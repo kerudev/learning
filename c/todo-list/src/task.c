@@ -1,7 +1,7 @@
 #include <string.h>
 #include "task.h"
 
-Task new_task(char content[]) {
+Task task_new(char *content) {
     Task task;
     task.id = 1;
     task.checked = false;
@@ -9,12 +9,16 @@ Task new_task(char content[]) {
     return task;
 }
 
-Task check_task(Task task) {
+Task task_check(Task task) {
     task.checked = true;
     return task;
 }
 
-Task uncheck_task(Task task) {
+Task task_uncheck(Task task) {
     task.checked = false;
     return task;
+}
+
+Task task_read_line() {
+    
 }

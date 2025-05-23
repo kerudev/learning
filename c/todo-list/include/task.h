@@ -3,16 +3,18 @@
 
 #include <stdbool.h> 
 
+#define CONTENT_SIZE 30
+
 typedef struct Task {
     int id;
-    char content[50];
+    char content[CONTENT_SIZE];
     bool checked;
 } Task;
 
-Task new_task(char content[]);
+Task task_new(char *content);
 
-Task check_task(Task task);
+Task task_check(Task task);
 
-Task uncheck_task(Task task);
+Task task_uncheck(Task task);
 
 #endif

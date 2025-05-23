@@ -1,8 +1,12 @@
 CC = gcc
-CFLAGS = -Wall -Iinclude
-SRC = src/main.c src/task.c
+CFLAGS = -Wall -Wextra -Iinclude
 
-OBJ = $(SRC:.c=.o)
+SRC_DIR = src
+BUILD_DIR = build
+INCLUDE_DIR = include
+
+SRC = $(wildcard $(SRC_DIR)/*.c)
+OBJ = $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(SRC))
 
 EXEC = program
 
@@ -11,8 +15,9 @@ all: $(EXEC)
 $(EXEC): $(OBJ)
 	$(CC) $(OBJ) -o $(EXEC)
 
-%.o: %.c
+build/%.o: src/%.c
+	@mkdir -p $(BUILD_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(OBJ) $(EXEC)
+	rm -f $(BUILD_DIR)/*.o $(EXEC)
