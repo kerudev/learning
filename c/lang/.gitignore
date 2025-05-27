@@ -1,0 +1,6 @@
+# Build directory and executables
+build
+program
+
+# Generated files
+*.csv
