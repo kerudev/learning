@@ -1,16 +1,29 @@
 #include <stdio.h>
 #include <string.h>
 
+#define SIZE 30
+
 int main() {
-    char name[30];
-    int age;
+    char name[SIZE];
+    unsigned int age;
     
     printf("Type your name: ");
     fgets(name, sizeof(name), stdin);
-    name[strcspn(name, "\n")] = 0;
+
+    if (strchr(name, '\n') == NULL) {
+        int c;
+        while ((c = getchar()) != '\n' && c != EOF) {}
+    } else {
+        name[strcspn(name, "\n")] = 0;
+    }
 
     printf("Type your age: ");
     scanf("%d", &age);
+
+    if (age < 0) {
+        printf("Invalid input for age. Are you sure it's is correct?\n");
+        return 1;
+    }
 
     printf("You are %s, age %d\n", name, age);
 
