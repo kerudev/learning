@@ -4,19 +4,17 @@
 Task task_new(char *content) {
     Task task;
     task.id = 1;
-    task.checked = false;
+    task.checked = 0;
     strcpy(task.content, content);
     return task;
 }
 
 Task task_check(Task task) {
-    task.checked = true;
+    task.checked = 1;
     return task;
 }
 
 Task task_uncheck(Task task) {
-    task.checked = false;
+    task.checked = 0;
     return task;
 }
-
-// Task task_read_line() {}
