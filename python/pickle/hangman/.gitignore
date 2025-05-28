@@ -1,0 +1,6 @@
+# Cache
+**/__pycache__
+
+# Generated files
+*.pkl
+*.sqlite
