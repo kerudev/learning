@@ -1,17 +1,22 @@
 import sqlite3
 import random
+from enum import Enum
+
+class ScoreField(str, Enum):
+    WINS = "wins"
+    LOSES = "loses"
 
 class Sqlite:
     def __init__(self):
-        self.__connection = sqlite3.connect("game.sqlite")
+        self.__connection = sqlite3.connect("words.sqlite")
         self.__cursor = self.__connection.cursor()
 
         self.__cursor.execute("""
             CREATE TABLE IF NOT EXISTS words (
                 id      INTEGER PRIMARY KEY AUTOINCREMENT,
                 word    TEXT NOT NULL,
-                tries   INTEGER NOT NULL,
-                wins    INTEGER NOT NULL
+                wins    INTEGER NOT NULL,
+                loses   INTEGER NOT NULL
             )
         """)
 
@@ -34,7 +39,7 @@ class Sqlite:
         parameters = [(word,) for word in words]
 
         self.__cursor.executemany("""
-            INSERT INTO words (word, tries, wins)
+            INSERT INTO words (word, loses, wins)
             VALUES(?, 0, 0)
         """, parameters)
 
@@ -51,6 +56,12 @@ class Sqlite:
             self.__populate()
             count = self.count()
 
-        word_id = random.randint(1, count + 1)
+        word_id = random.randint(1, count)
 
-        self.__cursor.execute(f"SELECT * FROM words WHERE id = {word_id}")
+        result = self.__cursor.execute(f"SELECT word FROM words WHERE id = {word_id}")
+
+        return result.fetchone()[0]
+
+    def update_score(self, field: ScoreField, word: str):
+        self.__cursor.execute(f"UPDATE words SET {field} = {field} + 1 WHERE word = '{word}'")
+        self.__connection.commit()
