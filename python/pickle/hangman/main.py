@@ -19,8 +19,12 @@ def main():
                 Sqlite().reset_score()
 
         case Action.ADD:
-            Sqlite().add(args.word)
+            match args.add_type:
+                case Action.ADD_WORD:
+                    Sqlite().add_word(args.word)
 
+                case Action.ADD_RANDOM:
+                    Sqlite().add_random(args)
 
 if __name__ == "__main__":
     main()

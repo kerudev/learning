@@ -1,3 +1,4 @@
+from argparse import Namespace
 import sqlite3
 import random
 from .utils import get_random_words
@@ -17,11 +18,19 @@ class Sqlite:
         self._cursor.execute("""
             CREATE TABLE IF NOT EXISTS words (
                 id      INTEGER PRIMARY KEY AUTOINCREMENT,
-                word    TEXT NOT NULL,
+                word    TEXT UNIQUE NOT NULL,
                 wins    INTEGER NOT NULL,
                 loses   INTEGER NOT NULL
             )
         """)
+
+        self._connection.commit()
+
+    def __insert_many(self, parameters: list[tuple[str]]):
+        self._cursor.executemany("""
+            INSERT INTO words (word, loses, wins)
+            VALUES(?, 0, 0)
+        """, parameters)
 
         self._connection.commit()
 
@@ -31,18 +40,31 @@ class Sqlite:
 
         parameters = [(word,) for word in words]
 
-        self._cursor.executemany("""
+        self.__insert_many(parameters)
+
+    def add_word(self, word: str):
+        self._cursor.execute(f"""
             INSERT INTO words (word, loses, wins)
-            VALUES(?, 0, 0)
-        """, parameters)
+            VALUES('{word}', 0, 0)
+        """)
 
         self._connection.commit()
+
+    def add_random(self, args: Namespace):
+        length = args.length or random.randint(4, 10)
+
+        words = get_random_words(length=length, total=args.number)
+        parameters = [(word,) for word in words]
+
+        print(parameters)
+
+        self.__insert_many(parameters)
 
     def count(self) -> int:
         result = self._cursor.execute("SELECT COUNT(*) AS count FROM words")
         return result.fetchone()[0]
 
-    def word(self) -> str:
+    def get_word(self) -> str:
         count = self.count()
 
         if not count:

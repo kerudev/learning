@@ -6,7 +6,7 @@ from .sqlite import Sqlite, ScoreField
 class Game:
     def __init__(self):
         self.__db = Sqlite()
-        self.__word = self.__db.word()
+        self.__word = self.__db.get_word()
         self.__tries = len(self.__word) + 2
         self.__state = len(self.__word) * ["_"]
         self.__left = [chr(i) for i in range(ord("a"), ord("z") + 1)]
