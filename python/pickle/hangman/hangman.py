@@ -26,5 +26,6 @@ def main():
                 case Action.ADD_RANDOM:
                     Sqlite().add_random(args)
 
+
 if __name__ == "__main__":
     main()

@@ -15,6 +15,7 @@ class Sqlite:
         self._connection = sqlite3.connect("words.sqlite")
         self._cursor = self._connection.cursor()
 
+        # fmt: off
         self._cursor.execute("""
             CREATE TABLE IF NOT EXISTS words (
                 id      INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -23,14 +24,17 @@ class Sqlite:
                 loses   INTEGER NOT NULL
             )
         """)
+        # fmt: on
 
         self._connection.commit()
 
     def __insert_many(self, parameters: list[tuple[str]]):
+        # fmt: off
         self._cursor.executemany("""
             INSERT INTO words (word, loses, wins)
             VALUES(?, 0, 0)
         """, parameters)
+        # fmt: on
 
         self._connection.commit()
 
@@ -43,10 +47,12 @@ class Sqlite:
         self.__insert_many(parameters)
 
     def add_word(self, word: str):
+        # fmt: off
         self._cursor.execute(f"""
             INSERT INTO words (word, loses, wins)
             VALUES('{word}', 0, 0)
         """)
+        # fmt: on
 
         self._connection.commit()
 
@@ -78,7 +84,9 @@ class Sqlite:
         return result.fetchone()[0]
 
     def update_score(self, field: ScoreField, word: str):
-        self._cursor.execute(f"UPDATE words SET {field.value} = {field.value} + 1 WHERE word = '{word}'")
+        self._cursor.execute(
+            f"UPDATE words SET {field.value} = {field.value} + 1 WHERE word = '{word}'"
+        )
         self._connection.commit()
 
     def reset_score(self):
@@ -95,7 +103,7 @@ class Sqlite:
         print("Score resetted.")
 
     def print_score(self):
-        result = self._cursor.execute("SELECT * FROM words WHERE wins > 0 OR loses > 0")
+        result = self._cursor.execute("SELECT * FROM words WHERE wins > 0")
 
         words = result.fetchall()
         columns = ["id", "word", "wins", "loses"]

@@ -20,8 +20,8 @@ def parse() -> Namespace:
     score = subparsers.add_parser(Action.SCORE.value, help="manages your score")
     score_group = score.add_mutually_exclusive_group(required=True)
 
-    score_group.add_argument("--show", action="store_true", help="see your score")
-    score_group.add_argument("--reset", action="store_true", help="resets the stored score")
+    score_group.add_argument("--show", action="store_true", help="displays the words you guessed")
+    score_group.add_argument("--reset", action="store_true", help="resets your score")
 
     add = subparsers.add_parser(Action.ADD.value, help="add a word to the game's database")
     add_subparsers = add.add_subparsers(dest="add_type", required=True)
