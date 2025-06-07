@@ -10,7 +10,12 @@ typedef struct Task {
 } Task;
 
 Task task_new(char *content);
-Task task_check(Task task);
-Task task_uncheck(Task task);
+
+void task_check(Task *task);
+void task_uncheck(Task *task);
+void task_drop(Task *task);
+
+Task task_from_line(char *line);
+void task_to_line(Task task, char *str);
 
 #endif

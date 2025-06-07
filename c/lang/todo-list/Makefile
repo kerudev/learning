@@ -5,7 +5,7 @@ SRC_DIR = src
 BUILD_DIR = build
 INCLUDE_DIR = include
 
-BIN = $(BUILD_DIR)/main
+BIN = $(BUILD_DIR)/todo
 
 SRC = $(wildcard $(SRC_DIR)/*.c)
 OBJ = $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(SRC))
