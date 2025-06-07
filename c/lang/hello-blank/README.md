@@ -1,5 +1,9 @@
 # c/lang/hello-blank
 
-Learned #include and #define, simple control flow, some stdio functions and Makefile.
+In this project I learned:
+- How to use `#include` and `#define` preprocessor directives.
+- Simple control flow structures (`if`, `else`, `for`, `while`...)
+- Some `stdio.h` functions
+- How to use `Makefile`.
 
-To compile, use `make all`. To run, use `./build/main`.
+Compile with `make all`, run with `./build/main`.
