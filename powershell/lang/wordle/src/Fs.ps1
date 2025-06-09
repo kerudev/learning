@@ -1,10 +1,38 @@
 function Write-File {
-    [Parameter(Mandatory=$true, Position=0)]
-    [string] $word
+    param (
+        [Parameter(Mandatory=$true)]
+        [string] $path,
 
-    Add-Content -Path "words.txt" -Value $word
+        [AllowEmptyString()]
+        [AllowNull()]
+        [string[]] $content,
+
+        [switch] $overwrite = $false,
+        [switch] $clear = $false
+    )
+
+    if ((-not $clear) -and (-not $content)) {
+        Write-Host "You must provide -Content if you are not using -Clear."
+        exit 1
+    }
+
+    if ($clear) {
+        Clear-Content -Path $path
+        return
+    }
+
+    $func = if ($overwrite) { 'Set-Content' } else { 'Add-Content' }
+    & $func -Path $path -Value ($content -join "`n")
 }
 
 function Read-File {
-    Get-Content -Path "words.txt"
+    [OutputType([string[]])]
+    param (
+        [Parameter(Mandatory=$true)]
+        [string] $path
+    )
+
+    ((Test-Path -Path $path) -and (Get-Content -Path $path -Raw).Length) `
+        ? (Get-Content -Path $path)
+        : @()
 }

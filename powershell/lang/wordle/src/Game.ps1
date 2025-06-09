@@ -1,4 +1,5 @@
 function New-Game {
+    [OutputType([string[][]])]
     param (
         [Parameter(Mandatory=$true)]
         [string] $word,
@@ -7,16 +8,16 @@ function New-Game {
         [int] $tries
     )
 
-    $default = "`e[47;1;30m`_"
+    $default = $gray + "_"
 
-    $row = 1..$word.Length | ForEach-Object { $default }
-    $game = 1..$tries | ForEach-Object { ,$row.Clone() }
+    $row = @($default) * $word.Length
+    $game = 1..$tries | ForEach-Object { ,($row.Clone()) }
 
     $game
-
 }
 
 function Start-Game {
+    [OutputType([int])]
     param (
         [Parameter(Mandatory=$true)]
         [string] $word,
@@ -27,34 +28,55 @@ function Start-Game {
 
     $game = New-Game -word $word -tries $tries
 
+    $message = ""
     $available = "a".."z"
+
+    $valid = Read-File -Path $knownWordsPath
+
     $used = @()
+    $used_fmt = @{}
 
     for ($try = 0; $try -lt $tries; $try++) {
         do {
-            # Clear-Host
+            [Console]::Clear()
 
-            Write-Host "Available:", (($available | Sort-Object) -join "")
-            Write-Host "     Used:", (($used | Sort-Object) -join "")
+            # Render letter info
+            Write-Host "Available:", (($available | Sort-Object) -join " ")
+            Write-Host "     Used:" -NoNewline
+            foreach ($key in ($used | Sort-Object)) { Write-Host $used_fmt[$key]$key -NoNewline }
+            Write-Host
 
-            foreach ($line in $game) {
-                Write-Host $line, "`e[0m"
-            }
+            # Render game
+            Write-Host
+            foreach ($line in $game) { Write-Host $line, $ansiReset }
 
+            # Render input placeholder
+            Write-Host $message
             Write-Host "> " -NoNewline
             $read = Read-Host
 
             if ($null -eq $read) {
+                Write-Host
                 Write-Host "Game finished"
-                exit 0
+                return -1
             }
             
             $letters = $read.ToLower().ToCharArray()
 
-            if ($letters.Count -ne $word.Length) {
-                Write-Host "You have to write" $word.Length "letters"
+            if ($letters.Length -ne $word.Length) {
+                $message = "Please write exactly $($word.Length) letters."
             }
-        } while ($letters.Count -ne $word.Length)
+            elseif ($letters -match '[^a-z]') {
+                $message = "Only lowercase letters a-z are allowed."
+            }
+            elseif (-not ($valid -contains ($letters -join ''))) {
+                $message = "Unknown word: '$read'"
+            }
+            else {
+                $message = ""
+            }
+
+        } while ($message)
 
         $available = $available | Where-Object -FilterScript { $_ -notin $letters }
 
@@ -62,27 +84,39 @@ function Start-Game {
             $wordLetter = $word[$pos]
             $letter = $letters[$pos]
 
-            if ($letter -notin $used) {
-                $used += $letter
-            }
+            if ($letter -notin $used) { $used += $letter }
 
             $color = ($letter -eq $wordLetter) `
-                ? "`e[42;1;30m"     # green
+                ? $green
                 : ($word.Contains($letter)) `
-                    ? "`e[43;1;30m" # yellow
-                    : "`e[47;1;30m" # gray
-    
+                    ? $yellow
+                    : $gray
+
+            if ($used_fmt.ContainsKey($letter)) {
+                $used_color = $used_fmt[$letter]
+
+                if (($used_color -eq $gray) -and ($color -ne $gray)) {
+                    $used_fmt[$letter] = $color
+                }
+
+                if (($used_color -eq $yellow) -and ($color -eq $green)) {
+                    $used_fmt[$letter] = $color
+                }
+            }
+
+            $used_fmt[$letter] = $color
+
             $game[$try][$pos] = $color + $letter
         }
 
         if ($word -eq ($letters -join "")) {
             Write-Host "You win!"
-            exit 0
+            return 0
         }
 
         if ($try + 1 -eq $tries) {
             Write-Host "You lose! The word was" $word
-            exit 1
+            return 1
         }
     }
 }

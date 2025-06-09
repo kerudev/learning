@@ -1,15 +1,11 @@
-. "$PSScriptRoot/Constants.ps1"
+function Get-AllWords {
+    $set = [System.Collections.Generic.HashSet[string]]::new()
 
-function Get-Word {
-    [OutputType([string])]
-    param (
-        [Parameter(Mandatory=$false, Position=0)]
-        [System.Object[]] $exclude = @()
-    )
+    for ($i = 0; $i -lt 8; $i++) {
+        $uri = $apiUrl + "?length=5&words=500"
+        $set.UnionWith([string[]](Invoke-RestMethod $uri))
+    }
 
-    do {
-        $word = (Invoke-RestMethod -Uri $apiUrl)[0]
-    } while($word -in $exclude)
-
-    $word
+    Write-File -Path $knownWordsPath -Content $set
+    Write-File -Path $availableWordsPath -Content $set
 }
