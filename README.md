@@ -29,10 +29,6 @@ programming languages or libraries I'm interested in.
 - **Clay**: modern layout library. Can render with raylib, WebGL, etc. 
   - Home: https://www.nicbarker.com/clay
 
-### PowerShell
-- I really like shells. I loved cmd and I love Bash. Time to love PowerShell
-  - Home: https://learn.microsoft.com/en-us/powershell/scripting/how-to-use-docs?view=powershell-7.5
-
 ### Web
 - **NextJS**: similar to React, but with backend management too.
   - Home: https://nextjs.org/
@@ -75,3 +71,7 @@ to dip my toes into embedded programming.
   - [hello-blank](./c/lang/hello-blank/README.md)
   - [rock-paper-scissors](./c/lang/rock-paper-scissors/README.md)
   - [todo-list](./c/lang/todo-list/README.md)
+
+### PowerShell
+- [**lang**](https://learn.microsoft.com/en-us/powershell/scripting/how-to-use-docs?view=powershell-7.5)
+  - [wordle](./powershell/lang/wordle/README.md)
