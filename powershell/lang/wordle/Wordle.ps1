@@ -15,19 +15,19 @@
     Start playing the game.
 
     .EXAMPLE
-    ./Main.ps1 -Play
+    ./Wordle.ps1 -Play
 
     .PARAMETER Add
     You can add a word with this parameter.
 
     .EXAMPLE
-    ./Main.ps1 -Add "queue"
+    ./Wordle.ps1 -Add "queue"
 
     .PARAMETER Reset
     Dumps known.txt into available.txt and empties used.txt.
 
     .EXAMPLE
-    ./Main.ps1 -Reset
+    ./Wordle.ps1 -Reset
 
     .NOTES
     Author: Cristian Marcos Martín
@@ -41,7 +41,7 @@ param (
 
 if (-not $PSBoundParameters.Keys.Count) {
     Write-Host "You must provide at least one argument."
-    Write-Host "Use 'Get-Help ./Main.ps1' if you are stuck."
+    Write-Host "Use 'Get-Help ./Wordle.ps1' if you are stuck."
     Write-Host
     exit 0
 }
