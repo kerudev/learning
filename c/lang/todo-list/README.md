@@ -10,4 +10,11 @@ In this project I learned:
 - How to pass functions as arguments.
 - How to use `gdb`.
 
-Compile with `make all`, run with `./build/todo`.
+Compile with `make all`. The help command is `./build/todo --help`.
+
+Run with `./build/todo [COMMAND]`:
+- `add`       write a task description to create a new task
+- `check`     marks a task as checked
+- `uncheck`   marks a task as unchecked
+- `drop`      drops a task if it is checked
+- `remove`    deletes the tasks file
