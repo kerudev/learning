@@ -5,12 +5,11 @@ use indexmap::IndexMap;
 use color_eyre::eyre::Result;
 use crossterm::event::{self, KeyCode, KeyEventKind};
 use ratatui::layout::{Constraint, Layout, Position};
-use ratatui::style::{Color, Modifier, Style, Stylize};
+use ratatui::style::{Color, Style, Stylize};
 use ratatui::text::{Line, Span, Text};
 use ratatui::widgets::{Block, List, ListItem, Paragraph};
 use ratatui::{DefaultTerminal, Frame};
 
-// TODO display the selected ID moving
 
 fn main() -> Result<()> {
     color_eyre::install()?;
@@ -24,6 +23,7 @@ struct App {
     mode: InputMode,
     input: String,
     messages: IndexMap<usize, String>,
+    prev_messages: IndexMap<usize, String>,
     cursor_x: usize,
     cursor_y: usize,
     selected: Option<usize>,
@@ -32,7 +32,7 @@ struct App {
 enum InputMode {
     Normal,
     Insert,
-    Edit,
+    Move,
 }
 
 impl App {
@@ -41,6 +41,7 @@ impl App {
             mode: InputMode::Normal,
             input: String::new(),
             messages: Self::load_messages().unwrap(),
+            prev_messages: IndexMap::new(),
             cursor_x: 0,
             cursor_y: 0,
             selected: None,
@@ -78,13 +79,16 @@ impl App {
             if let Some(key) = event::read()?.as_key_press_event() {
                 match self.mode {
                     InputMode::Normal => match key.code {
-                        KeyCode::Char('q') => return self.save_messages(),
+                        KeyCode::Esc => return self.save_messages(),
                         KeyCode::Char('i') => self.mode = InputMode::Insert,
-                        KeyCode::Char('e') => self.mode = InputMode::Edit,
+                        KeyCode::Char('m') => self.mode = InputMode::Move,
                         _ => {}
                     },
                     InputMode::Insert if key.kind == KeyEventKind::Press => match key.code {
-                        KeyCode::Esc => self.mode = InputMode::Normal,
+                        KeyCode::Esc => {
+                            self.mode = InputMode::Normal;
+                            self.reset_insert();
+                        },
                         KeyCode::Left => self.move_cursor_left(),
                         KeyCode::Right => self.move_cursor_right(),
                         KeyCode::Char(character) => self.add_char(character),
@@ -92,11 +96,14 @@ impl App {
                         KeyCode::Enter => self.submit_message(),
                         _ => {},
                     },
-                    InputMode::Edit if key.kind == KeyEventKind::Press => match key.code {
-                        KeyCode::Esc => self.mode = InputMode::Normal,
+                    InputMode::Move if key.kind == KeyEventKind::Press => match key.code {
+                        KeyCode::Esc => {
+                            self.mode = InputMode::Normal;
+                            self.reset_move();
+                        },
                         KeyCode::Up => self.move_cursor_up(),
                         KeyCode::Down => self.move_cursor_down(),
-                        KeyCode::Enter => self.change_message_pos(),
+                        KeyCode::Enter => self.change_selected(),
                         _ => {},
                     },
                     _ => {},
@@ -122,15 +129,36 @@ impl App {
     }
 
     fn move_cursor_up(&mut self) {
-        self.cursor_y = self.clamp_y(self.cursor_y.saturating_sub(1));
+        let new_y = self.cursor_y.saturating_sub(1);
+
+        if self.selected.is_some() {
+            self.messages.move_index(self.cursor_y, new_y);
+            self.selected = Some(self.cursor_y);
+        }
+
+        self.cursor_y = self.clamp_y(new_y);
     }
 
     fn move_cursor_down(&mut self) {
-        self.cursor_y = self.clamp_y(self.cursor_y.saturating_add(1));
+        let new_y = self.cursor_y.saturating_add(1);
+
+        if self.selected.is_some() && new_y < self.messages.len() {
+            self.messages.move_index(self.cursor_y, new_y);
+            self.selected = Some(self.cursor_y);
+        }
+
+        self.cursor_y = self.clamp_y(new_y);
     }
 
-    const fn reset_cursor(&mut self) {
+    fn reset_insert(&mut self) {
+        self.input.clear();
         self.cursor_x = 0;
+    }
+
+    fn reset_move(&mut self) {
+        self.messages = self.prev_messages.clone();
+        self.prev_messages.clear();
+        self.selected = None;
         self.cursor_y = 0;
     }
 
@@ -162,60 +190,49 @@ impl App {
         if self.input.len() == 0 { return; }
 
         self.messages.insert(self.messages.keys().len(), self.input.clone());
-        self.input.clear();
-        self.reset_cursor();
+        self.reset_insert();
     }
 
-    fn change_message_pos(&mut self) {
-        let keys: Vec<&usize> = self.messages.keys().collect();
-        let over = keys[self.cursor_y].clone();
-
+    fn change_selected(&mut self) {
         match self.selected {
-            Some(key) => {
-                // TODO change this function
-                self.messages.move_index(key, over); 
+            Some(_) => {
+                self.prev_messages.clear();
                 self.selected = None;
             },
-            None => self.selected = Some(over),
+            None => {
+                self.prev_messages = self.messages.clone();
+                self.selected = Some(self.cursor_y);
+            },
         }
     }
 
-    fn get_help_message<'a>(&self) -> (Vec<Span<'a>>, Style) {
+    fn get_help_message<'a>(&self) -> Vec<Span<'a>> {
         match self.mode {
-            InputMode::Normal => (
-                vec![
-                    "(Normal) ".bold().white(),
-                    "q".bold(),
-                    ": quit. ".into(),
-                    "i".bold(),
-                    ": insert ".bold(),
-                    "mode. ".into(),
-                    "e".bold(),
-                    ": edit ".bold(),
-                    "mode.".into(),
-                ],
-                Style::default().add_modifier(Modifier::RAPID_BLINK),
-            ),
-            InputMode::Insert => (
-                vec![
-                    "(Insert) ".bold().green(),
-                    "Esc".bold(),
-                    ": switch to normal mode. ".into(),
-                    "Enter".bold(),
-                    ": save message.".into(),
-                ],
-                Style::default(),
-            ),
-            InputMode::Edit => (
-                vec![
-                    "( Edit ) ".bold().blue(),
-                    "Esc".bold(),
-                    ": switch to normal mode. ".into(),
-                    "Enter".bold(),
-                    ": save changes.".into(),
-                ],
-                Style::default(),
-            ),
+            InputMode::Normal => vec![
+                "(Normal) ".bold(),
+                "Esc".bold(),
+                ": exit. ".into(),
+                "i".bold(),
+                ": insert ".bold(),
+                "mode. ".into(),
+                "m".bold(),
+                ": move ".bold(),
+                "mode.".into(),
+            ],
+            InputMode::Insert => vec![
+                "(Insert) ".bold().green(),
+                "Esc".bold().green(),
+                ": switch to normal mode. ".into(),
+                "Enter".bold().green(),
+                ": save message.".into(),
+            ],
+            InputMode::Move => vec![
+                "( Move ) ".bold().blue(),
+                "Esc".bold().blue(),
+                ": switch to normal mode. ".into(),
+                "Enter".bold().blue(),
+                ": select or unselect.".into(),
+            ],
         }
     }
 
@@ -228,9 +245,7 @@ impl App {
 
         let [help_area, input_area, messages_area] = vertical.areas(frame.area());
 
-        let (msg, style) = self.get_help_message();
-
-        let text = Text::from(Line::from(msg)).patch_style(style);
+        let text = Text::from(Line::from(self.get_help_message()));
         let help_message = Paragraph::new(text);
         frame.render_widget(help_message, help_area);
 
@@ -255,7 +270,7 @@ impl App {
                 input_area.x + self.cursor_x as u16 + 1,
                 input_area.y + 1,
             )),
-            InputMode::Edit => frame.set_cursor_position(Position::new(
+            InputMode::Move => frame.set_cursor_position(Position::new(
                 messages_area.x + 1,
                 messages_area.y + self.cursor_y as u16 + 1,
             )),
@@ -265,21 +280,26 @@ impl App {
         let message_list: Vec<ListItem> = self
             .messages
             .iter()
-            .map(|(k, v)| {
-                let content = Line::from(Span::raw(format!("{k}: {v}")));
+            .enumerate()
+            .map(|(pos, (k, v))| {
+                let style = if self.selected.is_some() && pos == self.cursor_y {
+                    Style::default().bg(Color::White)
+                } else {
+                    Style::default()
+                };
+
+                let content = Line::from(Span::raw(format!("{k}: {v}"))).style(style);
+
                 ListItem::new(content)
             })
             .collect();
 
-        let title = if self.selected.is_some() { self.selected.unwrap().to_string() } else { "None".to_string() };
-
         let messages = List::new(message_list)
             .style(match self.mode {
-                InputMode::Edit => Style::default().fg(Color::Blue),
+                InputMode::Move => Style::default().fg(Color::Blue),
                 _ => Style::default().fg(Color::White),
             })
-            .block(Block::bordered().title(title));
-            // .block(Block::bordered().title("Messages"));
+            .block(Block::bordered().title("Messages"));
 
         frame.render_widget(messages, messages_area);
     }
