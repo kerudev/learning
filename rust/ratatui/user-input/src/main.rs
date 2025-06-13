@@ -4,10 +4,10 @@ use std::path::Path;
 use color_eyre::eyre::Result;
 use crossterm::event::{self, KeyCode, KeyEventKind};
 use indexmap::IndexMap;
-use ratatui::layout::{Constraint, Layout, Position};
+use ratatui::layout::{Alignment, Constraint, Flex, Layout, Position};
 use ratatui::style::{Color, Style, Stylize as _};
 use ratatui::text::{Line, Span, Text};
-use ratatui::widgets::{Block, List, ListItem, Paragraph};
+use ratatui::widgets::{Block, Clear, List, ListItem, Paragraph, Wrap};
 use ratatui::{DefaultTerminal, Frame};
 
 fn main() -> Result<()> {
@@ -30,6 +30,7 @@ struct App {
     cursor_x: usize,
     cursor_y: usize,
     selected: Option<usize>,
+    show_delete_popup: bool,
 }
 
 enum InputMode {
@@ -53,6 +54,7 @@ impl App {
             cursor_x: 0,
             cursor_y: 0,
             selected: None,
+            show_delete_popup: false,
         }
     }
 
@@ -208,15 +210,14 @@ impl App {
                 "(Normal) ".bold(),
                 "Esc: ".bold(),
                 "exit. ".into(),
-                "i: ".bold(),
-                "insert ".bold(),
+                "i: insert ".bold().green(),
                 "mode. ".into(),
-                "m: move ".bold(),
+                "m: move ".bold().blue(),
                 "mode.".into(),
             ],
             InputMode::Insert => vec![
                 "(Insert) ".bold().green(),
-                "Esc: ".bold().green(),
+                "Esc: ".bold(),
                 "switch to normal mode. ".into(),
                 "Enter: ".bold().green(),
                 "save message.".into(),
@@ -227,13 +228,15 @@ impl App {
                 "switch to normal mode. ".into(),
                 "Enter: ".bold().blue(),
                 "select or unselect. ".into(),
-                "e: edit ".bold().blue(),
-                "mode.".into(),
+                "e: edit ".bold().yellow(),
+                "mode. ".into(),
+                "backspace: remove ".bold().red(),
+                "message.".into(),
             ],
             InputMode::Edit => vec![
                 "( Edit ) ".bold().yellow(),
-                "Esc: ".bold().yellow(),
-                "switch to normal mode. ".into(),
+                "Esc: ".bold().blue(),
+                "switch to move mode. ".into(),
                 "Enter: ".bold().yellow(),
                 "save changes.".into(),
             ],
@@ -245,6 +248,26 @@ impl App {
             terminal.draw(|frame| self.render(frame))?;
 
             if let Some(key) = event::read()?.as_key_press_event() {
+                if self.show_delete_popup {
+                    match key.code {
+                        KeyCode::Char('n') | KeyCode::Esc => self.show_delete_popup = false,
+                        KeyCode::Char('y') => {
+                            self.messages.shift_remove_index(self.cursor_y);
+                            self.selected = None;
+                            self.show_delete_popup = false;
+
+                            if self.messages.is_empty() {
+                                self.max_y = 0;
+                                self.mode = InputMode::Normal;
+                            } else {
+                                self.max_y = self.messages.len() - 1;
+                                self.move_cursor_up();
+                            }
+                        }
+                        _ => {}
+                    }
+                }
+
                 match self.mode {
                     InputMode::Normal => match key.code {
                         KeyCode::Esc => return self.save_messages(),
@@ -276,6 +299,7 @@ impl App {
                             self.mode = InputMode::Normal;
                             self.reset_move();
                         }
+
                         KeyCode::Char('e') => {
                             self.mode = InputMode::Edit;
 
@@ -283,6 +307,11 @@ impl App {
                             self.max_x = self.input.chars().count();
                             self.cursor_x = self.max_x;
                         }
+
+                        KeyCode::Backspace => {
+                            self.show_delete_popup = true;
+                        }
+
                         KeyCode::Up => self.move_cursor_up(),
                         KeyCode::Down => self.move_cursor_down(),
                         KeyCode::Enter => self.change_selected(),
@@ -350,7 +379,7 @@ impl App {
                 messages_area.x + self.cursor_x as u16 + 1 + self.calc_cursor_min_x() as u16,
                 messages_area.y + self.cursor_y as u16 + 1,
             )),
-            InputMode::Normal => {}
+            _ => {}
         }
 
         let message_list: Vec<ListItem> = self
@@ -385,5 +414,44 @@ impl App {
             .block(Block::bordered().title("Messages"));
 
         frame.render_widget(messages, messages_area);
+
+        if self.show_delete_popup {
+            let vertical = Layout::vertical([Constraint::Length(4)]).flex(Flex::Center);
+            let horizontal = Layout::horizontal([Constraint::Length(40)]).flex(Flex::Center);
+
+            let area = frame.area();
+            let [area] = vertical.areas(area);
+            let [area] = horizontal.areas(area);
+
+            let block = Block::bordered()
+                .title("Are you sure?")
+                .style(Style::default().fg(Color::Red));
+
+            let drop_message = vec![
+                vec![
+                    "Press ".into(),
+                    "'y'".bold().red(),
+                    " to remove message. ".into(),
+                ],
+                vec![
+                    "Press ".into(),
+                    "'n' or 'esc'".bold().red(),
+                    " to cancel.".into(),
+                ],
+            ];
+
+            let text = Paragraph::new(Text::from(
+                drop_message
+                    .into_iter()
+                    .map(Line::from)
+                    .collect::<Vec<Line>>(),
+            ))
+            .block(block)
+            .alignment(Alignment::Center)
+            .wrap(Wrap { trim: true });
+
+            frame.render_widget(Clear, area);
+            frame.render_widget(text, area);
+        }
     }
 }
