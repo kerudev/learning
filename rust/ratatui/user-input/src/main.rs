@@ -1,15 +1,14 @@
 use std::fs;
 use std::path::Path;
 
-use indexmap::IndexMap;
 use color_eyre::eyre::Result;
 use crossterm::event::{self, KeyCode, KeyEventKind};
+use indexmap::IndexMap;
 use ratatui::layout::{Constraint, Layout, Position};
-use ratatui::style::{Color, Style, Stylize};
+use ratatui::style::{Color, Style, Stylize as _};
 use ratatui::text::{Line, Span, Text};
 use ratatui::widgets::{Block, List, ListItem, Paragraph};
 use ratatui::{DefaultTerminal, Frame};
-
 
 fn main() -> Result<()> {
     color_eyre::install()?;
@@ -24,6 +23,10 @@ struct App {
     input: String,
     messages: IndexMap<usize, String>,
     prev_messages: IndexMap<usize, String>,
+    min_x: usize,
+    max_x: usize,
+    min_y: usize,
+    max_y: usize,
     cursor_x: usize,
     cursor_y: usize,
     selected: Option<usize>,
@@ -33,6 +36,7 @@ enum InputMode {
     Normal,
     Insert,
     Move,
+    Edit,
 }
 
 impl App {
@@ -42,6 +46,10 @@ impl App {
             input: String::new(),
             messages: Self::load_messages().unwrap(),
             prev_messages: IndexMap::new(),
+            min_x: 0,
+            max_x: 0,
+            min_y: 0,
+            max_y: 0,
             cursor_x: 0,
             cursor_y: 0,
             selected: None,
@@ -64,7 +72,9 @@ impl App {
     fn load_messages() -> Result<IndexMap<usize, String>> {
         let path = Path::new("messages.json");
 
-        if !path.exists() { return Ok(IndexMap::new()); }
+        if !path.exists() {
+            return Ok(IndexMap::new());
+        }
 
         let content = fs::read_to_string(path)?;
         let messages = serde_json::from_str(content.trim())?;
@@ -72,52 +82,12 @@ impl App {
         Ok(messages)
     }
 
-    fn run(mut self, mut terminal: DefaultTerminal) -> Result<()> {
-        loop {
-            terminal.draw(|frame| self.render(frame))?;
-
-            if let Some(key) = event::read()?.as_key_press_event() {
-                match self.mode {
-                    InputMode::Normal => match key.code {
-                        KeyCode::Esc => return self.save_messages(),
-                        KeyCode::Char('i') => self.mode = InputMode::Insert,
-                        KeyCode::Char('m') => self.mode = InputMode::Move,
-                        _ => {}
-                    },
-                    InputMode::Insert if key.kind == KeyEventKind::Press => match key.code {
-                        KeyCode::Esc => {
-                            self.mode = InputMode::Normal;
-                            self.reset_insert();
-                        },
-                        KeyCode::Left => self.move_cursor_left(),
-                        KeyCode::Right => self.move_cursor_right(),
-                        KeyCode::Char(character) => self.add_char(character),
-                        KeyCode::Backspace => self.delete_char(),
-                        KeyCode::Enter => self.submit_message(),
-                        _ => {},
-                    },
-                    InputMode::Move if key.kind == KeyEventKind::Press => match key.code {
-                        KeyCode::Esc => {
-                            self.mode = InputMode::Normal;
-                            self.reset_move();
-                        },
-                        KeyCode::Up => self.move_cursor_up(),
-                        KeyCode::Down => self.move_cursor_down(),
-                        KeyCode::Enter => self.change_selected(),
-                        _ => {},
-                    },
-                    _ => {},
-                }
-            }
-        }
-    }
-
     fn clamp_x(&self, new_x: usize) -> usize {
-        new_x.clamp(0, self.input.chars().count())
+        new_x.clamp(self.min_x, self.max_x)
     }
 
     fn clamp_y(&self, new_y: usize) -> usize {
-        new_y.clamp(0, self.messages.len() - 1)
+        new_y.clamp(self.min_y, self.max_y)
     }
 
     fn move_cursor_left(&mut self) {
@@ -156,10 +126,16 @@ impl App {
     }
 
     fn reset_move(&mut self) {
-        self.messages = self.prev_messages.clone();
         self.prev_messages.clear();
         self.selected = None;
         self.cursor_y = 0;
+    }
+
+    fn calc_cursor_min_x(&self) -> usize {
+        let keys: Vec<&usize> = self.messages.keys().collect();
+        let key = *keys[self.cursor_y];
+
+        key.to_string().len() + 2
     }
 
     fn byte_index(&self) -> usize {
@@ -172,37 +148,57 @@ impl App {
 
     fn add_char(&mut self, character: char) {
         let index = self.byte_index();
+
         self.input.insert(index, character);
+
+        self.min_x = 0;
+        self.max_x = self.input.chars().count();
+
         self.move_cursor_right();
     }
 
     fn delete_char(&mut self) {
-        if self.cursor_x == 0 { return; }
+        if self.cursor_x == self.min_x {
+            return;
+        }
 
         let before_char_to_delete = self.input.chars().take(self.cursor_x - 1);
         let after_char_to_delete = self.input.chars().skip(self.cursor_x);
 
         self.input = before_char_to_delete.chain(after_char_to_delete).collect();
+
+        self.min_x = 0;
+        self.max_x = self.input.chars().count();
+
         self.move_cursor_left();
     }
 
     fn submit_message(&mut self) {
-        if self.input.len() == 0 { return; }
+        if self.input.is_empty() {
+            return;
+        }
 
-        self.messages.insert(self.messages.keys().len(), self.input.clone());
+        self.messages
+            .insert(self.messages.keys().len(), self.input.clone());
+        self.reset_insert();
+    }
+
+    fn replace_message(&mut self) {
+        if self.input.is_empty() {
+            return;
+        }
+
+        self.messages[self.cursor_y] = self.input.clone();
         self.reset_insert();
     }
 
     fn change_selected(&mut self) {
-        match self.selected {
-            Some(_) => {
-                self.prev_messages.clear();
-                self.selected = None;
-            },
-            None => {
-                self.prev_messages = self.messages.clone();
-                self.selected = Some(self.cursor_y);
-            },
+        if self.selected.is_some() {
+            self.prev_messages.clear();
+            self.selected = None;
+        } else {
+            self.prev_messages = self.messages.clone();
+            self.selected = Some(self.cursor_y);
         }
     }
 
@@ -210,29 +206,105 @@ impl App {
         match self.mode {
             InputMode::Normal => vec![
                 "(Normal) ".bold(),
-                "Esc".bold(),
-                ": exit. ".into(),
-                "i".bold(),
-                ": insert ".bold(),
+                "Esc: ".bold(),
+                "exit. ".into(),
+                "i: ".bold(),
+                "insert ".bold(),
                 "mode. ".into(),
-                "m".bold(),
-                ": move ".bold(),
+                "m: move ".bold(),
                 "mode.".into(),
             ],
             InputMode::Insert => vec![
                 "(Insert) ".bold().green(),
-                "Esc".bold().green(),
-                ": switch to normal mode. ".into(),
-                "Enter".bold().green(),
-                ": save message.".into(),
+                "Esc: ".bold().green(),
+                "switch to normal mode. ".into(),
+                "Enter: ".bold().green(),
+                "save message.".into(),
             ],
             InputMode::Move => vec![
                 "( Move ) ".bold().blue(),
-                "Esc".bold().blue(),
-                ": switch to normal mode. ".into(),
-                "Enter".bold().blue(),
-                ": select or unselect.".into(),
+                "Esc: ".bold().blue(),
+                "switch to normal mode. ".into(),
+                "Enter: ".bold().blue(),
+                "select or unselect. ".into(),
+                "e: edit ".bold().blue(),
+                "mode.".into(),
             ],
+            InputMode::Edit => vec![
+                "( Edit ) ".bold().yellow(),
+                "Esc: ".bold().yellow(),
+                "switch to normal mode. ".into(),
+                "Enter: ".bold().yellow(),
+                "save changes.".into(),
+            ],
+        }
+    }
+
+    fn run(mut self, mut terminal: DefaultTerminal) -> Result<()> {
+        loop {
+            terminal.draw(|frame| self.render(frame))?;
+
+            if let Some(key) = event::read()?.as_key_press_event() {
+                match self.mode {
+                    InputMode::Normal => match key.code {
+                        KeyCode::Esc => return self.save_messages(),
+                        KeyCode::Char('i') => self.mode = InputMode::Insert,
+                        KeyCode::Char('m') => {
+                            self.mode = InputMode::Move;
+
+                            self.min_y = 0;
+                            self.max_y = self.messages.len() - 1;
+                        }
+                        _ => {}
+                    },
+
+                    InputMode::Insert if key.kind == KeyEventKind::Press => match key.code {
+                        KeyCode::Esc => {
+                            self.mode = InputMode::Normal;
+                            self.reset_insert();
+                        }
+                        KeyCode::Left => self.move_cursor_left(),
+                        KeyCode::Right => self.move_cursor_right(),
+                        KeyCode::Char(character) => self.add_char(character),
+                        KeyCode::Backspace => self.delete_char(),
+                        KeyCode::Enter => self.submit_message(),
+                        _ => {}
+                    },
+
+                    InputMode::Move if key.kind == KeyEventKind::Press => match key.code {
+                        KeyCode::Esc => {
+                            self.mode = InputMode::Normal;
+                            self.reset_move();
+                        }
+                        KeyCode::Char('e') => {
+                            self.mode = InputMode::Edit;
+
+                            self.input = self.messages[self.cursor_y].clone();
+                            self.max_x = self.input.chars().count();
+                            self.cursor_x = self.max_x;
+                        }
+                        KeyCode::Up => self.move_cursor_up(),
+                        KeyCode::Down => self.move_cursor_down(),
+                        KeyCode::Enter => self.change_selected(),
+                        _ => {}
+                    },
+
+                    InputMode::Edit if key.kind == KeyEventKind::Press => match key.code {
+                        KeyCode::Esc => self.mode = InputMode::Move,
+                        KeyCode::Left => self.move_cursor_left(),
+                        KeyCode::Right => self.move_cursor_right(),
+                        KeyCode::Char(character) => self.add_char(character),
+                        KeyCode::Backspace => self.delete_char(),
+                        KeyCode::Enter => {
+                            self.mode = InputMode::Move;
+                            self.replace_message();
+                        }
+                        _ => {}
+                    },
+
+                    _ => {}
+                }
+            }
         }
     }
 
@@ -249,18 +321,18 @@ impl App {
         let help_message = Paragraph::new(text);
         frame.render_widget(help_message, help_area);
 
-        let input_text = if self.input.len() == 0 {
-            Span::styled("Type your message here...", Style::default().gray())
-        } else {
+        let input_text = if !self.input.is_empty() && matches!(self.mode, InputMode::Insert) {
             Span::raw(self.input.as_str())
+        } else {
+            Span::styled("Type your message here...", Style::default().gray())
         };
 
-        let input = Paragraph::new(input_text)
-            .block(Block::bordered().title("Input")
-                .border_style(match self.mode {
+        let input =
+            Paragraph::new(input_text).block(Block::bordered().title("Input").border_style(
+                match self.mode {
                     InputMode::Insert => Style::default().fg(Color::Green),
                     _ => Style::default().fg(Color::White),
-                }
+                },
             ));
 
         frame.render_widget(input, input_area);
@@ -274,19 +346,29 @@ impl App {
                 messages_area.x + 1,
                 messages_area.y + self.cursor_y as u16 + 1,
             )),
-            _ => {},
+            InputMode::Edit => frame.set_cursor_position(Position::new(
+                messages_area.x + self.cursor_x as u16 + 1 + self.calc_cursor_min_x() as u16,
+                messages_area.y + self.cursor_y as u16 + 1,
+            )),
+            InputMode::Normal => {}
         }
 
         let message_list: Vec<ListItem> = self
             .messages
             .iter()
             .enumerate()
-            .map(|(pos, (k, v))| {
-                let style = if self.selected.is_some() && pos == self.cursor_y {
-                    Style::default().bg(Color::White)
-                } else {
-                    Style::default()
+            .map(|(pos, (k, mut v))| {
+                let is_selected = self.selected.is_some() && pos == self.cursor_y;
+
+                let style = match self.mode {
+                    InputMode::Move if is_selected => Style::default().bg(Color::LightBlue),
+                    InputMode::Edit if is_selected => Style::default().bg(Color::LightYellow),
+                    _ => Style::default(),
                 };
+
+                if matches!(self.mode, InputMode::Edit) && pos == self.cursor_y {
+                    v = &self.input;
+                }
 
                 let content = Line::from(Span::raw(format!("{k}: {v}"))).style(style);
 
@@ -297,6 +379,7 @@ impl App {
         let messages = List::new(message_list)
             .style(match self.mode {
                 InputMode::Move => Style::default().fg(Color::Blue),
+                InputMode::Edit => Style::default().fg(Color::Yellow),
                 _ => Style::default().fg(Color::White),
             })
             .block(Block::bordered().title("Messages"));
