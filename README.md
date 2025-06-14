@@ -10,9 +10,6 @@ programming languages or libraries I'm interested in.
   - Docs: https://pandas.pydata.org/docs/
 
 ### Rust
-- **ratatui**: library for creating TUIs.
-  - Home: https://ratatui.rs/
-
 - **serde**: I've worked with it on a surface level, but I want to know it more in depth.
   - Home: https://serde.rs/
 
@@ -62,16 +59,20 @@ to dip my toes into embedded programming.
 
 ## What I have learned
 
-### Python
-- [**pickle**](https://docs.python.org/3/library/pickle.html)
-  - [Hangman](./python/pickle/hangman/README.md)
-
 ### C
 - [**lang**](https://en.cppreference.com/w/c/language)
-  - [hello-blank](./c/lang/hello-blank/README.md)
-  - [rock-paper-scissors](./c/lang/rock-paper-scissors/README.md)
-  - [todo-list](./c/lang/todo-list/README.md)
+  - [hello-blank](./c/lang/hello-blank)
+  - [rock-paper-scissors](./c/lang/rock-paper-scissors)
+  - [todo-list](./c/lang/todo-list)
 
 ### PowerShell
 - [**lang**](https://learn.microsoft.com/en-us/powershell/scripting/how-to-use-docs?view=powershell-7.5)
-  - [wordle](./powershell/lang/wordle/README.md)
+  - [wordle](./powershell/lang/wordle)
+
+### Python
+- [**pickle**](https://docs.python.org/3/library/pickle.html)
+  - [hangman](./python/pickle/hangman)
+
+### Rust
+- [**ratatui**](https://ratatui.rs/)
+  - [user-input](./rust/ratatui/user-input)
