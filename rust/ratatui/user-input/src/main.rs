@@ -338,17 +338,22 @@ impl App {
     }
 
     fn render(&self, frame: &mut Frame) {
+        let help_message = self.get_help_message();
+
+        let width = frame.area().width as usize;
+        let help_width = help_message.iter().map(|s| s.content.to_string()).collect::<String>().len();
+        let help_height = if help_width >= width { 2 } else { 1 };
+
         let vertical = Layout::vertical([
-            Constraint::Length(1),
+            Constraint::Length(help_height),
             Constraint::Length(3),
             Constraint::Min(1),
         ]);
 
         let [help_area, input_area, messages_area] = vertical.areas(frame.area());
 
-        let text = Text::from(Line::from(self.get_help_message()));
-        let help_message = Paragraph::new(text);
-        frame.render_widget(help_message, help_area);
+        let help_widget = Paragraph::new(Text::from(Line::from(help_message))).wrap(Wrap { trim: true });
+        frame.render_widget(help_widget, help_area);
 
         let input_text = if !self.input.is_empty() && matches!(self.mode, InputMode::Insert) {
             Span::raw(self.input.as_str())
@@ -356,7 +361,7 @@ impl App {
             Span::styled("Type your message here...", Style::default().gray())
         };
 
-        let input =
+        let input_widget =
             Paragraph::new(input_text).block(Block::bordered().title("Input").border_style(
                 match self.mode {
                     InputMode::Insert => Style::default().fg(Color::Green),
@@ -364,7 +369,7 @@ impl App {
                 },
             ));
 
-        frame.render_widget(input, input_area);
+        frame.render_widget(input_widget, input_area);
 
         match self.mode {
             InputMode::Insert => frame.set_cursor_position(Position::new(
@@ -405,7 +410,7 @@ impl App {
             })
             .collect();
 
-        let messages = List::new(message_list)
+        let messages_widget = List::new(message_list)
             .style(match self.mode {
                 InputMode::Move => Style::default().fg(Color::Blue),
                 InputMode::Edit => Style::default().fg(Color::Yellow),
@@ -413,7 +418,7 @@ impl App {
             })
             .block(Block::bordered().title("Messages"));
 
-        frame.render_widget(messages, messages_area);
+        frame.render_widget(messages_widget, messages_area);
 
         if self.show_delete_popup {
             let vertical = Layout::vertical([Constraint::Length(4)]).flex(Flex::Center);
