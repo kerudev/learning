@@ -1,7 +1,7 @@
 # rust/ratatui/table
 
 Inspired by:
-- Ratatui's table [example](https://github.com/ratatui/ratatui/tree/main/examples/apps/table)
+- ratatui/examples/apps > [table](https://github.com/ratatui/ratatui/tree/8d60e96/examples/apps/table)
 
 In this project I learned how to:
 - Work with `StatefulWidgets`.

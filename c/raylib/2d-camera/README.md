@@ -1,7 +1,7 @@
 # c/raylib/2d-camera
 
 Inspired by:
-- raylib > core > [2d camera example](https://github.com/raysan5/raylib/blob/e140aca1b5ce2595336aad4a2300033bd9a9a452/examples/core/core_2d_camera.c)
+- raylib > examples > core > [2d camera](https://github.com/raysan5/raylib/blob/e140aca/examples/core/core_2d_camera.c)
 
 In this project I learned how to:
 - Install and build dependencies for a C project.
