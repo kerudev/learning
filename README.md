@@ -20,9 +20,6 @@ programming languages or libraries I'm interested in.
 - **OpenGL**: I'm interested in rendering graphics.
   - Home: https://www.opengl.org/
 
-- **Raylib**: I've heard not a single bad comment about it. 
-  - Home: https://www.raylib.com/
-
 - **Clay**: modern layout library. Can render with raylib, WebGL, etc. 
   - Home: https://www.nicbarker.com/clay
 
@@ -60,19 +57,23 @@ to dip my toes into embedded programming.
 ## What I have learned
 
 ### C
-- [**lang**](https://en.cppreference.com/w/c/language)
+- **lang**: [docs](https://en.cppreference.com/w/c/language)
   - [hello-blank](./c/lang/hello-blank)
   - [rock-paper-scissors](./c/lang/rock-paper-scissors)
   - [todo-list](./c/lang/todo-list)
 
+- **raylib**: [docs](https://www.raylib.com/)
+  - [2d-camera](./c/raylib/2d-camera)
+
 ### PowerShell
-- [**lang**](https://learn.microsoft.com/en-us/powershell/scripting/how-to-use-docs?view=powershell-7.5)
+- **lang**: [docs](https://learn.microsoft.com/en-us/powershell/scripting/how-to-use-docs?view=powershell-7.5)
   - [wordle](./powershell/lang/wordle)
 
 ### Python
-- [**pickle**](https://docs.python.org/3/library/pickle.html)
+- **pickle**: [docs](https://docs.python.org/3/library/pickle.html)
   - [hangman](./python/pickle/hangman)
 
 ### Rust
-- [**ratatui**](https://ratatui.rs/)
+- **ratatui**: [docs](https://ratatui.rs/)
   - [user-input](./rust/ratatui/user-input)
+  - [table](./rust/ratatui/table)
