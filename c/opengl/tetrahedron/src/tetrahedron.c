@@ -34,6 +34,8 @@ void display() {
     glFlush();
 }
 
+// Sets up global attributes like clear color and drawing color, enables and
+// initializes any needed modes.
 void init() {
     glClearColor(0.1, 0.39, 0.88, 1.0);
     glColor3f(1.0, 1.0, 1.0);
@@ -45,7 +47,7 @@ void init() {
     // Set the camera lens perspective.
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glFrustum(-2, 2, -1.5, 1.5, 1, 40);
+    glFrustum(-2, 2, -2, 2, 1, 40);
 
     // Set up transforms:
     // First, rotate 70 degrees around y
