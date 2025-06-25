@@ -62,6 +62,9 @@ to dip my toes into embedded programming.
   - [rock-paper-scissors](./c/lang/rock-paper-scissors)
   - [todo-list](./c/lang/todo-list)
 
+- **opengl**: [docs](https://www.opengl.org/)
+  - [tetrahedron](./c/opengl/tetrahedron)
+
 - **raylib**: [docs](https://www.raylib.com/)
   - [2d-camera](./c/raylib/2d-camera)
 
