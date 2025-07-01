@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <string.h>
 
+int wireframe = 0;
+
 const char *vertexShaderSource = "#version 330 core\n"
     "layout (location = 0) in vec3 aPos;\n"
     "void main()\n"
@@ -17,11 +19,16 @@ const char *fragmentShaderSource = "#version 330 core\n"
     "}\n\0";
 
 int help() {
-    printf("Demo of some basic triangles examples with OpenGL.\n\n");
+    printf("Demo of some basic triangles examples with OpenGL.\n");
+    printf("Provide the --wire flag after the command to display in wireframe mode.\n\n");
 
     printf("The available commands are listed below:\n");
-    printf("- triangle  The most basic triangle example.\n");
+    printf("- tri       The most basic triangle example.\n");
     printf("- ebo       Example using two triangles to display how EBO works.\n");
+    printf("- ex1       Exercise 1: Draw 2 triangles next to each other.\n");
+
+    printf("\nFor example: ./build main tri\n");
+    printf("For example: ./build main ebo --wire\n");
 
     return 0;
 }
@@ -35,56 +42,14 @@ void processInput(GLFWwindow *window) {
         glfwSetWindowShouldClose(window, 1);
 }
 
-int triangle(GLFWwindow *window) {
-    // vertex shader
-    unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-    glCompileShader(vertexShader);
-
-    // check for shader compile errors
-    int success;
-    char infoLog[512];
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-    if (!success) {
-        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-        printf("ERROR::SHADER::VERTEX::COMPILATION_FAILED\n");
-    }
-
-    // fragment shader
-    unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-    glCompileShader(fragmentShader);
-
-    // check for shader compile errors
-    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-    if (!success) {
-        glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-        printf("ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n");
-    }
-
-    // link shaders
-    unsigned int shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
-    glLinkProgram(shaderProgram);
-
-    // check for linking errors
-    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-    if (!success) {
-        glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-        printf("ERROR::SHADER::PROGRAM::LINKING_FAILED\n");
-    }
-
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
-
+int triangle(GLFWwindow *window, unsigned int shaderProgram) {
     // vertex data (and buffer(s))
     float vertices[] = {
         -0.5f, -0.5f, 0.0f, // left  
          0.5f, -0.5f, 0.0f, // right 
          0.0f,  0.5f, 0.0f  // top   
     }; 
-    
+
     unsigned int VBO, VAO;
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
@@ -105,8 +70,8 @@ int triangle(GLFWwindow *window) {
     // unbind VAO so other VAO calls won't accidentally modify this VAO (rarely happens)
     glBindVertexArray(0); 
 
-    // uncomment this call to draw in wireframe polygons.
-    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    // draw in wireframe polygons.
+    if (wireframe) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     // render loop
     while(!glfwWindowShouldClose(window)) {
@@ -130,54 +95,11 @@ int triangle(GLFWwindow *window) {
     // optional: de-allocate all resources
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
-    glDeleteProgram(shaderProgram);
 
     return 0;
 }
 
-int ebo(GLFWwindow *window) {
-    // vertex shader
-    unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-    glCompileShader(vertexShader);
-
-    // check for shader compile errors
-    int success;
-    char infoLog[512];
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-    if (!success) {
-        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-        printf("ERROR::SHADER::VERTEX::COMPILATION_FAILED\n");
-    }
-
-    // fragment shader
-    unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-    glCompileShader(fragmentShader);
-
-    // check for shader compile errors
-    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-    if (!success) {
-        glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-        printf("ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n");
-    }
-
-    // link shaders
-    unsigned int shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
-    glLinkProgram(shaderProgram);
-
-    // check for linking errors
-    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-    if (!success) {
-        glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-        printf("ERROR::SHADER::PROGRAM::LINKING_FAILED\n");
-    }
-
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
-
+int ebo(GLFWwindow *window, unsigned int shaderProgram) {
     float vertices[] = {
          0.5f,  0.5f, 0.0f,  // top right
          0.5f, -0.5f, 0.0f,  // bottom right
@@ -216,8 +138,8 @@ int ebo(GLFWwindow *window) {
     // VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
     glBindVertexArray(0); 
 
-    // uncomment this call to draw in wireframe polygons.
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    // draw in wireframe polygons.
+    if (wireframe) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     // render loop
     while(!glfwWindowShouldClose(window)) {
@@ -243,22 +165,101 @@ int ebo(GLFWwindow *window) {
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
     glDeleteBuffers(1, &EBO);
-    glDeleteProgram(shaderProgram);
+
+    return 0;
+}
+
+/**
+ * 1. Try to draw 2 triangles next to each other using glDrawArrays by adding
+ * more vertices to your data.
+ * 
+ * + Use EBO for reusing vertices.
+ */
+int ex1(GLFWwindow *window, unsigned int shaderProgram) {
+    // vertex data (and buffer(s))
+    float vertices[] = {
+        // left triangle
+        -1.0f, -0.5f, 0.0f, // left
+        -0.5f,  0.5f, 0.0f, // top
+         0.0f, -0.5f, 0.0f, // right
+        // right triangle
+         1.0f, -0.5f, 0.0f, // right
+         0.5f,  0.5f, 0.0f  // top
+    };
+
+    unsigned int indices[] = {
+        0, 1, 2,    // left triangle
+        2, 3, 4,    // right triangle
+    };
+
+    unsigned VBO, VAO, EBO;
+
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
+    glGenBuffers(1, &EBO);
+    glBindVertexArray(VAO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0); 
+
+    // remember: do NOT unbind the EBO while a VAO is active as the bound element buffer object IS stored in the VAO; keep the EBO bound.
+    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+    glBindVertexArray(0); 
+
+    if (wireframe) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+    // render loop
+    while(!glfwWindowShouldClose(window)) {
+        // input
+        processInput(window);
+        
+        // render
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        // draw triangle
+        glUseProgram(shaderProgram);
+        glBindVertexArray(VAO);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        glBindVertexArray(0);
+
+        // glfw: swap buffers and poll IO events
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+    }
+
+    // optional: de-allocate all resources
+    glDeleteVertexArrays(1, &VAO);
+    glDeleteBuffers(1, &VBO);
+    glDeleteBuffers(1, &EBO);
 
     return 0;
 }
 
 int main(int argc, char **argv) {
     if (argc < 2) {
-        printf("Provide at least one argument.\n");
+        help();
         return 1;
-    }    
+    }
 
     char *command = argv[1];
-    int exit_code = 0;
 
     if (strcmp(command, "-h") == 0 || strcmp(command, "--help") == 0) {
-        return help();
+        help();
+        return 0;
+    }
+
+    if (argc > 2 && strcmp(argv[2], "--wire") == 0) {
+        wireframe = 1;
     }
 
     // glfw: initialize and configure
@@ -289,16 +290,66 @@ int main(int argc, char **argv) {
         return -1;
     }
 
-    if (strcmp(command, "triangle") == 0) {
-        exit_code = triangle(window);
+    // vertex shader
+    unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+    glCompileShader(vertexShader);
+
+    // check for shader compile errors
+    int success;
+    char infoLog[512];
+    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+    if (!success) {
+        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+        printf("ERROR::SHADER::VERTEX::COMPILATION_FAILED\n");
+    }
+
+    // fragment shader
+    unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
+    glCompileShader(fragmentShader);
+
+    // check for shader compile errors
+    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+    if (!success) {
+        glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
+        printf("ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n");
+    }
+
+    // link shaders
+    unsigned int shaderProgram = glCreateProgram();
+    glAttachShader(shaderProgram, vertexShader);
+    glAttachShader(shaderProgram, fragmentShader);
+    glLinkProgram(shaderProgram);
+
+    // check for linking errors
+    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+    if (!success) {
+        glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
+        printf("ERROR::SHADER::PROGRAM::LINKING_FAILED\n");
+    }
+
+    glDeleteShader(vertexShader);
+    glDeleteShader(fragmentShader);
+
+
+    int exit_code = 0;
+
+    if (strcmp(command, "tri") == 0) {
+        exit_code = triangle(window, shaderProgram);
     }
     else if (strcmp(command, "ebo") == 0) {
-        exit_code = ebo(window);
+        exit_code = ebo(window, shaderProgram);
+    }
+    else if (strcmp(command, "ex1") == 0) {
+        exit_code = ex1(window, shaderProgram);
     }
     else {
         printf("The %s example doesn't exist. Please use -h or --help.\n", command);
         exit_code = 1;
     }
+
+    glDeleteProgram(shaderProgram);
 
     // glfw: terminate and clear GLFW resources
     glfwTerminate();
