@@ -4,9 +4,14 @@ Example from https://learnopengl.com/Getting-started/Hello-Window
 
 In this project I learned how to:
 - Use GLAD and GLFW to work together with OpenGL.
-- Generate glad.h (https://glad.dav1d.de)
-- Compile glad.c into a library (ar rcs libglad.a glad.o, then move libglad.a to /usr/lib)
-- Link with glad as a gcc flag using -lglad.
+- Generate glad (https://glad.dav1d.de)
+- Move glad.h to make it available globally
+    - `sudo mv glad.h /usr/include/glad`
+- Compile glad.c into a static library
+    - `gcc glad.c -o glad.o`
+    - `ar rcs libglad.a glad.o`
+    - `sudo mv libglad.a /usr/lib`
+- Link the with the glad library (`-lglad`).
 - Create a window.
 - Resize a window.
 

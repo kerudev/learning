@@ -65,6 +65,10 @@ to dip my toes into embedded programming.
 - **opengl**: [docs](https://www.opengl.org/)
   - [tetrahedron](./c/opengl/tetrahedron)
 
+- **learnopengl**: [home](https://learnopengl.com/)
+  - [00_window](./c/opengl/learnopengl/00_window)
+  - [01_triangle](./c/opengl/learnopengl/01_triangle)
+
 - **raylib**: [docs](https://www.raylib.com/)
   - [2d-camera](./c/raylib/2d-camera)
 
