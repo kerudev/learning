@@ -19,7 +19,7 @@ float alpha = 0.0f;
 
 int help() {
     printf("Demo of some basic texture examples with OpenGL.\n");
-    printf("Use the --wall flag to change the texture.\n\n");
+    printf("Use the --wall flag to change the background texture.\n\n");
 
     printf("The available commands are listed below:\n");
     printf("- tex1      Example using a texture.\n");
@@ -172,7 +172,7 @@ int texture(GLFWwindow* window, const Shader shader, int num) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     // load image, create texture and generate mipmaps
-    const char *texturePath = (wall) ? "textures/wall.jpg" : TEX_WOOD;
+    const char *texturePath = (wall) ? TEX_WALL : TEX_WOOD;
     int width, height, nrChannels;
     unsigned char *data = stbi_load(texturePath, &width, &height, &nrChannels, 0); 
 
