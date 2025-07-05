@@ -52,7 +52,7 @@ Shader createShader(const char* vertexPath, const char* fragmentPath) {
     
     // read fragment shader
     const char *fragmentSource = readLines(fragmentPath);
-    if (!vertexSource) {
+    if (!fragmentSource) {
         return (Shader){ .id = 0 };
     }
 
@@ -69,7 +69,7 @@ Shader createShader(const char* vertexPath, const char* fragmentPath) {
     glGetShaderiv(vertex, GL_COMPILE_STATUS, &success);
     if(!success) {
         glGetShaderInfoLog(vertex, 512, NULL, infoLog);
-        strcpy(infoLog, "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n");
+        printf("ERROR::SHADER::VERTEX::COMPILATION_FAILED\n%s\n", infoLog);
     };
 
     // compile fragment shader
@@ -80,7 +80,7 @@ Shader createShader(const char* vertexPath, const char* fragmentPath) {
     glGetShaderiv(fragment, GL_COMPILE_STATUS, &success);
     if(!success) {
         glGetShaderInfoLog(fragment, 512, NULL, infoLog);
-        strcpy(infoLog, "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n");
+        printf("ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n%s\n", infoLog);
     };
 
     // shader Program
@@ -92,7 +92,7 @@ Shader createShader(const char* vertexPath, const char* fragmentPath) {
     glGetProgramiv(id, GL_LINK_STATUS, &success);
     if(!success) {
         glGetProgramInfoLog(id, 512, NULL, infoLog);
-        strcpy(infoLog, "ERROR::SHADER::PROGRAM::COMPILATION_FAILED\n");
+        printf("ERROR::SHADER::PROGRAM::COMPILATION_FAILED\n%s\n", infoLog);
     }
 
     // delete shaders

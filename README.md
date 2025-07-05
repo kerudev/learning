@@ -68,6 +68,8 @@ to dip my toes into embedded programming.
 - **learnopengl**: [home](https://learnopengl.com/)
   - [00_window](./c/opengl/learnopengl/00_window)
   - [01_triangle](./c/opengl/learnopengl/01_triangle)
+  - [02_shaders](./c/opengl/learnopengl/02_shaders)
+  - [03_textures](./c/opengl/learnopengl/03_textures)
 
 - **raylib**: [docs](https://www.raylib.com/)
   - [2d-camera](./c/raylib/2d-camera)
