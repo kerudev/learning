@@ -15,9 +15,11 @@ int help() {
 
     std::cout << "The available commands are listed below:" << std::endl;
     std::cout << "- tra1      Example using rotation and translate transformations." << std::endl;
-    std::cout << "- tra2      Example using a texture and coloring over it.\n" << std::endl;
-    
-    std::cout << "For example: ./build/main tra1" << std::endl;
+    std::cout << "- tra2      Example using a texture and coloring over it." << std::endl;
+    std::cout << "- ex1       Exercise 1: swap the order of rotate and translate." << std::endl;
+    std::cout << "- ex2       Exercise 2: move container using transforms and scale with the sin function." << std::endl;
+
+    std::cout << "\nFor example: ./build/main tra1" << std::endl;
 
     return 0;
 }
@@ -167,16 +169,20 @@ int transformation(GLFWwindow *window, Shader shader, int num) {
 
         // create transformations
         glm::mat4 transform = glm::mat4(1.0f);
-        
+
         if (num == 1) {
             transform = glm::rotate(transform, glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
             transform = glm::scale(transform, glm::vec3(0.5, 0.5, 0.5));
         }
-        else if (num == 2) {
+        else if (num == 3) {
+            transform = glm::rotate(transform, (float) glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
             transform = glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
-            transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
         }
-        
+        else {  // 2, 4
+            transform = glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
+            transform = glm::rotate(transform, (float) glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+        }
+
         shader.use();
         unsigned int transformLoc = glGetUniformLocation(shader.id, "transform");
         glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
@@ -184,6 +190,18 @@ int transformation(GLFWwindow *window, Shader shader, int num) {
         // render container
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+        if (num == 4) {
+            transform = glm::mat4(1.0f);
+            transform = glm::translate(transform, glm::vec3(-0.5f, 0.5f, 0.0f)); 
+
+            float scaleRatio = (float) sin(glfwGetTime());
+            transform = glm::scale(transform, glm::vec3(scaleRatio, scaleRatio, scaleRatio));
+
+            glUniformMatrix4fv(transformLoc, 1, GL_FALSE, &transform[0][0]);
+
+            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        }
 
         // swap buffers
         glfwSwapBuffers(window);
@@ -231,6 +249,12 @@ int main(int argc, char const *argv[]) {
     }
     else if (strcmp(command, "tra2") == 0) {
         exit_code = transformation(window, shader, 2);
+    }
+    else if (strcmp(command, "ex1") == 0) {
+        exit_code = transformation(window, shader, 3);
+    }
+    else if (strcmp(command, "ex2") == 0) {
+        exit_code = transformation(window, shader, 4);
     }
 
     glDeleteProgram(shader.id);
