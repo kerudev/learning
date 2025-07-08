@@ -10,28 +10,30 @@
 
 #include "shader.h"
 
-const char *TEX_WALL = "textures/wall.jpg";
-const char *TEX_WOOD = "textures/container.jpg";
-const char *TEX_FACE = "textures/awesomeface.png";
+const char *TEX_WALL = "../textures/wall.jpg";
+const char *TEX_WOOD = "../textures/container.jpg";
+const char *TEX_FACE = "../textures/awesomeface.png";
 
 int wall = 0;
 float alpha = 0.0f;
 
 int help() {
-    printf("Demo of some basic texture examples with OpenGL.\n");
-    printf("Use the --wall flag to change the background texture.\n\n");
+    printf(
+        "Demo of some basic texture examples with OpenGL.\n"
+        "Use the --wall flag to change the background texture.\n\n"
 
-    printf("The available commands are listed below:\n");
-    printf("- tex1      Example using a texture.\n");
-    printf("- tex2      Example using a texture and coloring over it.\n");
-    printf("- tex3      Example using uniform variables.\n");
-    printf("- ex1       Exercise 1: Awesome face looks the other way.\n");
-    printf("- ex2       Exercise 2: Display 4 smiley faces on a single container image clamped at its edge.\n");
-    printf("- ex3       Exercise 3: Display only the center pixels of the textures (GL_NEAREST).\n");
-    printf("- ex4       Exercise 4: Change alpha value using up and down arrow keys.\n\n");
-    
-    printf("For example: ./build/main tex1\n");
-    printf("For example: ./build/main tex2 --wall\n");
+        "The available commands are listed below:\n"
+        "- tex1     Example using a texture.\n"
+        "- tex2     Example using a texture and coloring over it.\n"
+        "- tex3     Example using uniform variables.\n"
+        "- ex1      Exercise 1: Awesome face looks the other way.\n"
+        "- ex2      Exercise 2: Display 4 smiley faces on a single container image clamped at its edge.\n"
+        "- ex3      Exercise 3: Display only the center pixels of the textures (GL_NEAREST).\n"
+        "- ex4      Exercise 4: Change alpha value using up and down arrow keys.\n\n"
+        
+        "For example: ./build/main tex1\n"
+        "For example: ./build/main tex2 --wall\n"
+    );
 
     return 0;
 }
@@ -294,29 +296,23 @@ int exercise(GLFWwindow* window, const Shader shader, int num) {
     glBindTexture(GL_TEXTURE_2D, texture1);
 
     // set the texture wrapping parameters
-    switch (num) {
-    case 2:
+    if (num == 2) {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        break;
-
-    default:
+    }
+    else {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        break;
     }
 
     // set texture filtering parameters
-    switch (num) {
-    case 3:
+    if (num == 3) {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        break;
-    
-    default:
+    }
+    else {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        break;
     }
 
     // load image, create texture and generate mipmaps
@@ -343,16 +339,13 @@ int exercise(GLFWwindow* window, const Shader shader, int num) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
     // set texture filtering parameters
-    switch (num) {
-    case 3:
+    if (num == 3) {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        break;
-    
-    default:
+    }
+    else {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        break;
     }
 
     // load image, create texture and generate mipmaps

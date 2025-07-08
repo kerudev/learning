@@ -11,6 +11,8 @@ typedef struct {
 Shader createShader(const char* name);
 Shader createShaderFromPaths(const char* vertexPath, const char* fragmentPath);
 
+char *readShaderFile(const char *path);
+
 void useShader(const Shader* shader);
 
 void setShaderBool(const Shader* shader, const char* name, bool value);

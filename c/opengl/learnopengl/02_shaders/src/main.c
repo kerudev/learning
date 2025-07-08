@@ -8,14 +8,16 @@
 #include "shader.h"
 
 int help() {
-    printf("Demo of some basic shader examples with OpenGL.\n\n");
+    printf(
+        "Demo of some basic shader examples with OpenGL.\n\n"
 
-    printf("The available commands are listed below:\n");
-    printf("- uni       Example using uniform variables.\n");
-    printf("- attr      Example using vertex and color attributes.\n");
-    printf("- ex1       Exercise 1: Upside down triangle.\n");
-    printf("- ex2       Exercise 2: Triangle moved with X offset.\n");
-    printf("- ex3       Exercise 3: Output the vertex position to the fragment shader.\n");
+        "The available commands are listed below:\n"
+        "- uni      Example using uniform variables.\n"
+        "- attr     Example using vertex and color attributes.\n"
+        "- ex1      Exercise 1: Upside down triangle.\n"
+        "- ex2      Exercise 2: Triangle moved with X offset.\n"
+        "- ex3      Exercise 3: Output the vertex position to the fragment shader.\n"
+    );
 
     return 0;
 }
@@ -58,19 +60,7 @@ GLFWwindow *initWindow() {
     return window;
 }
 
-unsigned int buildShaderProgram(const char *shaderName) {
-    char vertexPath[64];
-    char fragmentPath[64];
-
-    sprintf(vertexPath, "shaders/vertex/%s.vert", shaderName);
-    sprintf(fragmentPath, "shaders/fragment/%s.frag", shaderName);
-
-    Shader shader = createShader(vertexPath, fragmentPath);
-    
-    return shader.id;
-}
-
-int uniform(GLFWwindow *window, unsigned int shaderProgram) {
+int uniform(GLFWwindow *window, Shader shader) {
     float vertices[] = {
         -0.5f, -0.5f, 0.0f, // left
          0.5f, -0.5f, 0.0f, // right
@@ -96,11 +86,11 @@ int uniform(GLFWwindow *window, unsigned int shaderProgram) {
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glUseProgram(shaderProgram);
+        useShader(&shader);
 
         float timeValue = glfwGetTime();
         float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
-        int vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
+        int vertexColorLocation = glGetUniformLocation(&shader.id, "ourColor");
         glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
 
         glBindVertexArray(VAO);
@@ -116,7 +106,7 @@ int uniform(GLFWwindow *window, unsigned int shaderProgram) {
     return 0;
 }
 
-int attributes(GLFWwindow *window, unsigned int shaderProgram) {
+int attributes(GLFWwindow *window, Shader shader) {
     float vertices[] = {
         // positions         // colors
          0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // bottom right
@@ -146,7 +136,7 @@ int attributes(GLFWwindow *window, unsigned int shaderProgram) {
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glUseProgram(shaderProgram);
+        useShader(&shader);
 
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 3);
@@ -161,7 +151,7 @@ int attributes(GLFWwindow *window, unsigned int shaderProgram) {
     return 0;
 }
 
-int exercise(GLFWwindow *window, unsigned int shaderProgram, int num) {
+int exercise(GLFWwindow *window, Shader shader, int num) {
     float vertices[] = {
         // positions         // colors
          0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // bottom right
@@ -191,12 +181,10 @@ int exercise(GLFWwindow *window, unsigned int shaderProgram, int num) {
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glUseProgram(shaderProgram);
+        useShader(&shader);
 
-        if (num == 2) {
-            int offset = glGetUniformLocation(shaderProgram, "offset");
-            glUniform1f(offset, 1.0f);
-        }
+        if (num == 2)
+            setShaderFloat(&shader, "offset", 1.0f);
 
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 3);
@@ -231,9 +219,9 @@ int main(int argc, char const *argv[]) {
         return 1;
     };
 
-    unsigned int shaderProgram = buildShaderProgram(command);
+    Shader shader = createShader(command);
 
-    if (!shaderProgram) {
+    if (!shader.id) {
         printf("Failed to create the shader program for '%s'\n", command);
         return 1;
     }
@@ -241,20 +229,20 @@ int main(int argc, char const *argv[]) {
     int exit_code = 0;
 
     if (strcmp(command, "uni") == 0) {
-        exit_code = uniform(window, shaderProgram);
+        exit_code = uniform(window, shader);
     }
     else if (strcmp(command, "attr") == 0) {
-        exit_code = attributes(window, shaderProgram);
+        exit_code = attributes(window, shader);
     }
     else if (strcmp(command, "ex1") == 0) {
         // 1. Adjust the vertex shader so that the triangle is upside down
-        exit_code = exercise(window, shaderProgram, 1);
+        exit_code = exercise(window, shader, 1);
     }
     else if (strcmp(command, "ex2") == 0) {
         // 2. Specify a horizontal offset via a uniform and move the triangle 
         // to the right side of the screen in the vertex shader using this
         // offset value
-        exit_code = exercise(window, shaderProgram, 2);
+        exit_code = exercise(window, shader, 2);
     }
     else if (strcmp(command, "ex3") == 0) {
         // 3. Output the vertex position to the fragment shader using the out
@@ -262,10 +250,10 @@ int main(int argc, char const *argv[]) {
         // (see how even the vertex position values are interpolated across the
         // triangle). Once you managed to do this; try to answer the following
         // question: why is the bottom-left side of our triangle black?
-        exit_code = exercise(window, shaderProgram, 3);
+        exit_code = exercise(window, shader, 3);
     }
 
-    glDeleteProgram(shaderProgram);
+    glDeleteProgram(shader.id);
     glfwTerminate();
 
     return exit_code;

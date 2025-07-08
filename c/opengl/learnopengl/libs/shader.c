@@ -1,11 +1,13 @@
 #include <glad/glad.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+
 #include "shader.h"
 
-char *readLines(const char *path) {
+char *readShaderFile(const char *path) {
     FILE *f = fopen(path, "r");
 
     if (!f) {
@@ -43,15 +45,25 @@ char *readLines(const char *path) {
     return content;
 }
 
-Shader createShader(const char* vertexPath, const char* fragmentPath) {
+Shader createShader(const char *shaderName) {
+    char vertexPath[64];
+    char fragmentPath[64];
+
+    sprintf(vertexPath, "shaders/vertex/%s.vert", shaderName);
+    sprintf(fragmentPath, "shaders/fragment/%s.frag", shaderName);
+
+    return createShaderFromPaths(vertexPath, fragmentPath);
+}
+
+Shader createShaderFromPaths(const char* vertexPath, const char* fragmentPath) {
     // read vertex shader
-    const char *vertexSource = readLines(vertexPath);
+    const char *vertexSource = readShaderFile(vertexPath);
     if (!vertexSource) {
         return (Shader){ .id = 0 };
     }
     
     // read fragment shader
-    const char *fragmentSource = readLines(fragmentPath);
+    const char *fragmentSource = readShaderFile(fragmentPath);
     if (!fragmentSource) {
         return (Shader){ .id = 0 };
     }
