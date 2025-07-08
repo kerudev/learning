@@ -10,16 +10,19 @@
 
 #include "shader.hpp"
 
+const char *TEX_CONTAINER = "../textures/container.jpg";
+const char *TEX_FACE = "../textures/awesomeface.png";
+
 int help() {
-    std::cout << "Demo of some basic transformation examples with OpenGL.\n" << std::endl;
+    std::cout << R"(Demo of some basic transformation examples with OpenGL."
 
-    std::cout << "The available commands are listed below:" << std::endl;
-    std::cout << "- tra1      Example using rotation and translate transformations." << std::endl;
-    std::cout << "- tra2      Example using a texture and coloring over it." << std::endl;
-    std::cout << "- ex1       Exercise 1: swap the order of rotate and translate." << std::endl;
-    std::cout << "- ex2       Exercise 2: move container using transforms and scale with the sin function." << std::endl;
+The available commands are listed below: 
+- tra1      Example using rotation and translate transformations. 
+- tra2      Example using a texture and coloring over it. 
+- ex1       Exercise 1: swap the order of rotate and translate. 
+- ex2       Exercise 2: move container using transforms and scale with the sin function. 
 
-    std::cout << "\nFor example: ./build/main tra1" << std::endl;
+For example: ./build/main tra1)" << std::endl;
 
     return 0;
 }
@@ -109,7 +112,7 @@ int transformation(GLFWwindow *window, Shader shader, int num) {
 
     // load image, create texture and generate mipmaps
     int width, height, nrChannels;
-    unsigned char *data = stbi_load("textures/container.jpg", &width, &height, &nrChannels, 0); 
+    unsigned char *data = stbi_load(TEX_CONTAINER, &width, &height, &nrChannels, 0); 
 
     if (!data) {
         std::cout << "Failed to load texture1" << std::endl;
@@ -135,7 +138,7 @@ int transformation(GLFWwindow *window, Shader shader, int num) {
 
     // load image, create texture and generate mipmaps
     stbi_set_flip_vertically_on_load(true);
-    data = stbi_load("textures/awesomeface.png", &width, &height, &nrChannels, 0); 
+    data = stbi_load(TEX_FACE, &width, &height, &nrChannels, 0); 
 
     if (!data) {
         std::cout << "Failed to load texture2" << std::endl;

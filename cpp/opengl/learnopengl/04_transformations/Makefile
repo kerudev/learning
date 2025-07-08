@@ -1,5 +1,5 @@
 CC = c++
-CFLAGS = -Wall -Wextra -Iinclude
+CFLAGS = -Wall -Wextra -I../include
 LDFLAGS = -lglfw -lglad -lm
 
 SRC_DIR = src

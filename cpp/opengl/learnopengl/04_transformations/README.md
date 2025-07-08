@@ -1,4 +1,4 @@
-# c/opengl/learnopengl/03_textures
+# cpp/opengl/learnopengl/04_transformations
 
 Example and exercises from https://learnopengl.com/Getting-started/Transformations
 
