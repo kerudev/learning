@@ -10,6 +10,8 @@
 
 #include "shader.hpp"
 
+unsigned int num = 0;
+
 // window
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
@@ -44,10 +46,12 @@ int help() {
     std::cout << R"(Demo of some basic camera examples with OpenGL.
 
 The available commands are listed below:
-- cam1    Rotates the camera around.
-- cam2    Move the camera around (WASD) (  no frame time calculation).
-- cam3    Move the camera around (WASD) (with frame time calculation).
-- cam4    Same as cam3, but with zoom controlled by mouse wheel.
+- cam1      Rotates the camera around.
+- cam2      Move the camera around (WASD) (  no frame time calculation).
+- cam3      Move the camera around (WASD) (with frame time calculation).
+- cam4      Same as cam3, but with zoom controlled by mouse wheel.
+- ex1       Move camera, but not on the y axis.
+- ex2       Handmade implementation of the lookAt function.
 
 For example: ./build/main cam1)" << std::endl;
 
@@ -98,9 +102,8 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
 }
 
 void processInput(GLFWwindow *window) {
-    if (deltaTime) {
+    if (deltaTime)
         cameraSpeed = 2.5f * deltaTime;
-    }
 
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, 1);
@@ -116,6 +119,9 @@ void processInput(GLFWwindow *window) {
 
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+
+    if (num == 5)
+        cameraPos.y = 0.0f;
 }
 
 GLFWwindow *initWindow() {
@@ -180,7 +186,39 @@ int readTexture(const char *path, GLuint format, GLboolean flip) {
     return 0;
 }
 
-int camera(GLFWwindow *window, Shader shader, int num) {
+// Custom implementation of the LookAt function
+glm::mat4 calculate_lookAt(glm::vec3 position, glm::vec3 target, glm::vec3 worldUp) {
+    // 1. Position = known
+    // 2. Calculate cameraDirection
+    glm::vec3 zaxis = glm::normalize(position - target);
+    // 3. Get positive right axis vector
+    glm::vec3 xaxis = glm::normalize(glm::cross(glm::normalize(worldUp), zaxis));
+    // 4. Calculate camera up vector
+    glm::vec3 yaxis = glm::cross(zaxis, xaxis);
+
+    // Create translation and rotation matrix
+    // In glm we access elements as mat[col][row] due to column-major layout
+    glm::mat4 translation = glm::mat4(1.0f); // Identity matrix by default
+    translation[3][0] = -position.x; // Fourth column, first row
+    translation[3][1] = -position.y;
+    translation[3][2] = -position.z;
+
+    glm::mat4 rotation = glm::mat4(1.0f);
+    rotation[0][0] = xaxis.x; // First column, first row
+    rotation[1][0] = xaxis.y;
+    rotation[2][0] = xaxis.z;
+    rotation[0][1] = yaxis.x; // First column, second row
+    rotation[1][1] = yaxis.y;
+    rotation[2][1] = yaxis.z;
+    rotation[0][2] = zaxis.x; // First column, third row
+    rotation[1][2] = zaxis.y;
+    rotation[2][2] = zaxis.z; 
+
+    // Return lookAt matrix as combination of translation and rotation matrix
+    return rotation * translation; // Remember to read from right to left (first translation then rotation)
+}
+
+int camera(GLFWwindow *window, Shader shader) {
     float vertices[] = {
         -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
          0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
@@ -241,7 +279,7 @@ int camera(GLFWwindow *window, Shader shader, int num) {
     glEnable(GL_DEPTH_TEST);
     // glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);  // disable cursor
 
-    if (num == 4) {
+    if (num <= 4) {
         glfwSetCursorPosCallback(window, mouse_callback);
         glfwSetScrollCallback(window, scroll_callback);
     }
@@ -282,7 +320,7 @@ int camera(GLFWwindow *window, Shader shader, int num) {
     // render loop
     while (!glfwWindowShouldClose(window)) {
         // per-frame time logic
-        if (num == 3 || num == 4) {
+        if (num <= 3) {
             float currentFrame = glfwGetTime();
             deltaTime = currentFrame - lastFrame;
             lastFrame = currentFrame;
@@ -318,11 +356,23 @@ int camera(GLFWwindow *window, Shader shader, int num) {
                 glm::vec3(0.0f, 1.0f, 0.0f)
             );
         }
-        else if (num == 2 || num == 3 || num == 4) {
+        else if (num == 6) {
+            float radius = 10.0f;
+            float time = glfwGetTime();
+            float camX = static_cast<float>(sin(time) * radius);
+            float camZ = static_cast<float>(cos(time) * radius);
+
+            view = calculate_lookAt(
+                glm::vec3(camX, 0.0f, camZ),
+                glm::vec3(0.0f, 0.0f, 0.0f),
+                glm::vec3(0.0f, 1.0f, 0.0f)
+            );
+        }
+        else {
             view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
         }
 
-        if (num == 4) {
+        if (num <= 4) {
             glm::mat4 projection = glm::perspective(glm::radians(fov), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
             shader.setMat4("projection", projection);
         }
@@ -381,20 +431,14 @@ int main(int argc, char const *argv[]) {
         return 1;
     }
 
-    int exit_code = 0;
+    if      (strcmp(command, "cam1") == 0) num = 1;
+    else if (strcmp(command, "cam2") == 0) num = 2;
+    else if (strcmp(command, "cam3") == 0) num = 3;
+    else if (strcmp(command, "cam4") == 0) num = 4;
+    else if (strcmp(command,  "ex1") == 0) num = 5;
+    else if (strcmp(command,  "ex2") == 0) num = 6;
 
-    if (strcmp(command, "cam1") == 0) {
-        exit_code = camera(window, shader, 1);
-    }
-    else if (strcmp(command, "cam2") == 0) {
-        exit_code = camera(window, shader, 2);
-    }
-    else if (strcmp(command, "cam3") == 0) {
-        exit_code = camera(window, shader, 3);
-    }
-    else if (strcmp(command, "cam4") == 0) {
-        exit_code = camera(window, shader, 4);
-    }
+    int exit_code = camera(window, shader);
 
     glDeleteProgram(shader.id);
     glfwTerminate();
