@@ -92,6 +92,8 @@ to dip my toes into embedded programming.
 - **learnopengl**: [home](https://learnopengl.com/)
   - [first part](./c/opengl/learnopengl) (lessons use C++ libraries, so I moved to C++ to save time)
   - [04_transformations](./cpp/opengl/learnopengl/04_transformations/)
+  - [05_coordinate_systems](./cpp/opengl/learnopengl/05_coordinate_systems/)
+  - [06_camera](./cpp/opengl/learnopengl/06_camera/)
 
 ### PowerShell
 - **lang**: [docs](https://learn.microsoft.com/en-us/powershell/scripting/how-to-use-docs?view=powershell-7.5)
