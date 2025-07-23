@@ -1,17 +1,13 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h>
-
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+#include <stdio.h>
+#include <string.h>
 
 #include "shader.hpp"
 #include "camera.hpp"
 
-int num = 0;
+char *argument = NULL;
 
 // window
 const unsigned int SCR_WIDTH = 800;
@@ -31,16 +27,57 @@ bool firstMouse = true;
 
 // lighting
 glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
+float ambientStrength = 0.1;
+float specularStrength = 0.5;
 
 int help() {
     std::cout << R"(Demo of some basic lighting examples with OpenGL.
 
 The available commands are listed below:
-- light1    
+- light1    Basic lighting on a cube using the Phong model.
+- ex1       Move the light source around to change its effect.
+- ex2       Different values for ambient and specular strengths.
+- ex3       Phong shading in view space instead of world space.
+- ex4       Gouraud shading instead of Phong shading.
 
 For example: ./build/main light1)" << std::endl;
 
     return 0;
+}
+
+void process_args(int argc, char const *argv[]) {
+    if (argc < 2) {
+        printf("Please provide an argument.\n\n");
+        help();
+        exit(1);
+    }
+
+    const char *command = argv[1];
+
+    if (strcmp(command, "-h") == 0 || strcmp(command, "--help") == 0) {
+        help();
+        exit(0);
+    }
+
+    char *arguments[] = {
+        "light1",
+        "ex1",
+        "ex2",
+        "ex3",
+        "ex4"
+    };
+
+    size_t arguments_size = sizeof(arguments) / sizeof(arguments[0]);
+
+    for (size_t i = 0; i < arguments_size; i++) {
+        if (strcmp(command, arguments[i]) == 0) argument = arguments[i];
+    }
+
+    if (!argument) {
+        printf("Unknown argument: %s\n", argv[1]);
+        printf("Use --help\n");
+        exit(1);
+    }
 }
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
@@ -122,7 +159,7 @@ GLFWwindow *initWindow() {
     return window;
 }
 
-int light(GLFWwindow *window, Shader cubeShader, Shader lightShader) {
+int chapter(GLFWwindow *window, Shader cubeShader, Shader lightShader) {
     float vertices[] = {
         -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
          0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
@@ -212,7 +249,18 @@ int light(GLFWwindow *window, Shader cubeShader, Shader lightShader) {
         cubeShader.setVec3("objectColor", 1.0f, 0.5f, 0.31f);
         cubeShader.setVec3("lightColor",  1.0f, 1.0f, 1.0f);
         cubeShader.setVec3("lightPos", lightPos);
-        cubeShader.setVec3("viewPos", camera.position); 
+        cubeShader.setVec3("viewPos", camera.position);
+
+        // changes the light's components strengths to visualize their effect
+        if (strcmp(argument, "ex2") == 0) {
+            lightPos.x = 0.5f;
+            lightPos.y = 0.5f;
+            ambientStrength = sin(currentFrame) * 2.0f;
+            specularStrength = sin(-currentFrame) * 2.0f;
+        }
+
+        cubeShader.setFloat("ambientStrength", ambientStrength);
+        cubeShader.setFloat("specularStrength", specularStrength);
 
         // view/projection transformations
         glm::mat4 projection = glm::perspective(glm::radians(camera.zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
@@ -228,7 +276,6 @@ int light(GLFWwindow *window, Shader cubeShader, Shader lightShader) {
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
-
         // also draw the lamp object
         lightShader.use();
         lightShader.setMat4("projection", projection);
@@ -237,6 +284,13 @@ int light(GLFWwindow *window, Shader cubeShader, Shader lightShader) {
         model = glm::mat4(1.0f);
         model = glm::translate(model, lightPos);
         model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
+
+        // moves the light cube around to change the lighting's effect 
+        if (strcmp(argument, "ex1") == 0) {
+            lightPos.x = sin(currentFrame) * 2.0f + 1.0f;
+            lightPos.y = sin(currentFrame / 2.0f);
+        }
+
         lightShader.setMat4("model", model);
 
         glBindVertexArray(lightVAO);
@@ -255,17 +309,7 @@ int light(GLFWwindow *window, Shader cubeShader, Shader lightShader) {
 }
 
 int main(int argc, char const *argv[]) {
-    if (argc < 2) {
-        help();
-        return 1;
-    }
-
-    const char *command = argv[1];
-
-    if (strcmp(command, "-h") == 0 || strcmp(command, "--help") == 0) {
-        help();
-        return 0;
-    }
+    process_args(argc, argv);
 
     GLFWwindow *window = initWindow();
 
@@ -274,7 +318,13 @@ int main(int argc, char const *argv[]) {
         return 1;
     };
 
-    Shader cubeShader = Shader::createShader("cube");
+    const char *cubeShaderName = (strcmp(argument, "ex3") == 0)
+        ? "ex3"
+        : (strcmp(argument, "ex4") == 0)
+            ? "gouraud"
+            : "cube";
+            
+    Shader cubeShader = Shader::createShader(cubeShaderName);
     Shader lightShader = Shader::createShader("light");
 
     if (!cubeShader.id) {
@@ -282,16 +332,7 @@ int main(int argc, char const *argv[]) {
         return 1;
     }
 
-    if      (strcmp(command, "light1") == 0) num = 1;
-    else    num = -1;
-
-    if (num < 0) {
-        std::cout << "Unknown option: " << command << std::endl;
-        std::cout << "Use --help" << std::endl;
-        return 1;
-    }
-
-    int exit_code = light(window, cubeShader, lightShader);
+    int exit_code = chapter(window, cubeShader, lightShader);
 
     glDeleteProgram(cubeShader.id);
     glDeleteProgram(lightShader.id);
