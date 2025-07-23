@@ -5,7 +5,7 @@ programming languages or libraries I'm interested in.
 
 ## The workflow
 
-To work a new branch:
+To work on a new branch:
 
 ```sh
 git checkout -b <branch>
@@ -13,11 +13,19 @@ mkdir -p $(git branch --show-current)
 code $(git branch --show-current)
 ```
 
+To make a new commit:
+
+```sh
+git commit -m "[$(git branch --show-current)] ..."
+```
+
 To go back to the top level:
 
 ```sh
 code $(git rev-parse --show-toplevel)
 ```
+
+Or you can use aliases to do all that, as me :)
 
 ## What I want to learn
 
@@ -83,7 +91,7 @@ to dip my toes into embedded programming.
   - [01_triangle](./c/opengl/learnopengl/01_triangle)
   - [02_shaders](./c/opengl/learnopengl/02_shaders)
   - [03_textures](./c/opengl/learnopengl/03_textures)
-  - [second part](./cpp/opengl/learnopengl)
+  - [second part](./cpp/opengl/learnopengl) (lessons use C++ libraries, so I moved to C++ to save time)
 
 - **raylib**: [docs](https://www.raylib.com/)
   - [2d-camera](./c/raylib/2d-camera)
@@ -94,6 +102,8 @@ to dip my toes into embedded programming.
   - [04_transformations](./cpp/opengl/learnopengl/04_transformations/)
   - [05_coordinate_systems](./cpp/opengl/learnopengl/05_coordinate_systems/)
   - [06_camera](./cpp/opengl/learnopengl/06_camera/)
+  - [10_colors](./cpp/opengl/learnopengl/10_colors/)
+  - [11_basic_lighting](./cpp/opengl/learnopengl/11_basic_lighting/)
 
 ### PowerShell
 - **lang**: [docs](https://learn.microsoft.com/en-us/powershell/scripting/how-to-use-docs?view=powershell-7.5)
