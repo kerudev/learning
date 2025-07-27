@@ -32,9 +32,12 @@ int help() {
     std::cout << R"(Demo of some basic material examples with OpenGL.
 
 The available commands are listed below:
-- mat1      
+- ch1       Use of the 'Material' and 'Light' structs in the fragment shader.
+- ch2       Same as 'ch1', but with changing colors.
+- ex1       Light cube changes color too.
+- ex2       Simulation of cyan plastic.
 
-For example: ./build/main mat1)" << std::endl;
+For example: ./build/main ch1)" << std::endl;
 
     return 0;
 }
@@ -54,8 +57,10 @@ void process_args(int argc, char const *argv[]) {
     }
 
     char *arguments[] = {
-        "mat1",
-        "mat2",
+        "ch1",
+        "ch2",
+        "ex1",
+        "ex2",
     };
 
     size_t arguments_size = sizeof(arguments) / sizeof(arguments[0]);
@@ -69,6 +74,10 @@ void process_args(int argc, char const *argv[]) {
         printf("Use --help\n");
         exit(1);
     }
+}
+
+int is_arg(const char *arg) {
+    return strcmp(argument, arg) == 0;
 }
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
@@ -150,7 +159,21 @@ GLFWwindow *initWindow() {
     return window;
 }
 
-int chapter(GLFWwindow *window, Shader cubeShader, Shader lightShader) {
+int chapter(GLFWwindow *window) {
+    Shader cubeShader = Shader::createShader("cube");
+    if (!cubeShader.id) {
+        std::cout << "Failed to create the cube shader program" << std::endl;
+        return 1;
+    }
+
+    const char *lightShaderName = (is_arg("ex1")) ? "ex1" : "light";
+
+    Shader lightShader = Shader::createShader(lightShaderName);
+    if (!lightShader.id) {
+        std::cout << "Failed to create the light shader program" << std::endl;
+        return 1;
+    }
+
     float vertices[] = {
         -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
          0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
@@ -239,28 +262,37 @@ int chapter(GLFWwindow *window, Shader cubeShader, Shader lightShader) {
         cubeShader.use();
         cubeShader.setVec3("viewPos", camera.position);
 
-        cubeShader.setVec3("material.ambient",    1.0f, 0.5f, 0.31f);
-        cubeShader.setVec3("material.diffuse",    1.0f, 0.5f, 0.31f);
-        cubeShader.setVec3("material.specular",   0.5f, 0.5f, 0.5f);
-        cubeShader.setFloat("material.shininess", 128.0f);
+        if (is_arg("ex2")) {
+            cubeShader.setVec3("material.ambient",    0.0f, 0.1f, 0.06f);
+            cubeShader.setVec3("material.diffuse",    0.0f, 0.51f, 0.51f);
+            cubeShader.setVec3("material.specular",   0.5f, 0.5f, 0.5f);
+            cubeShader.setFloat("material.shininess", 128.0 * 0.25f);
+        } else {
+            cubeShader.setVec3("material.ambient",    1.0f, 0.5f, 0.31f);
+            cubeShader.setVec3("material.diffuse",    1.0f, 0.5f, 0.31f);
+            cubeShader.setVec3("material.specular",   0.5f, 0.5f, 0.5f);
+            cubeShader.setFloat("material.shininess", 32.0f);
+        }
 
-        if (strcmp(argument, "mat1") == 0) {
+        cubeShader.setVec3("light.position",    lightPos);
+        cubeShader.setVec3("light.specular",    1.0f, 1.0f, 1.0f);
+
+        if (is_arg("ch1")) {
             cubeShader.setVec3("light.ambient",     0.2f, 0.2f, 0.2f);
             cubeShader.setVec3("light.diffuse",     0.5f, 0.5f, 0.5f);
         }
-
-        cubeShader.setVec3("light.specular",    1.0f, 1.0f, 1.0f);
-        cubeShader.setVec3("light.position",    lightPos);
-
-        if (strcmp(argument, "mat2") == 0) {
+        else if (is_arg("ex2")) {
+            cubeShader.setVec3("light.ambient",     1.0f, 1.0f, 1.0f);
+            cubeShader.setVec3("light.diffuse",     1.0f, 1.0f, 1.0f);
+        } else {
             glm::vec3 lightColor;
             lightColor.x = sin(glfwGetTime() * 2.0f);
             lightColor.y = sin(glfwGetTime() * 0.7f);
             lightColor.z = sin(glfwGetTime() * 1.3f);
-            
+
             glm::vec3 diffuseColor = lightColor   * glm::vec3(0.5f); 
             glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f); 
-            
+
             cubeShader.setVec3("light.ambient", ambientColor);
             cubeShader.setVec3("light.diffuse", diffuseColor);
         }
@@ -290,6 +322,15 @@ int chapter(GLFWwindow *window, Shader cubeShader, Shader lightShader) {
 
         lightShader.setMat4("model", model);
 
+        if (is_arg("ex1")) {
+            glm::vec3 lightColor;
+            lightColor.x = sin(glfwGetTime() * 2.0f);
+            lightColor.y = sin(glfwGetTime() * 0.7f);
+            lightColor.z = sin(glfwGetTime() * 1.3f);
+            
+            lightShader.setVec3("lightColor", lightColor);
+        }
+
         glBindVertexArray(lightVAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
        
@@ -302,6 +343,9 @@ int chapter(GLFWwindow *window, Shader cubeShader, Shader lightShader) {
     glDeleteVertexArrays(1, &lightVAO);
     glDeleteBuffers(1, &VBO);
 
+    glDeleteProgram(cubeShader.id);
+    glDeleteProgram(lightShader.id);
+
     return 0;
 }
 
@@ -311,22 +355,12 @@ int main(int argc, char const *argv[]) {
     GLFWwindow *window = initWindow();
 
     if (window == NULL) {
-        std::cout << "Terminating example" << std::endl;
+        std::cout << "Can't initiate window" << std::endl;
         return 1;
     };
 
-    Shader cubeShader = Shader::createShader("cube");
-    Shader lightShader = Shader::createShader("light");
+    int exit_code = chapter(window);
 
-    if (!cubeShader.id) {
-        std::cout << "Failed to create the shader program" << std::endl;
-        return 1;
-    }
-
-    int exit_code = chapter(window, cubeShader, lightShader);
-
-    glDeleteProgram(cubeShader.id);
-    glDeleteProgram(lightShader.id);
     glfwTerminate();
 
     return exit_code;
