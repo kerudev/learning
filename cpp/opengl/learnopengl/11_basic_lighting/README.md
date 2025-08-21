@@ -11,4 +11,4 @@ Compile with `make all`.
 
 Get a list of all available examples using `./build/main --help`.
 
-For example: `./build/main light1`
+For example: `./build/main ch1`

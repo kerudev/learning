@@ -10,6 +10,7 @@
 
 #include <vector>
 
+#include "common.hpp"
 #include "shader.hpp"
 
 const char *TEX_CONTAINER = "../textures/container.jpg";
@@ -18,17 +19,30 @@ const char *TEX_FACE = "../textures/awesomeface.png";
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
+// arguments
+const char *args[] = {
+    "ch1",
+    "ch2",
+    "ch3",
+    "ch4",
+    "ex1",
+};
+
+size_t args_size = sizeof(args) / sizeof(args[0]);
+
+char *arg[4];
+
 int help() {
     std::cout << R"(Demo of some basic coordinate system examples with OpenGL.
 
 The available commands are listed below:
-- coord1    Renders a rotated plane 
-- coord2    Renders a rotating cube (without glEnable(GL_DEPTH_TEST))
-- coord3    Renders a rotating cube (with    glEnable(GL_DEPTH_TEST))
-- coord4    Renders 10 cubes with different rotations 
-- ex1       Exercise 1: render 10 cubes, some rotating
+- ch1       Renders a rotated plane 
+- ch2       Renders a rotating cube (without glEnable(GL_DEPTH_TEST))
+- ch3       Renders a rotating cube (with    glEnable(GL_DEPTH_TEST))
+- ch4       Renders 10 cubes with different rotations 
+- ex1       Render 10 cubes, some rotating
 
-For example: ./build/main coord1)" << std::endl;
+For example: ./build/main ch1)" << std::endl;
 
     return 0;
 }
@@ -42,8 +56,8 @@ void processInput(GLFWwindow *window) {
         glfwSetWindowShouldClose(window, 1);
 }
 
-std::vector<float> getVertices(int num) {
-    if (num == 1) {
+std::vector<float> getVertices() {
+    if (is_arg("ch1")) {
         return {
             // positions            // texture coords
              0.5f,  0.5f, 0.0f,     1.0f, 1.0f,   // top right
@@ -128,8 +142,14 @@ GLFWwindow *initWindow() {
     return window;
 }
 
-int coordinates(GLFWwindow *window, Shader shader, int num) {
-    std::vector<float> vertices = getVertices(num);
+int chapter(GLFWwindow *window) {
+    Shader shader = Shader::createShader("coord");
+    if (!shader.id) {
+        std::cout << "Failed to create the shader program" << std::endl;
+        return 1;
+    }
+
+    std::vector<float> vertices = getVertices();
 
     glm::vec3 cubePositions[] = {
         glm::vec3( 0.0f,  0.0f,  0.0f), 
@@ -149,7 +169,7 @@ int coordinates(GLFWwindow *window, Shader shader, int num) {
         1, 2, 3,    // second triangle
     };
 
-    if (num == 3 || num == 4 || num == 5)
+    if (is_arg("ch3") || is_arg("ch4") || is_arg("ex1"))
         glEnable(GL_DEPTH_TEST);
 
     unsigned int VBO, VAO, EBO;
@@ -252,17 +272,17 @@ int coordinates(GLFWwindow *window, Shader shader, int num) {
         glm::mat4 view          = glm::mat4(1.0f);
         glm::mat4 projection    = glm::mat4(1.0f);
 
-        if (num == 1) {
+        if (is_arg("ch1")) {
             model  = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
         }
-        else if (num == 2 || num == 3) {
+        else if (is_arg("ch2") || is_arg("ch3")) {
             model  = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));  
         }
 
         projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
         view       = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
 
-        if (num != 4 || num != 5) {
+        if (!is_arg("ch4") || !is_arg("ex1")) {
             // retrieve the matrix uniform locations
             unsigned int modelLoc = glGetUniformLocation(shader.id, "model");
             unsigned int viewLoc  = glGetUniformLocation(shader.id, "view");
@@ -279,13 +299,13 @@ int coordinates(GLFWwindow *window, Shader shader, int num) {
         // render container
         glBindVertexArray(VAO);
 
-        if (num == 1) {
+        if (is_arg("ch1")) {
             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         }
-        else if (num == 2 || num == 3) {
+        else if (is_arg("ch2") || is_arg("ch3")) {
             glDrawArrays(GL_TRIANGLES, 0, 36);
         }
-        else if (num == 4) {
+        else if (is_arg("ch4")) {
             shader.setMat4("view", view);
 
             for (unsigned int i = 0; i < 10; i++) {
@@ -299,7 +319,7 @@ int coordinates(GLFWwindow *window, Shader shader, int num) {
                 glDrawArrays(GL_TRIANGLES, 0, 36);
             }
         }
-        else if (num == 5) {
+        else if (is_arg("ex1")) {
             shader.setMat4("view", view);
 
             for (unsigned int i = 0; i < 10; i++) {
@@ -325,55 +345,28 @@ int coordinates(GLFWwindow *window, Shader shader, int num) {
     glDeleteBuffers(1, &VBO);
     glDeleteBuffers(1, &EBO);
 
+    glDeleteProgram(shader.id);
+
     return 0;
 }
 
 int main(int argc, char const *argv[]) {
-    if (argc < 2) {
-        help();
-        return 1;
-    }
-
-    const char *command = argv[1];
-
-    if (strcmp(command, "-h") == 0 || strcmp(command, "--help") == 0) {
-        help();
-        return 0;
+    switch (process_args(argc, argv, args, args_size)) {
+        case -1:
+            help();
+            return 0;
+        case 1:
+            return 1;
     }
 
     GLFWwindow *window = initWindow();
-
     if (window == NULL) {
-        std::cout << "Terminating example" << std::endl;
+        std::cout << "Can't initiate window" << std::endl;
         return 1;
     };
 
-    Shader shader = Shader::createShader("coord");
+    int exit_code = chapter(window);
 
-    if (!shader.id) {
-        std::cout << "Failed to create the shader program" << std::endl;
-        return 1;
-    }
-
-    int exit_code = 0;
-
-    if (strcmp(command, "coord1") == 0) {
-        exit_code = coordinates(window, shader, 1);
-    }
-    else if (strcmp(command, "coord2") == 0) {
-        exit_code = coordinates(window, shader, 2);
-    }
-    else if (strcmp(command, "coord3") == 0) {
-        exit_code = coordinates(window, shader, 3);
-    }
-    else if (strcmp(command, "coord4") == 0) {
-        exit_code = coordinates(window, shader, 4);
-    }
-    else if (strcmp(command, "ex1") == 0) {
-        exit_code = coordinates(window, shader, 5);
-    }
-
-    glDeleteProgram(shader.id);
     glfwTerminate();
 
     return exit_code;

@@ -1,13 +1,10 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include <stdio.h>
-#include <string.h>
-
+#include "common.hpp"
+#include "callbacks.hpp"
 #include "shader.hpp"
 #include "camera.hpp"
-
-char *argument = NULL;
 
 // window
 const unsigned int SCR_WIDTH = 800;
@@ -30,81 +27,30 @@ glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
 float ambientStrength = 0.1;
 float specularStrength = 0.5;
 
+// arguments
+const char *args[] = {
+    "ch1",
+    "ex1",
+    "ex2",
+    "ex3",
+    "ex4"
+};
+
+size_t args_size = sizeof(args) / sizeof(args[0]);
+
 int help() {
     std::cout << R"(Demo of some basic lighting examples with OpenGL.
 
 The available commands are listed below:
-- light1    Basic lighting on a cube using the Phong model.
+- ch1       Basic lighting on a cube using the Phong model.
 - ex1       Move the light source around to change its effect.
 - ex2       Different values for ambient and specular strengths.
 - ex3       Phong shading in view space instead of world space.
 - ex4       Gouraud shading instead of Phong shading.
 
-For example: ./build/main light1)" << std::endl;
+For example: ./build/main ch1)" << std::endl;
 
     return 0;
-}
-
-void process_args(int argc, char const *argv[]) {
-    if (argc < 2) {
-        printf("Please provide an argument.\n\n");
-        help();
-        exit(1);
-    }
-
-    const char *command = argv[1];
-
-    if (strcmp(command, "-h") == 0 || strcmp(command, "--help") == 0) {
-        help();
-        exit(0);
-    }
-
-    char *arguments[] = {
-        "light1",
-        "ex1",
-        "ex2",
-        "ex3",
-        "ex4"
-    };
-
-    size_t arguments_size = sizeof(arguments) / sizeof(arguments[0]);
-
-    for (size_t i = 0; i < arguments_size; i++) {
-        if (strcmp(command, arguments[i]) == 0) argument = arguments[i];
-    }
-
-    if (!argument) {
-        printf("Unknown argument: %s\n", argv[1]);
-        printf("Use --help\n");
-        exit(1);
-    }
-}
-
-void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
-    glViewport(0, 0, width, height);
-}
-
-void mouse_callback(GLFWwindow* window, double xposIn, double yposIn) {
-    float xpos = static_cast<float>(xposIn);
-    float ypos = static_cast<float>(yposIn);
-
-    if (firstMouse) {
-        lastX = xpos;
-        lastY = ypos;
-        firstMouse = false;
-    }
-
-    float xoffset = xpos - lastX;
-    float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
-
-    lastX = xpos;
-    lastY = ypos;
-
-    camera.ProcessMouseMovement(xoffset, yoffset);
-}
-
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
-    camera.ProcessMouseScroll(static_cast<float>(yoffset));
 }
 
 void processInput(GLFWwindow *window) {
@@ -159,7 +105,25 @@ GLFWwindow *initWindow() {
     return window;
 }
 
-int chapter(GLFWwindow *window, Shader cubeShader, Shader lightShader) {
+int chapter(GLFWwindow *window) {
+    const char *cubeShaderName = (is_arg("ex3"))
+        ? "ex3"
+        : (is_arg("ex4"))
+            ? "gouraud"
+            : "cube";
+            
+    Shader cubeShader = Shader::createShader(cubeShaderName);
+    if (!cubeShader.id) {
+        std::cout << "Failed to create the cube shader program" << std::endl;
+        return 1;
+    }
+    
+    Shader lightShader = Shader::createShader("light");
+    if (!lightShader.id) {
+        std::cout << "Failed to create the light shader program" << std::endl;
+        return 1;
+    }
+
     float vertices[] = {
         -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
          0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
@@ -252,7 +216,7 @@ int chapter(GLFWwindow *window, Shader cubeShader, Shader lightShader) {
         cubeShader.setVec3("viewPos", camera.position);
 
         // changes the light's components strengths to visualize their effect
-        if (strcmp(argument, "ex2") == 0) {
+        if (is_arg("ex2")) {
             lightPos.x = 0.5f;
             lightPos.y = 0.5f;
             ambientStrength = sin(currentFrame) * 2.0f;
@@ -286,7 +250,7 @@ int chapter(GLFWwindow *window, Shader cubeShader, Shader lightShader) {
         model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
 
         // moves the light cube around to change the lighting's effect 
-        if (strcmp(argument, "ex1") == 0) {
+        if (is_arg("ex1")) {
             lightPos.x = sin(currentFrame) * 2.0f + 1.0f;
             lightPos.y = sin(currentFrame / 2.0f);
         }
@@ -305,37 +269,30 @@ int chapter(GLFWwindow *window, Shader cubeShader, Shader lightShader) {
     glDeleteVertexArrays(1, &lightVAO);
     glDeleteBuffers(1, &VBO);
 
+    glDeleteProgram(cubeShader.id);
+    glDeleteProgram(lightShader.id);
+
     return 0;
 }
 
 int main(int argc, char const *argv[]) {
-    process_args(argc, argv);
+    switch (process_args(argc, argv, args, args_size)) {
+        case -1:
+            help();
+            return 0;
+        case 1:
+            return 1;
+    }
 
     GLFWwindow *window = initWindow();
 
     if (window == NULL) {
-        std::cout << "Terminating example" << std::endl;
+        std::cout << "Can't initiate window" << std::endl;
         return 1;
     };
 
-    const char *cubeShaderName = (strcmp(argument, "ex3") == 0)
-        ? "ex3"
-        : (strcmp(argument, "ex4") == 0)
-            ? "gouraud"
-            : "cube";
-            
-    Shader cubeShader = Shader::createShader(cubeShaderName);
-    Shader lightShader = Shader::createShader("light");
+    int exit_code = chapter(window);
 
-    if (!cubeShader.id) {
-        std::cout << "Failed to create the shader program" << std::endl;
-        return 1;
-    }
-
-    int exit_code = chapter(window, cubeShader, lightShader);
-
-    glDeleteProgram(cubeShader.id);
-    glDeleteProgram(lightShader.id);
     glfwTerminate();
 
     return exit_code;

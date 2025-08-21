@@ -8,21 +8,32 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "common.hpp"
 #include "shader.hpp"
 
 const char *TEX_CONTAINER = "../textures/container.jpg";
 const char *TEX_FACE = "../textures/awesomeface.png";
 
+// arguments
+const char *args[] = {
+    "ch1",
+    "ch2",
+    "ex1",
+    "ex2",
+};
+
+size_t args_size = sizeof(args) / sizeof(args[0]);
+
 int help() {
     std::cout << R"(Demo of some basic transformation examples with OpenGL."
 
 The available commands are listed below: 
-- tra1      Example using rotation and translate transformations. 
-- tra2      Example using a texture and coloring over it. 
+- ch1       Example using rotation and translate transformations. 
+- ch2       Example using a texture and coloring over it. 
 - ex1       Exercise 1: swap the order of rotate and translate. 
 - ex2       Exercise 2: move container using transforms and scale with the sin function. 
 
-For example: ./build/main tra1)" << std::endl;
+For example: ./build/main ch1)" << std::endl;
 
     return 0;
 }
@@ -65,7 +76,13 @@ GLFWwindow *initWindow() {
     return window;
 }
 
-int transformation(GLFWwindow *window, Shader shader, int num) {
+int chapter(GLFWwindow *window) {
+    Shader shader = Shader::createShader("transform");
+    if (!shader.id) {
+        std::cout << "Failed to create the shader program" << std::endl;
+        return 1;
+    }
+
     float vertices[] = {
         // positions            // texture coords
          0.5f,  0.5f, 0.0f,     1.0f, 1.0f,   // top right
@@ -173,15 +190,15 @@ int transformation(GLFWwindow *window, Shader shader, int num) {
         // create transformations
         glm::mat4 transform = glm::mat4(1.0f);
 
-        if (num == 1) {
+        if (is_arg("ch1")) {
             transform = glm::rotate(transform, glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
             transform = glm::scale(transform, glm::vec3(0.5, 0.5, 0.5));
         }
-        else if (num == 3) {
+        else if (is_arg("ex1")) {
             transform = glm::rotate(transform, (float) glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
             transform = glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
         }
-        else {  // 2, 4
+        else {
             transform = glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
             transform = glm::rotate(transform, (float) glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
         }
@@ -194,7 +211,7 @@ int transformation(GLFWwindow *window, Shader shader, int num) {
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-        if (num == 4) {
+        if (is_arg("ex4")) {
             transform = glm::mat4(1.0f);
             transform = glm::translate(transform, glm::vec3(-0.5f, 0.5f, 0.0f)); 
 
@@ -215,6 +232,8 @@ int transformation(GLFWwindow *window, Shader shader, int num) {
     glDeleteBuffers(1, &VBO);
     glDeleteBuffers(1, &EBO);
 
+    glDeleteProgram(shader.id);
+
     return 0;
 }
 
@@ -232,35 +251,13 @@ int main(int argc, char const *argv[]) {
     }
 
     GLFWwindow *window = initWindow();
-
     if (window == NULL) {
-        std::cout << "Terminating example" << std::endl;
+        std::cout << "Can't initiate window" << std::endl;
         return 1;
     };
 
-    Shader shader = Shader::createShader("transform");
+    int exit_code = chapter(window);
 
-    if (!shader.id) {
-        std::cout << "Failed to create the shader program" << std::endl;
-        return 1;
-    }
-
-    int exit_code = 0;
-
-    if (strcmp(command, "tra1") == 0) {
-        exit_code = transformation(window, shader, 1);
-    }
-    else if (strcmp(command, "tra2") == 0) {
-        exit_code = transformation(window, shader, 2);
-    }
-    else if (strcmp(command, "ex1") == 0) {
-        exit_code = transformation(window, shader, 3);
-    }
-    else if (strcmp(command, "ex2") == 0) {
-        exit_code = transformation(window, shader, 4);
-    }
-
-    glDeleteProgram(shader.id);
     glfwTerminate();
 
     return exit_code;

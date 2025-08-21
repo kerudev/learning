@@ -1,13 +1,10 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include <stdio.h>
-#include <string.h>
-
+#include "common.hpp"
+#include "callbacks.hpp"
 #include "shader.hpp"
 #include "camera.hpp"
-
-char *argument = NULL;
 
 // window
 const unsigned int SCR_WIDTH = 800;
@@ -28,6 +25,16 @@ bool firstMouse = true;
 // lighting
 glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
 
+// arguments
+const char *args[] = {
+    "ch1",
+    "ch2",
+    "ex1",
+    "ex2",
+};
+
+size_t args_size = sizeof(args) / sizeof(args[0]);
+
 int help() {
     std::cout << R"(Demo of some basic material examples with OpenGL.
 
@@ -42,84 +49,19 @@ For example: ./build/main ch1)" << std::endl;
     return 0;
 }
 
-void process_args(int argc, char const *argv[]) {
-    if (argc < 2) {
-        printf("Please provide an argument.\n\n");
-        help();
-        exit(1);
-    }
-
-    const char *command = argv[1];
-
-    if (strcmp(command, "-h") == 0 || strcmp(command, "--help") == 0) {
-        help();
-        exit(0);
-    }
-
-    char *arguments[] = {
-        "ch1",
-        "ch2",
-        "ex1",
-        "ex2",
-    };
-
-    size_t arguments_size = sizeof(arguments) / sizeof(arguments[0]);
-
-    for (size_t i = 0; i < arguments_size; i++) {
-        if (strcmp(command, arguments[i]) == 0) argument = arguments[i];
-    }
-
-    if (!argument) {
-        printf("Unknown argument: %s\n", argv[1]);
-        printf("Use --help\n");
-        exit(1);
-    }
-}
-
-int is_arg(const char *arg) {
-    return strcmp(argument, arg) == 0;
-}
-
-void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
-    glViewport(0, 0, width, height);
-}
-
-void mouse_callback(GLFWwindow* window, double xposIn, double yposIn) {
-    float xpos = static_cast<float>(xposIn);
-    float ypos = static_cast<float>(yposIn);
-
-    if (firstMouse) {
-        lastX = xpos;
-        lastY = ypos;
-        firstMouse = false;
-    }
-
-    float xoffset = xpos - lastX;
-    float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
-
-    lastX = xpos;
-    lastY = ypos;
-
-    camera.ProcessMouseMovement(xoffset, yoffset);
-}
-
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
-    camera.ProcessMouseScroll(static_cast<float>(yoffset));
-}
-
 void processInput(GLFWwindow *window) {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, 1);
 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         camera.ProcessKeyboard(FORWARD, deltaTime);
-    
+
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
         camera.ProcessKeyboard(BACKWARD, deltaTime);
-    
+
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
         camera.ProcessKeyboard(LEFT, deltaTime);
-    
+
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         camera.ProcessKeyboard(RIGHT, deltaTime);
 }
@@ -350,7 +292,13 @@ int chapter(GLFWwindow *window) {
 }
 
 int main(int argc, char const *argv[]) {
-    process_args(argc, argv);
+    switch (process_args(argc, argv, args, args_size)) {
+        case -1:
+            help();
+            return 0;
+        case 1:
+            return 1;
+    }
 
     GLFWwindow *window = initWindow();
 
