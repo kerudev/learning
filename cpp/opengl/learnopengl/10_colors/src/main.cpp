@@ -1,6 +1,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include "common.hpp"
+#include "callbacks.hpp"
 #include "shader.hpp"
 #include "camera.hpp"
 
@@ -22,33 +24,6 @@ bool firstMouse = true;
 
 // lighting
 glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
-
-void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
-    glViewport(0, 0, width, height);
-}
-
-void mouse_callback(GLFWwindow* window, double xposIn, double yposIn) {
-    float xpos = static_cast<float>(xposIn);
-    float ypos = static_cast<float>(yposIn);
-
-    if (firstMouse) {
-        lastX = xpos;
-        lastY = ypos;
-        firstMouse = false;
-    }
-
-    float xoffset = xpos - lastX;
-    float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
-
-    lastX = xpos;
-    lastY = ypos;
-
-    camera.ProcessMouseMovement(xoffset, yoffset);
-}
-
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
-    camera.ProcessMouseScroll(static_cast<float>(yoffset));
-}
 
 void processInput(GLFWwindow *window) {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -102,7 +77,19 @@ GLFWwindow *initWindow() {
     return window;
 }
 
-int colors(GLFWwindow *window, Shader cubeShader, Shader lightShader) {
+int chapter(GLFWwindow *window) {
+    Shader cubeShader = Shader::createShader("cube");    
+    if (!cubeShader.id) {
+        std::cout << "Failed to create the shader program" << std::endl;
+        return 1;
+    }
+    
+    Shader lightShader = Shader::createShader("light");
+    if (!lightShader.id) {
+        std::cout << "Failed to create the light shader program" << std::endl;
+        return 1;
+    }
+
     float vertices[] = {
         -0.5f, -0.5f, -0.5f, 
          0.5f, -0.5f, -0.5f,  
@@ -229,29 +216,21 @@ int colors(GLFWwindow *window, Shader cubeShader, Shader lightShader) {
     glDeleteVertexArrays(1, &lightVAO);
     glDeleteBuffers(1, &VBO);
 
+    glDeleteProgram(cubeShader.id);
+    glDeleteProgram(lightShader.id);
+
     return 0;
 }
 
 int main() {
     GLFWwindow *window = initWindow();
-
     if (window == NULL) {
-        std::cout << "Terminating example" << std::endl;
+        std::cout << "Can't initiate window" << std::endl;
         return 1;
     };
 
-    Shader cubeShader = Shader::createShader("cube");
-    Shader lightShader = Shader::createShader("light");
+    int exit_code = chapter(window);
 
-    if (!cubeShader.id) {
-        std::cout << "Failed to create the shader program" << std::endl;
-        return 1;
-    }
-
-    int exit_code = colors(window, cubeShader, lightShader);
-
-    glDeleteProgram(cubeShader.id);
-    glDeleteProgram(lightShader.id);
     glfwTerminate();
 
     return exit_code;
