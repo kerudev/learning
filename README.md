@@ -65,7 +65,12 @@ to dip my toes into embedded programming.
   - Docs (syscalls x86_64): https://blog.rchapman.org/posts/Linux_System_Call_Table_for_x86_64/
 
 ### Others
-- Maybe I'll tinker with V or Odin some day.
+- V: general purpose language ([repo](https://github.com/vlang/v))
+- Odin: Data-Oriented language ([repo](https://github.com/odin-lang/Odin))
+- Gleam: language for building scalable systems ([repo](https://github.com/gleam-lang/gleam))
+- Amber: compiles to Bash ([repo](https://github.com/amber-lang/amber))
+- Carbon: experimental successor of C++ ([repo](https://github.com/carbon-language/carbon-lang))
+- More on my [Ideas](https://github.com/stars/kerudev/lists/ideas) star list.
 
 ## What I have learned
 
@@ -83,7 +88,7 @@ to dip my toes into embedded programming.
   - [01_triangle](./c/opengl/learnopengl/01_triangle)
   - [02_shaders](./c/opengl/learnopengl/02_shaders)
   - [03_textures](./c/opengl/learnopengl/03_textures)
-  - [second part](./cpp/opengl/learnopengl)
+  - [second part](./cpp/opengl/learnopengl) (lessons use C++ libraries, so I moved to C++ to save time)
 
 - **raylib**: [docs](https://www.raylib.com/)
   - [2d-camera](./c/raylib/2d-camera)
@@ -94,6 +99,9 @@ to dip my toes into embedded programming.
   - [04_transformations](./cpp/opengl/learnopengl/04_transformations/)
   - [05_coordinate_systems](./cpp/opengl/learnopengl/05_coordinate_systems/)
   - [06_camera](./cpp/opengl/learnopengl/06_camera/)
+  - [10_colors](./cpp/opengl/learnopengl/10_colors)
+  - [11_basic_lighting](./cpp/opengl/learnopengl/11_basic_lighting)
+  - [12_materials](./cpp/opengl/learnopengl/12_materials)
 
 ### PowerShell
 - **lang**: [docs](https://learn.microsoft.com/en-us/powershell/scripting/how-to-use-docs?view=powershell-7.5)
