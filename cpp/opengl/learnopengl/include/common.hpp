@@ -5,6 +5,7 @@
 
 int process_args(int argc, char const *argv[], const char *args[], size_t args_size);
 int is_arg(const char *arg);
-char *get_arg(char buf[]);
+char *copy_arg(char buf[]);
+char *get_arg();
 
 #endif
