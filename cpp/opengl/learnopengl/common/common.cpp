@@ -5,7 +5,9 @@
 
 #include "common.hpp"
 
-char argument[4];
+#define MAX_ARG_LEN 4
+
+char argument[MAX_ARG_LEN];
 
 int process_args(int argc, char const *argv[], const char *args[], size_t args_size) {
     if (argc < 2) {
@@ -36,6 +38,10 @@ int is_arg(const char *arg) {
     return strcmp(argument, arg) == 0;
 }
 
-char *get_arg(char buf[]) {
+char *copy_arg(char buf[]) {
     return strcpy(argument, buf);
+}
+
+char *get_arg() {
+    return argument;
 }

@@ -76,6 +76,16 @@ public:
         return Shader(vertexPath, fragmentPath);
     }
 
+    static Shader createShader(const char *vertName, const char *fragName) {
+        char vertexPath[64];
+        char fragmentPath[64];
+
+        sprintf(vertexPath, "shaders/%s.vert", vertName);
+        sprintf(fragmentPath, "shaders/%s.frag", fragName);
+
+        return Shader(vertexPath, fragmentPath);
+    }
+
     void use() { 
         glUseProgram(id); 
     }
