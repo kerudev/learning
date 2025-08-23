@@ -19,6 +19,13 @@ To go back to the top level:
 code $(git rev-parse --show-toplevel)
 ```
 
+To rebase master after finishing work on a branch:
+
+```sh
+git checkout master
+git rebase $(git rev-parse --symbolic-full-name @{-1})
+```
+
 ## What I want to learn
 
 ### Python
@@ -102,6 +109,7 @@ to dip my toes into embedded programming.
   - [10_colors](./cpp/opengl/learnopengl/10_colors)
   - [11_basic_lighting](./cpp/opengl/learnopengl/11_basic_lighting)
   - [12_materials](./cpp/opengl/learnopengl/12_materials)
+  - [13_lighting_maps](./cpp/opengl/learnopengl/13_lighting_maps)
 
 ### PowerShell
 - **lang**: [docs](https://learn.microsoft.com/en-us/powershell/scripting/how-to-use-docs?view=powershell-7.5)
