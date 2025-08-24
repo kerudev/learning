@@ -163,7 +163,7 @@ int chapter(GLFWwindow *window) {
         glm::vec3( 1.5f,  0.2f, -1.5f), 
         glm::vec3(-1.3f,  1.0f, -1.5f)  
     };
-    
+
     unsigned int indices[] = {
         0, 1, 3,    // first triangle
         1, 2, 3,    // second triangle
@@ -217,7 +217,7 @@ int chapter(GLFWwindow *window) {
     glGenerateMipmap(GL_TEXTURE_2D);
 
     stbi_image_free(data);
-    
+
     // texture 2
     glGenTextures(1, &texture2);
     glActiveTexture(GL_TEXTURE1);
@@ -243,7 +243,7 @@ int chapter(GLFWwindow *window) {
     glGenerateMipmap(GL_TEXTURE_2D);
 
     stbi_image_free(data);
-    
+
     shader.use();
     shader.setInt("texture1", 0);
     shader.setInt("texture2", 1);
