@@ -121,10 +121,10 @@ void processInput(GLFWwindow *window) {
 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         cameraPos += cameraSpeed * cameraFront;
-    
+
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
         cameraPos -= cameraSpeed * cameraFront;
-    
+
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
         cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
 
@@ -326,14 +326,14 @@ int chapter(GLFWwindow *window) {
     // texture 2
     buildTexture(&texture2, GL_REPEAT, GL_REPEAT, GL_LINEAR, GL_LINEAR);
     readTexture(TEX_FACE, GL_RGBA, GL_TRUE);
-    
+
     shader.use();
     shader.setInt("texture1", 0);
     shader.setInt("texture2", 1);
 
     glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
     shader.setMat4("projection", projection);
-    
+
     // render loop
     while (!glfwWindowShouldClose(window)) {
         // per-frame time logic
@@ -360,13 +360,13 @@ int chapter(GLFWwindow *window) {
 
         // camera/view transformations
         glm::mat4 view;
-        
+
         if (is_arg("ch1")) {
             float radius = 10.0f;
             float time = glfwGetTime();
             float camX = static_cast<float>(sin(time) * radius);
             float camZ = static_cast<float>(cos(time) * radius);
-    
+
             view = glm::lookAt(
                 glm::vec3(camX, 0.0f, camZ),
                 glm::vec3(0.0f, 0.0f, 0.0f),

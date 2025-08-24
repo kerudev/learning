@@ -12,13 +12,13 @@ void main() {
     // ambient
     float ambientStrength = 0.1;
     vec3 ambient = ambientStrength * lightColor;    
-    
+
     // diffuse 
     vec3 norm = normalize(Normal);
     vec3 lightDir = normalize(LightPos - FragPos);
     float diff = max(dot(norm, lightDir), 0.0);
     vec3 diffuse = diff * lightColor;
-    
+
     // specular
     float specularStrength = 0.5;
     vec3 viewDir = normalize(-FragPos); // the viewer is always at (0,0,0) in view-space, so viewDir is (0,0,0) - Position => -Position
