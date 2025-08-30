@@ -1,6 +1,6 @@
 #include <glad/glad.h>
 
-#include "callbacks.hpp"
+#include "callbacks.h"
 #include "camera.hpp"
 
 extern Camera camera;

@@ -132,4 +132,5 @@ private:
         this->up    = glm::normalize(glm::cross(this->right, this->front));
     }
 };
-#endif
+
+#endif // CAMERA_H

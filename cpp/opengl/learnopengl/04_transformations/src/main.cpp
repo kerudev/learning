@@ -8,7 +8,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "common.hpp"
+#include "utils.h"
 #include "shader.hpp"
 
 const char *TEX_CONTAINER = "../textures/container.jpg";
