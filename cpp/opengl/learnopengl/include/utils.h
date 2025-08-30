@@ -8,4 +8,4 @@ int is_arg(const char *arg);
 char *copy_arg(char buf[]);
 char *get_arg();
 
-#endif
+#endif // COMMON_H

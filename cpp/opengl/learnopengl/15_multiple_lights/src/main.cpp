@@ -1,12 +1,12 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include "common.hpp"
+#include "utils.h"
 #include "shader.hpp"
-#include "texture.hpp"
+#include "texture.h"
 #include "camera.hpp"
-#include "callbacks.hpp"
-#include "constants.hpp"
+#include "callbacks.h"
+#include "constants.h"
 
 #include <array>
 
@@ -54,11 +54,11 @@ int help() {
     std::cout << R"(Demo of some basic multiple lights examples with OpenGL.
 
 The available commands are listed below:
-- ch1       
-- ex1       Desert
-- ex2       Factory
-- ex3       Horror
-- ex4       Biochemical lab
+- ch1       Scene with multiple light sources.
+- ex1       Desert.
+- ex2       Factory.
+- ex3       Horror.
+- ex4       Biochemical lab.
 
 For example: ./build/main ch1)" << std::endl;
 

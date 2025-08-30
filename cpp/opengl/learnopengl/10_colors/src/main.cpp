@@ -1,8 +1,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include "common.hpp"
-#include "callbacks.hpp"
+#include "utils.h"
+#include "callbacks.h"
 #include "shader.hpp"
 #include "camera.hpp"
 

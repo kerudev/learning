@@ -1,12 +1,12 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include "common.hpp"
+#include "utils.h"
 #include "shader.hpp"
-#include "texture.hpp"
+#include "texture.h"
 #include "camera.hpp"
-#include "callbacks.hpp"
-#include "constants.hpp"
+#include "callbacks.h"
+#include "constants.h"
 
 // window
 const unsigned int SCR_WIDTH = 800;

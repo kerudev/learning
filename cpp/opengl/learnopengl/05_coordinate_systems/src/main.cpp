@@ -10,7 +10,7 @@
 
 #include <vector>
 
-#include "common.hpp"
+#include "utils.h"
 #include "shader.hpp"
 
 const char *TEX_CONTAINER = "../textures/container.jpg";
