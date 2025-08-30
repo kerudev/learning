@@ -16,7 +16,7 @@ unsigned int loadTexture(const char *path) {
 
     if (!data) {
         std::cout << "Failed to load texture: " << path << std::endl;
-        return 1;
+        return NULL;
     }
 
     GLenum format;
