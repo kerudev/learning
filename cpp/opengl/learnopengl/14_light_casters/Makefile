@@ -1,29 +1,26 @@
 CC = c++
 CFLAGS = -Wall -Wextra -I../include
-LDFLAGS = -lglfw -lglad -lm
+LDFLAGS = -L../lib -lcommon -lglfw -lglad -lm
 
 SRC_DIR = src
-COMMON_DIR = ../common
 BUILD_DIR = build
 
 SRC = $(wildcard $(SRC_DIR)/*.cpp)
-COMMON = $(wildcard $(COMMON_DIR)/*.cpp)
-ALL_SOURCES = $(SRC) $(COMMON)
-
-OBJ = $(patsubst %.cpp, $(BUILD_DIR)/%.o, $(notdir $(ALL_SOURCES)))
+OBJ = $(patsubst $(SRC_DIR)/%.cpp, $(BUILD_DIR)/%.o, $(SRC))
 
 BIN = $(BUILD_DIR)/main
 
-vpath %.cpp $(SRC_DIR) $(COMMON_DIR)
-
 all: $(BIN)
 
-$(BIN): $(OBJ)
+../lib/libcommon.a:
+	$(MAKE) -C ../
+
+$(BIN): $(OBJ) ../lib/libcommon.a
 	$(CC) $(OBJ) -o $@ $(LDFLAGS)
 
-$(BUILD_DIR)/%.o: %.cpp
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
 	@mkdir -p $(BUILD_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -rf $(BUILD_DIR)/*.o $(BIN)
+	rm -rf $(BUILD_DIR) $(BIN)

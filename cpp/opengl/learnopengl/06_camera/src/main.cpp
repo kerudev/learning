@@ -9,15 +9,12 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "utils.h"
+#include "constants.h"
 #include "shader.hpp"
 
 // window
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
-
-// textures
-const char *TEX_CONTAINER = "../textures/container.jpg";
-const char *TEX_FACE = "../textures/awesomeface.png";
 
 // camera
 float cameraSpeed = 0.05f;
@@ -145,7 +142,7 @@ GLFWwindow *initWindow() {
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     #endif
 
-    GLFWwindow *window = glfwCreateWindow(800, 600, "LearnOpenGL - Transformations", NULL, NULL);
+    GLFWwindow *window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL - Camera", NULL, NULL);
 
     if (window == NULL) {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -321,11 +318,11 @@ int chapter(GLFWwindow *window) {
 
     // texture 1
     buildTexture(&texture1, GL_REPEAT, GL_REPEAT, GL_LINEAR, GL_LINEAR);
-    readTexture(TEX_CONTAINER, GL_RGB, GL_FALSE);
+    readTexture(CONTAINER_TEX, GL_RGB, GL_FALSE);
 
     // texture 2
     buildTexture(&texture2, GL_REPEAT, GL_REPEAT, GL_LINEAR, GL_LINEAR);
-    readTexture(TEX_FACE, GL_RGBA, GL_TRUE);
+    readTexture(FACE_TEX, GL_RGBA, GL_TRUE);
 
     shader.use();
     shader.setInt("texture1", 0);
