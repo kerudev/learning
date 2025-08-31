@@ -110,6 +110,8 @@ to dip my toes into embedded programming.
   - [11_basic_lighting](./cpp/opengl/learnopengl/11_basic_lighting)
   - [12_materials](./cpp/opengl/learnopengl/12_materials)
   - [13_lighting_maps](./cpp/opengl/learnopengl/13_lighting_maps)
+  - [14_light_casters](./cpp/opengl/learnopengl/14_light_casters)
+  - [15_multiple_lights](./cpp/opengl/learnopengl/15_multiple_lights)
 
 ### PowerShell
 - **lang**: [docs](https://learn.microsoft.com/en-us/powershell/scripting/how-to-use-docs?view=powershell-7.5)

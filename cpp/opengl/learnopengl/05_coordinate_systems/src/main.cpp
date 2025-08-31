@@ -34,10 +34,10 @@ int help() {
     std::cout << R"(Demo of some basic coordinate system examples with OpenGL.
 
 The available commands are listed below:
-- ch1       Renders a rotated plane 
+- ch1       Renders a rotated plane
 - ch2       Renders a rotating cube (without glEnable(GL_DEPTH_TEST))
 - ch3       Renders a rotating cube (with    glEnable(GL_DEPTH_TEST))
-- ch4       Renders 10 cubes with different rotations 
+- ch4       Renders 10 cubes with different rotations
 - ex1       Render 10 cubes, some rotating
 
 For example: ./build/main ch1)" << std::endl;
@@ -61,7 +61,7 @@ std::vector<float> getVertices() {
              0.5f,  0.5f, 0.0f,     1.0f, 1.0f,   // top right
              0.5f, -0.5f, 0.0f,     1.0f, 0.0f,   // bottom right
             -0.5f, -0.5f, 0.0f,     0.0f, 0.0f,   // bottom left
-            -0.5f,  0.5f, 0.0f,     0.0f, 1.0f    // top left 
+            -0.5f,  0.5f, 0.0f,     0.0f, 1.0f    // top left
         };
     }
     else {
@@ -150,16 +150,16 @@ int chapter(GLFWwindow *window) {
     std::vector<float> vertices = getVertices();
 
     glm::vec3 cubePositions[] = {
-        glm::vec3( 0.0f,  0.0f,  0.0f), 
-        glm::vec3( 2.0f,  5.0f, -15.0f), 
-        glm::vec3(-1.5f, -2.2f, -2.5f),  
-        glm::vec3(-3.8f, -2.0f, -12.3f),  
-        glm::vec3( 2.4f, -0.4f, -3.5f),  
-        glm::vec3(-1.7f,  3.0f, -7.5f),  
-        glm::vec3( 1.3f, -2.0f, -2.5f),  
-        glm::vec3( 1.5f,  2.0f, -2.5f), 
-        glm::vec3( 1.5f,  0.2f, -1.5f), 
-        glm::vec3(-1.3f,  1.0f, -1.5f)  
+        glm::vec3( 0.0f,  0.0f,  0.0f),
+        glm::vec3( 2.0f,  5.0f, -15.0f),
+        glm::vec3(-1.5f, -2.2f, -2.5f), 
+        glm::vec3(-3.8f, -2.0f, -12.3f), 
+        glm::vec3( 2.4f, -0.4f, -3.5f), 
+        glm::vec3(-1.7f,  3.0f, -7.5f), 
+        glm::vec3( 1.3f, -2.0f, -2.5f), 
+        glm::vec3( 1.5f,  2.0f, -2.5f),
+        glm::vec3( 1.5f,  0.2f, -1.5f),
+        glm::vec3(-1.3f,  1.0f, -1.5f) 
     };
 
     unsigned int indices[] = {
@@ -203,7 +203,7 @@ int chapter(GLFWwindow *window) {
 
     // load image, create texture and generate mip texture and generate mi5maps
     int width, height, nrChannels;
-    unsigned char *data = stbi_load(CONTAINER_TEX, &width, &height, &nrChannels, 0); 
+    unsigned char *data = stbi_load(CONTAINER_TEX, &width, &height, &nrChannels, 0);
 
     if (!data) {
         std::cout << "Failed to load texture1" << std::endl;
@@ -229,7 +229,7 @@ int chapter(GLFWwindow *window) {
 
     // load image, create texture and generate mipmaps
     stbi_set_flip_vertically_on_load(true);
-    data = stbi_load(FACE_TEX, &width, &height, &nrChannels, 0); 
+    data = stbi_load(FACE_TEX, &width, &height, &nrChannels, 0);
 
     if (!data) {
         std::cout << "Failed to load texture2" << std::endl;
@@ -272,7 +272,7 @@ int chapter(GLFWwindow *window) {
             model  = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
         }
         else if (is_arg("ch2") || is_arg("ch3")) {
-            model  = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));  
+            model  = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f)); 
         }
 
         projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);

@@ -193,7 +193,7 @@ void scene(Shader cubeShader) {
     cubeShader.setFloat("spotLight.linear",      0.09f);
     cubeShader.setFloat("spotLight.quadratic",   0.032f);
     cubeShader.setFloat("spotLight.cutOff",      glm::cos(glm::radians(12.5f)));
-    cubeShader.setFloat("spotLight.outerCutOff", glm::cos(glm::radians(15.0f)));    
+    cubeShader.setFloat("spotLight.outerCutOff", glm::cos(glm::radians(15.0f)));   
 }
 
 void desert(Shader cubeShader) {

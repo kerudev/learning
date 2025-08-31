@@ -4,7 +4,7 @@ Example and exercises from https://learnopengl.com/Lighting/Light-casters
 
 In this project I learned how to:
 - Use directional light.
-- Implement light attenuation .
+- Implement light attenuation.
 - Implement light intensity.
 
 Compile with `make all`.

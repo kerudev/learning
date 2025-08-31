@@ -29,11 +29,11 @@ size_t args_size = sizeof(args) / sizeof(args[0]);
 int help() {
     std::cout << R"(Demo of some basic transformation examples with OpenGL."
 
-The available commands are listed below: 
-- ch1       Example using rotation and translate transformations. 
-- ch2       Example using a texture and coloring over it. 
-- ex1       Exercise 1: swap the order of rotate and translate. 
-- ex2       Exercise 2: move container using transforms and scale with the sin function. 
+The available commands are listed below:
+- ch1       Example using rotation and translate transformations.
+- ch2       Example using a texture and coloring over it.
+- ex1       Exercise 1: swap the order of rotate and translate.
+- ex2       Exercise 2: move container using transforms and scale with the sin function.
 
 For example: ./build/main ch1)" << std::endl;
 
@@ -90,7 +90,7 @@ int chapter(GLFWwindow *window) {
          0.5f,  0.5f, 0.0f,     1.0f, 1.0f,   // top right
          0.5f, -0.5f, 0.0f,     1.0f, 0.0f,   // bottom right
         -0.5f, -0.5f, 0.0f,     0.0f, 0.0f,   // bottom left
-        -0.5f,  0.5f, 0.0f,     0.0f, 1.0f    // top left 
+        -0.5f,  0.5f, 0.0f,     0.0f, 1.0f    // top left
     };
 
     unsigned int indices[] = {
@@ -131,7 +131,7 @@ int chapter(GLFWwindow *window) {
 
     // load image, create texture and generate mipmaps
     int width, height, nrChannels;
-    unsigned char *data = stbi_load(CONTAINER_TEX, &width, &height, &nrChannels, 0); 
+    unsigned char *data = stbi_load(CONTAINER_TEX, &width, &height, &nrChannels, 0);
 
     if (!data) {
         std::cout << "Failed to load texture1" << std::endl;
@@ -157,7 +157,7 @@ int chapter(GLFWwindow *window) {
 
     // load image, create texture and generate mipmaps
     stbi_set_flip_vertically_on_load(true);
-    data = stbi_load(FACE_TEX, &width, &height, &nrChannels, 0); 
+    data = stbi_load(FACE_TEX, &width, &height, &nrChannels, 0);
 
     if (!data) {
         std::cout << "Failed to load texture2" << std::endl;
@@ -215,7 +215,7 @@ int chapter(GLFWwindow *window) {
 
         if (is_arg("ex4")) {
             transform = glm::mat4(1.0f);
-            transform = glm::translate(transform, glm::vec3(-0.5f, 0.5f, 0.0f)); 
+            transform = glm::translate(transform, glm::vec3(-0.5f, 0.5f, 0.0f));
 
             float scaleRatio = (float) sin(glfwGetTime());
             transform = glm::scale(transform, glm::vec3(scaleRatio, scaleRatio, scaleRatio));

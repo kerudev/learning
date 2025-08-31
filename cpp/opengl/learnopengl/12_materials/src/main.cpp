@@ -118,11 +118,11 @@ int chapter(GLFWwindow *window) {
 
     float vertices[] = {
         -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-         0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
-         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
-         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
-        -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
-        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
+         0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
 
         -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
          0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
@@ -232,8 +232,8 @@ int chapter(GLFWwindow *window) {
             lightColor.y = sin(glfwGetTime() * 0.7f);
             lightColor.z = sin(glfwGetTime() * 1.3f);
 
-            glm::vec3 diffuseColor = lightColor   * glm::vec3(0.5f); 
-            glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f); 
+            glm::vec3 diffuseColor = lightColor   * glm::vec3(0.5f);
+            glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f);
 
             cubeShader.setVec3("light.ambient", ambientColor);
             cubeShader.setVec3("light.diffuse", diffuseColor);
