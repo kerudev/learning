@@ -52,7 +52,7 @@ GLFWwindow *initWindow() {
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     #endif
 
-    GLFWwindow *window = glfwCreateWindow(800, 600, "LearnOpenGL - Colors", NULL, NULL);
+    GLFWwindow *window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL - Colors", NULL, NULL);
 
     if (window == NULL) {
         std::cout << "Failed to create GLFW window" << std::endl;

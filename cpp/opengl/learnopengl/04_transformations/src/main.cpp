@@ -9,10 +9,12 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "utils.h"
+#include "constants.h"
 #include "shader.hpp"
 
-const char *TEX_CONTAINER = "../textures/container.jpg";
-const char *TEX_FACE = "../textures/awesomeface.png";
+// window
+const unsigned int SCR_WIDTH = 800;
+const unsigned int SCR_HEIGHT = 600;
 
 // arguments
 const char *args[] = {
@@ -57,7 +59,7 @@ GLFWwindow *initWindow() {
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     #endif
 
-    GLFWwindow *window = glfwCreateWindow(800, 600, "LearnOpenGL - Transformations", NULL, NULL);
+    GLFWwindow *window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL - Transformations", NULL, NULL);
 
     if (window == NULL) {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -129,7 +131,7 @@ int chapter(GLFWwindow *window) {
 
     // load image, create texture and generate mipmaps
     int width, height, nrChannels;
-    unsigned char *data = stbi_load(TEX_CONTAINER, &width, &height, &nrChannels, 0); 
+    unsigned char *data = stbi_load(CONTAINER_TEX, &width, &height, &nrChannels, 0); 
 
     if (!data) {
         std::cout << "Failed to load texture1" << std::endl;
@@ -155,7 +157,7 @@ int chapter(GLFWwindow *window) {
 
     // load image, create texture and generate mipmaps
     stbi_set_flip_vertically_on_load(true);
-    data = stbi_load(TEX_FACE, &width, &height, &nrChannels, 0); 
+    data = stbi_load(FACE_TEX, &width, &height, &nrChannels, 0); 
 
     if (!data) {
         std::cout << "Failed to load texture2" << std::endl;

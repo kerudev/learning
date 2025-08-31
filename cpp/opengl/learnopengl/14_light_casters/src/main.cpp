@@ -34,7 +34,6 @@ const char *args[] = {
     "ch2",
     "ch3",
     "ch4",
-    "ex1",
 };
 
 size_t args_size = sizeof(args) / sizeof(args[0]);
@@ -80,7 +79,7 @@ GLFWwindow *initWindow() {
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     #endif
 
-    GLFWwindow *window = glfwCreateWindow(800, 600, "LearnOpenGL - Light Casters", NULL, NULL);
+    GLFWwindow *window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL - Light Casters", NULL, NULL);
 
     if (window == NULL) {
         std::cout << "Failed to create GLFW window" << std::endl;
