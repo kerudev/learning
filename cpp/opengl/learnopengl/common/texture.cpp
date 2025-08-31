@@ -12,7 +12,7 @@ unsigned int loadTexture(const char *path) {
 
     int width, height, nrChannels;
 
-    unsigned char *data = stbi_load(path, &width, &height, &nrChannels, 0); 
+    unsigned char *data = stbi_load(path, &width, &height, &nrChannels, 0);
 
     if (!data) {
         std::cout << "Failed to load texture: " << path << std::endl;

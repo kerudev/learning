@@ -1,8 +1,9 @@
 # VSCode
 .vscode
 
-# C
+# C/C++
 build
+lib
 
 # Python
 __pycache__

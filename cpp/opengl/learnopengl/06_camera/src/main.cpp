@@ -106,7 +106,7 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
         fov = 1.0f;
 
     if (fov > 45.0f)
-        fov = 45.0f; 
+        fov = 45.0f;
 }
 
 void processInput(GLFWwindow *window) {
@@ -179,7 +179,7 @@ int readTexture(const char *path, GLuint format, GLboolean flip) {
     int width, height, nrChannels;
 
     stbi_set_flip_vertically_on_load(flip);
-    unsigned char *data = stbi_load(path, &width, &height, &nrChannels, 0); 
+    unsigned char *data = stbi_load(path, &width, &height, &nrChannels, 0);
 
     if (!data) {
         std::cout << "Failed to load texture: " << path << std::endl;
@@ -220,7 +220,7 @@ glm::mat4 calculate_lookAt(glm::vec3 position, glm::vec3 target, glm::vec3 world
     rotation[2][1] = yaxis.z;
     rotation[0][2] = zaxis.x; // First column, third row
     rotation[1][2] = zaxis.y;
-    rotation[2][2] = zaxis.z; 
+    rotation[2][2] = zaxis.z;
 
     // Return lookAt matrix as combination of translation and rotation matrix
     return rotation * translation; // Remember to read from right to left (first translation then rotation)
@@ -278,16 +278,16 @@ int chapter(GLFWwindow *window) {
     };
 
     glm::vec3 cubePositions[] = {
-        glm::vec3( 0.0f,  0.0f,  0.0f), 
-        glm::vec3( 2.0f,  5.0f, -15.0f), 
-        glm::vec3(-1.5f, -2.2f, -2.5f),  
-        glm::vec3(-3.8f, -2.0f, -12.3f),  
-        glm::vec3( 2.4f, -0.4f, -3.5f),  
-        glm::vec3(-1.7f,  3.0f, -7.5f),  
-        glm::vec3( 1.3f, -2.0f, -2.5f),  
-        glm::vec3( 1.5f,  2.0f, -2.5f), 
-        glm::vec3( 1.5f,  0.2f, -1.5f), 
-        glm::vec3(-1.3f,  1.0f, -1.5f)  
+        glm::vec3( 0.0f,  0.0f,  0.0f),
+        glm::vec3( 2.0f,  5.0f, -15.0f),
+        glm::vec3(-1.5f, -2.2f, -2.5f), 
+        glm::vec3(-3.8f, -2.0f, -12.3f), 
+        glm::vec3( 2.4f, -0.4f, -3.5f), 
+        glm::vec3(-1.7f,  3.0f, -7.5f), 
+        glm::vec3( 1.3f, -2.0f, -2.5f), 
+        glm::vec3( 1.5f,  2.0f, -2.5f),
+        glm::vec3( 1.5f,  0.2f, -1.5f),
+        glm::vec3(-1.3f,  1.0f, -1.5f) 
     };
 
     glEnable(GL_DEPTH_TEST);
