@@ -62,10 +62,6 @@ git rebase $(git rev-parse --symbolic-full-name @{-1})
   - Home: https://go.dev/
   - Docs: https://go.dev/learn/
 
-### Arduino
-- Planning on buying a starter kit soon, as that stuff interests me and I want
-to dip my toes into embedded programming.
-
 ### assembly
 - Why not?
 - I'd like to learn the NASM (Intel) before GAS (AT&T).
@@ -80,6 +76,11 @@ to dip my toes into embedded programming.
 - More on my [Ideas](https://github.com/stars/kerudev/lists/ideas) star list.
 
 ## What I have learned
+
+### Arduino
+- **book**: [docs](https://docs.arduino.cc/)
+  - [02_spaceship_interface](./arduino/book/02_spaceship_interface)
+  - [03_love_o_meter](./arduino/book/03_love_o_meter)
 
 ### C
 - **lang**: [docs](https://en.cppreference.com/w/c/language)
