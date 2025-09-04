@@ -3,28 +3,47 @@
 This repo contains small projects and code snippets I've used to learn
 programming languages or libraries I'm interested in.
 
-## The workflow
+## My workflow
+
+I follow the same workflow throughout the lifetime of a branch.
+
+To speed things up, I use the following aliases:
+
+```sh
+alias commit="git commit -m "$1""
+alias add="git add ."
+alias push="git push"
+alias branch="git branch --show-current"
+alias toplevel="git rev-parse --show-toplevel"
+alias prev="git rev-parse --symbolic-full-name --abbrev-ref=loose @{-1}"
+alias master="git checkout master"
+```
 
 To work a new branch:
 
 ```sh
 git checkout -b <branch>
-mkdir -p $(git branch --show-current)
-code $(git branch --show-current)
+mkdir -p $(branch)
+code $(branch)
 ```
 
-To go back to the top level:
+To make a new commit:
 
 ```sh
-code $(git rev-parse --show-toplevel)
+add
+commit "[$(branch)] commit message"
 ```
 
-To rebase master after finishing work on a branch:
+To rebase master after completing work on a branch:
 
 ```sh
-git checkout master
-git rebase $(git rev-parse --symbolic-full-name @{-1})
+push
+code $(toplevel)
+master
+git rebase $(prev)
 ```
+
+After that, I do repeat the process for the next branch.
 
 ## What I want to learn
 
@@ -67,12 +86,15 @@ git rebase $(git rev-parse --symbolic-full-name @{-1})
 - I'd like to learn the NASM (Intel) before GAS (AT&T).
   - Docs (syscalls x86_64): https://blog.rchapman.org/posts/Linux_System_Call_Table_for_x86_64/
 
-### Others
+### Other languages
 - V: general purpose language ([repo](https://github.com/vlang/v))
 - Odin: Data-Oriented language ([repo](https://github.com/odin-lang/Odin))
 - Gleam: language for building scalable systems ([repo](https://github.com/gleam-lang/gleam))
 - Amber: compiles to Bash ([repo](https://github.com/amber-lang/amber))
 - Carbon: experimental successor of C++ ([repo](https://github.com/carbon-language/carbon-lang))
+
+### Others
+- [LLVM tutorials](https://llvm.org/docs/tutorial/).
 - More on my [Ideas](https://github.com/stars/kerudev/lists/ideas) star list.
 
 ## What I have learned
@@ -81,6 +103,7 @@ git rebase $(git rev-parse --symbolic-full-name @{-1})
 - **book**: [docs](https://docs.arduino.cc/)
   - [02_spaceship_interface](./arduino/book/02_spaceship_interface)
   - [03_love_o_meter](./arduino/book/03_love_o_meter)
+  - [04_color_mixing_lamp](./arduino/book/04_color_mixing_lamp)
 
 ### C
 - **lang**: [docs](https://en.cppreference.com/w/c/language)
