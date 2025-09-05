@@ -7,5 +7,6 @@
 #define CONTAINER2_SPEC         "../textures/container2_specular.png"
 #define CONTAINER2_SPEC_COLORED "../textures/lighting_maps_specular_color.png"
 #define MATRIX_EMI              "../textures/matrix.jpg"
+#define BACKPACK_MODEL          "../models/backpack/backpack.obj"
 
 #endif // CONSTANTS_H
