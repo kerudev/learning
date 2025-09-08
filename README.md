@@ -136,6 +136,7 @@ After that, I do repeat the process for the next branch.
   - [13_lighting_maps](./cpp/opengl/learnopengl/13_lighting_maps)
   - [14_light_casters](./cpp/opengl/learnopengl/14_light_casters)
   - [15_multiple_lights](./cpp/opengl/learnopengl/15_multiple_lights)
+  - [20_model_loading](./cpp/opengl/learnopengl/20_model_loading)
 
 ### PowerShell
 - **lang**: [docs](https://learn.microsoft.com/en-us/powershell/scripting/how-to-use-docs?view=powershell-7.5)
