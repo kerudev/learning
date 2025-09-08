@@ -1,16 +1,1 @@
-# VSCode
 .vscode
-
-# C/C++
-build
-lib
-
-# Python
-__pycache__
-site_packages
-
-# Rust
-target
-
-# TS
-node_modules
