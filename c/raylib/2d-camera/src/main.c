@@ -6,7 +6,7 @@
 #include "raylib.h"
 #include "raygui.h"
 
-# define M_PI 3.14159265358979323846
+#define M_PI 3.14159265358979323846
 #define MAX_BUILDINGS 100
 #define GRAVITY_CONSTANT 9.81f
 

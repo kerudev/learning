@@ -16,12 +16,20 @@ Dependencies:
 
 To build `raygui` from source:
 
-```
+```sh
 git clone --depth 1 https://github.com/raysan5/raygui
-mkdir dependencies
 mv raygui/src/raygui.h raygui/src/raygui.c
 gcc -o build/raygui.so raygui/src/raygui.c -shared -fpic -DRAYGUI_IMPLEMENTATION -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
-mv raygui/src/raygui.c dependencies/raygui.h
+sudo mv raygui/src/raygui.c /usr/include/raygui.h
+rm -rf raygui
+```
+
+Building a shared object is not really needed, as `#define RAYGUI_IMPLEMENTATION`
+already does all the heavy work. So to get raygui.h without building:
+
+```sh
+git clone --depth 1 https://github.com/raysan5/raygui
+sudo mv raygui/src/raygui.h /usr/include
 rm -rf raygui
 ```
 

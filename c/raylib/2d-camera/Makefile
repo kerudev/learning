@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -Idependencies/
+CFLAGS = -Wall -Wextra
 LDFLAGS = -lraylib -lm -ldl -lpthread -lGL
 
 SRC_DIR = src
@@ -20,4 +20,4 @@ build/%.o: src/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(BUILD_DIR)/*.o $(BIN)
+	rm -rf $(BUILD_DIR)
