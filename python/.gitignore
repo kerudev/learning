@@ -1,0 +1,5 @@
+# cache
+__pycache__
+
+# dependencies 
+site_packages
