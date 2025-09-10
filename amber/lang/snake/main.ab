@@ -1,0 +1,74 @@
+import { echo_info, escaped, echo_colored, env_const_get, printf } from "std/env"
+import { text_contains, match_regex, lowercase } from "std/text"
+
+let COLUMNS = 0
+let LINES = 0
+
+let key = ""
+let headchar = ""
+
+fun init_grid() {
+    for i in 0..LINES - 2 {
+        for j in 0..COLUMNS - 2 {
+            $ eval "row{i}[{j}]='.'" $ ?
+        }
+    }
+}
+
+fun draw_grid() {
+    trust $ clear $
+
+    // draw first line
+    printf("┌")
+    for i in 0..COLUMNS - 2 { printf("─") }
+    printf("┐\n")
+
+    // draw box
+    for i in 0..LINES - 2 {
+        printf("|")
+        trust $ eval printf %s "\\\$\{row{i}[@]}" $
+        printf("|\n")
+    }
+
+    // draw last line
+    printf("└")
+    for i in 0..COLUMNS - 2 { printf("─") }
+    printf("┘\n")
+}
+
+fun cleanup() {
+    clear
+    exit 0
+}
+
+fun getkey() {
+    trust $ read -rsn1 -t 0.1 {nameof key} $
+    key = lowercase(key)
+
+    if {
+        key == "w": headchar = "^"
+        key == "a": headchar = "<"
+        key == "d": headchar = ">"
+        key == "s": headchar = "v"
+        key == "q": cleanup()
+    }
+}
+
+main {
+    COLUMNS = trust $ tput cols $ as Num
+    LINES = trust $ tput lines $ as Num
+
+    if COLUMNS != 80 or LINES != 24 {
+        echo_colored("Please resize your terminal to 80x24", 31)
+        echo_colored(trust $ echo "Current size: {COLUMNS}x{LINES}" $, 34)
+        exit 1
+    }
+
+    init_grid()
+    draw_grid()
+
+    loop {
+        getkey()
+        draw_grid()
+    }
+}
