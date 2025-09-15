@@ -48,38 +48,28 @@ After that, I do repeat the process for the next branch.
 ## What I want to learn
 
 ### Python
-- **pandas**: data analysis. Uses DataFrames (table-like structures) as the core component. 
-  - Docs: https://pandas.pydata.org/docs/
+- [**collections**](https://docs.python.org/3.13/library/collections.html): standard library.
+- [**functools**](https://docs.python.org/3.13/library/functools.html): standard library.
+- [**itertools**](https://docs.python.org/3.13/library/itertools.html): standard library.
+- [**struct**](https://docs.python.org/3.13/library/struct.html): standard library.
+- [**pandas**](https://pandas.pydata.org/docs/): data analysis library.
 
 ### Rust
-- **serde**: I've worked with it on a surface level, but I want to know it more in depth.
-  - Home: https://serde.rs/
-
-- **tokio**: really popular on the Rust community. Would be helpful to reinforce my concurrency knowledge.
-  - Home: https://tokio.rs/
+- [**serde**](https://serde.rs/): I've worked with it on a surface level, but I want to know it more in depth.
+- [**tokio**](https://tokio.rs/): really popular on the Rust community. Would be helpful to reinforce my concurrency knowledge.
 
 ### C
-- **Clay**: modern layout library. Can render with raylib, WebGL, etc. 
-  - Home: https://www.nicbarker.com/clay
+- [**Clay**](https://www.nicbarker.com/clay): modern layout library. Can render with raylib, WebGL, etc. 
 
 ### Web
-- **NextJS**: similar to React, but with backend management too.
-  - Home: https://nextjs.org/
-  - Docs: https://nextjs.org/learn
-
-- **WebGL**: graphics engine in the browser.
-  - Docs: https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API
+- [**NextJS**](https://nextjs.org/): similar to React, but with backend management too.
+- [**WebGL**](https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API): graphics engine in the browser.
 
 ### Zig
-- I've always been curious about it.
-  - Home: https://ziglang.org/
-  - Docs: https://ziglang.org/learn/
-  - Book: https://pedropark99.github.io/zig-book/
+- [**lang**](https://ziglang.org/): I've always been curious about it. 
 
 ### Go
-- I want to know why it got so popular and explore it!
-  - Home: https://go.dev/
-  - Docs: https://go.dev/learn/
+- [**lang**](https://go.dev/): I want to know why it got so popular and explore it!
 
 ### assembly
 - Why not?
@@ -94,7 +84,11 @@ After that, I do repeat the process for the next branch.
 - Carbon: experimental successor of C++ ([repo](https://github.com/carbon-language/carbon-lang))
 
 ### Others
-- [LLVM tutorials](https://llvm.org/docs/tutorial/).
+- [LLVM tutorials](https://llvm.org/docs/tutorial/)
+- [NextJS docs](https://nextjs.org/learn)
+- [Go docs](https://go.dev/learn/)
+- [Zig docs](https://ziglang.org/learn/)
+- [Zig book](https://pedropark99.github.io/zig-book/)
 - More on my [Ideas](https://github.com/stars/kerudev/lists/ideas) star list.
 
 ## What I have learned
@@ -128,9 +122,9 @@ After that, I do repeat the process for the next branch.
 ### C++
 - **learnopengl**: [home](https://learnopengl.com/)
   - [first part](./c/opengl/learnopengl) (lessons use C++ libraries, so I moved to C++ to save time)
-  - [04_transformations](./cpp/opengl/learnopengl/04_transformations/)
-  - [05_coordinate_systems](./cpp/opengl/learnopengl/05_coordinate_systems/)
-  - [06_camera](./cpp/opengl/learnopengl/06_camera/)
+  - [04_transformations](./cpp/opengl/learnopengl/04_transformations)
+  - [05_coordinate_systems](./cpp/opengl/learnopengl/05_coordinate_systems)
+  - [06_camera](./cpp/opengl/learnopengl/06_camera)
   - [10_colors](./cpp/opengl/learnopengl/10_colors)
   - [11_basic_lighting](./cpp/opengl/learnopengl/11_basic_lighting)
   - [12_materials](./cpp/opengl/learnopengl/12_materials)
