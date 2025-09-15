@@ -8,6 +8,6 @@ In this project I learned how to:
 Components used:
 - 1 RGB LED
 - 3 phototransistors
-- 3 220 Ohm resistors
-- 3 10k Ohm resistors
+- 3 220Ω resistors
+- 3 10kΩ resistors
 - Red, green and blue color plastic sheets

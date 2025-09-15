@@ -10,5 +10,5 @@ Components used:
 - 1 switch
 - 2 red LEDs
 - 1 green LEDs
-- 3 220 Ohm resistors
-- 1 10k Ohm resistor
+- 3 220Ω resistors
+- 1 10kΩ resistor

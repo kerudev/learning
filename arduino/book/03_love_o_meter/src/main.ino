@@ -1,5 +1,7 @@
 #include <Arduino.h>
 
+const int BAUD_RATE = 9600;
+
 const int SENSOR_PIN = A0;
 
 const float BASELINE_TEMP = 25.0;
@@ -9,7 +11,7 @@ const int LEDS[] = {2, 3, 4};
 const int LEDS_LEN = sizeof(LEDS) / sizeof(LEDS[0]);
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(BAUD_RATE);
 
   for (int n = 0; n < LEDS_LEN; n++) {
     pinMode(LEDS[n], OUTPUT);
