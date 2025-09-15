@@ -7,5 +7,5 @@ In this project I learned how to:
 
 Components used:
 - 3 red LEDs
-- 3 220 Ohm resistors
+- 3 220Ω resistors
 - 1 TMP36 temperature sensor

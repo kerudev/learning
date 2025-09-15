@@ -3,19 +3,23 @@
 
 Servo servo;
 
-int const MIN_VAL = 0;
-int const MAX_VAL = 1023;
+const int BAUD_RATE = 9600;
 
-int const MIN_ANGLE = 0;
-int const MAX_ANGLE = 179;
+const int MIN_VAL = 0;
+const int MAX_VAL = 1023;
 
-int const POT_PIN = A0;
+const int MIN_ANGLE = 0;
+const int MAX_ANGLE = 179;
+
+const int POT_PIN = A0;
+const int SERVO_PIN = 5;
+
 int potVal;
 int angle;
 
 void setup() {
-  servo.attach(5);
-  Serial.begin(9600);
+  servo.attach(SERVO_PIN);
+  Serial.begin(BAUD_RATE);
 }
 
 void loop() {
@@ -24,7 +28,7 @@ void loop() {
 
   Serial.print("potVal: ");
   Serial.print(potVal);
-  Serial.print(", angle: ");
+  Serial.print("\tangle: ");
   Serial.println(angle);
 
   servo.write(angle);
