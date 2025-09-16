@@ -99,6 +99,8 @@ After that, I do repeat the process for the next branch.
   - [03_love_o_meter](./arduino/book/03_love_o_meter)
   - [04_color_mixing_lamp](./arduino/book/04_color_mixing_lamp)
   - [05_mood_cue](./arduino/book/05_mood_cue)
+  - [06_light_theremin](./arduino/book/06_light_theremin)
+  - [07_keyboard_instrument](./arduino/book/07_keyboard_instrument)
 
 ### C
 - **lang**: [docs](https://en.cppreference.com/w/c/language)

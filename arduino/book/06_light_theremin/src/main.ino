@@ -27,7 +27,7 @@ void setup() {
     if (sensorVal < sensorMin) sensorMin = sensorVal;
   }
 
-  digitalWrite(SENSOR_PIN, LOW);
+  digitalWrite(LED_PIN, LOW);
 
   Serial.begin(BAUD_RATE);
 }
