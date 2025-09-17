@@ -1,5 +1,5 @@
-import { echo_info, escaped, echo_colored, env_const_get, printf } from "std/env"
-import { text_contains, match_regex, lowercase } from "std/text"
+import { echo_colored, printf, env_var_get } from "std/env"
+import { lowercase } from "std/text"
 
 let COLUMNS = 0
 let LINES = 0
@@ -8,67 +8,93 @@ let key = ""
 let headchar = ""
 
 fun init_grid() {
-    for i in 0..LINES - 2 {
-        for j in 0..COLUMNS - 2 {
-            $ eval "row{i}[{j}]='.'" $ ?
+    for i in 0..LINES {
+        for j in 0..COLUMNS {
+            trust $ eval "row{i}[{j}]=' '" $
         }
     }
 }
 
 fun draw_grid() {
-    trust $ clear $
+    trust $ tput rc $ // restore cursor position
+    trust $ tput sc $ // save cursor position
 
     // draw first line
     printf("┌")
-    for i in 0..COLUMNS - 2 { printf("─") }
+    for i in 0..COLUMNS { printf("─") }
     printf("┐\n")
 
     // draw box
-    for i in 0..LINES - 2 {
+    for i in 0..LINES {
         printf("|")
-        trust $ eval printf %s "\\\$\{row{i}[@]}" $
+        trust $ eval "printf '%s' \\\"\\\$\{row\$i[@]}\\\"" $
         printf("|\n")
     }
 
     // draw last line
     printf("└")
-    for i in 0..COLUMNS - 2 { printf("─") }
-    printf("┘\n")
+    for i in 0..COLUMNS { printf("─") }
+    printf("┘")
 }
 
 fun cleanup() {
-    clear
+    trust $ tput cnorm $ // hide cursor
+    trust $ tput clear $ // clear screen and cursor position
     exit 0
 }
 
-fun getkey() {
+fun set_key() {
     trust $ read -rsn1 -t 0.1 {nameof key} $
     key = lowercase(key)
+}
 
+fun set_head() {
     if {
         key == "w": headchar = "^"
         key == "a": headchar = "<"
-        key == "d": headchar = ">"
         key == "s": headchar = "v"
+        key == "d": headchar = ">"
         key == "q": cleanup()
     }
 }
 
-main {
-    COLUMNS = trust $ tput cols $ as Num
-    LINES = trust $ tput lines $ as Num
+fun spawn_food() {
+    let rnd_x = 0
+    let rnd_y = 0
+    
+    loop {
+        rnd_x = trust env_var_get("RANDOM") as Num % LINES
+        rnd_y = trust env_var_get("RANDOM") as Num % COLUMNS
 
-    if COLUMNS != 80 or LINES != 24 {
+        $ eval "[[ \\\"\\\$\{row\$rnd_x[\$rnd_y]}\\\" != "@" ]]" $ failed { continue }
+
+        break
+    }
+
+    trust $ eval "row\$rnd_x[\$rnd_y]='@'" $
+}
+
+main {
+    COLUMNS = trust $ tput cols $ as Num - 2
+    LINES = trust $ tput lines $ as Num - 2
+
+    if COLUMNS < 80 or LINES < 24 {
         echo_colored("Please resize your terminal to 80x24", 31)
         echo_colored(trust $ echo "Current size: {COLUMNS}x{LINES}" $, 34)
         exit 1
     }
 
+    trust $ tput clear $ // clear screen and cursor position
+    trust $ tput sc $    // save cursor position
+    trust $ tput civis $ // hide cursor
+
     init_grid()
     draw_grid()
 
     loop {
-        getkey()
+        set_key()
+        set_head()
+        spawn_food()
         draw_grid()
     }
 }
