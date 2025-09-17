@@ -1,18 +1,45 @@
-import { echo_colored, printf, env_var_get } from "std/env"
+import { echo_colored, printf, env_var_get, input_hidden } from "std/env"
 import { lowercase } from "std/text"
+import { math_floor } from "std/math"
 
 let COLUMNS = 0
 let LINES = 0
 
-let key = ""
-let headchar = ""
+let pressed = ""
+let key = "w"
 
-fun init_grid() {
+let head = "^"
+let head_y = 0
+let head_x = 0
+
+let is_alive = true
+
+fun cleanup() {
+    trust $ tput clear $ // clear screen and cursor position
+    trust $ tput cnorm $ // show cursor
+    trust $ stty echo $  // show input
+
+    exit 0
+}
+
+fun init_game() {
+    trust $ tput clear $ // clear screen and cursor position
+    trust $ tput sc $    // save cursor position
+    trust $ tput civis $ // hide cursor
+    trust $ stty -echo $ // hide input
+
+    // init grid
     for i in 0..LINES {
         for j in 0..COLUMNS {
             trust $ eval "row{i}[{j}]=' '" $
         }
     }
+
+    // init snake
+    head_y = math_floor(LINES / 2)
+    head_x = math_floor(COLUMNS / 2)
+
+    trust $ eval "row{head_y}[{head_x}]={head}" $
 }
 
 fun draw_grid() {
@@ -27,7 +54,7 @@ fun draw_grid() {
     // draw box
     for i in 0..LINES {
         printf("|")
-        trust $ eval "printf '%s' \\\"\\\$\{row\$i[@]}\\\"" $
+        trust $ eval "printf '%s' \\\"\\\$\{row{i}[@]}\\\"" $
         printf("|\n")
     }
 
@@ -37,64 +64,78 @@ fun draw_grid() {
     printf("┘")
 }
 
-fun cleanup() {
-    trust $ tput cnorm $ // hide cursor
-    trust $ tput clear $ // clear screen and cursor position
-    exit 0
-}
+fun read_key() {
+    trust $ read -rsn1 -t 0.001 {nameof pressed} $
 
-fun set_key() {
-    trust $ read -rsn1 -t 0.1 {nameof key} $
-    key = lowercase(key)
+    if len(pressed) {
+        key = lowercase(pressed)
+    }
 }
 
 fun set_head() {
     if {
-        key == "w": headchar = "^"
-        key == "a": headchar = "<"
-        key == "s": headchar = "v"
-        key == "d": headchar = ">"
+        key == "w" and head != "v": head = "^"
+        key == "s" and head != "^": head = "v"
+        key == "a" and head != ">": head = "<"
+        key == "d" and head != "<": head = ">"
         key == "q": cleanup()
     }
+}
+
+fun move_snake() {
+    if {
+        head == "^": head_y -= 1
+        head == "v": head_y += 1
+        head == "<": head_x -= 1
+        head == ">": head_x += 1
+    }
+
+    if head_y < 0 or head_y > LINES or head_x < 0 or head_x > COLUMNS {
+        echo_colored("You died!", 31)
+        exit 1
+    }
+
+    trust $ eval "row{head_y}[{head_x}]='{head}'" $
 }
 
 fun spawn_food() {
     let rnd_x = 0
     let rnd_y = 0
-    
+
     loop {
         rnd_x = trust env_var_get("RANDOM") as Num % LINES
         rnd_y = trust env_var_get("RANDOM") as Num % COLUMNS
 
-        $ eval "[[ \\\"\\\$\{row\$rnd_x[\$rnd_y]}\\\" != "@" ]]" $ failed { continue }
+        $ eval "[[ \\\"\\\$\{row{rnd_x}[{rnd_y}]}\\\" = \\\" \\\" ]]" $ failed { continue }
 
         break
     }
 
-    trust $ eval "row\$rnd_x[\$rnd_y]='@'" $
+    trust $ eval "row{rnd_x}[{rnd_y}]='@'" $
 }
 
 main {
     COLUMNS = trust $ tput cols $ as Num - 2
     LINES = trust $ tput lines $ as Num - 2
 
-    if COLUMNS < 80 or LINES < 24 {
-        echo_colored("Please resize your terminal to 80x24", 31)
-        echo_colored(trust $ echo "Current size: {COLUMNS}x{LINES}" $, 34)
-        exit 1
+    if COLUMNS < 3 or LINES < 3 {
+        echo_colored("Please resize your terminal to be at least 33x5", 31)
+        echo_colored("Current size: {COLUMNS}x{LINES}", 34)
+        exit 0
     }
 
-    trust $ tput clear $ // clear screen and cursor position
-    trust $ tput sc $    // save cursor position
-    trust $ tput civis $ // hide cursor
-
-    init_grid()
+    init_game()
     draw_grid()
 
     loop {
-        set_key()
+        read_key()
         set_head()
         spawn_food()
+        move_snake()
         draw_grid()
+
+        trust $ sleep 0.1 $
+
+        if not is_alive { break }
     }
 }
