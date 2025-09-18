@@ -2,24 +2,33 @@ import { echo_colored, printf, env_var_get, input_hidden } from "std/env"
 import { lowercase } from "std/text"
 import { math_floor } from "std/math"
 
-let COLUMNS = 0
-let LINES = 0
-
+// input
 let pressed = ""
 let key = "w"
 
+// snake's head
 let head = "^"
 let head_y = 0
 let head_x = 0
 
-let is_alive = true
+// snake's tail
+let tail_y = 0
+let tail_x = 0
 
-fun cleanup() {
-    trust $ tput clear $ // clear screen and cursor position
+// game grid
+let COLUMNS = 0
+let LINES = 0
+
+// game state
+let score = 0
+let is_alive = true
+let body = "^"
+
+fun cleanup(code: Num) {
     trust $ tput cnorm $ // show cursor
     trust $ stty echo $  // show input
 
-    exit 0
+    exit code
 }
 
 fun init_game() {
@@ -31,7 +40,7 @@ fun init_game() {
     // init grid
     for i in 0..LINES {
         for j in 0..COLUMNS {
-            trust $ eval "row{i}[{j}]=' '" $
+            trust $ eval "grid{i}[{j}]=' '" $
         }
     }
 
@@ -39,7 +48,7 @@ fun init_game() {
     head_y = math_floor(LINES / 2)
     head_x = math_floor(COLUMNS / 2)
 
-    trust $ eval "row{head_y}[{head_x}]={head}" $
+    trust $ eval "grid{head_y}[{head_x}]='{head}'" $
 }
 
 fun draw_grid() {
@@ -54,7 +63,7 @@ fun draw_grid() {
     // draw box
     for i in 0..LINES {
         printf("|")
-        trust $ eval "printf '%s' \\\"\\\$\{row{i}[@]}\\\"" $
+        trust $ eval "printf '%s' \\\"\\\$\{grid{i}[@]}\\\"" $
         printf("|\n")
     }
 
@@ -78,11 +87,15 @@ fun set_head() {
         key == "s" and head != "^": head = "v"
         key == "a" and head != ">": head = "<"
         key == "d" and head != "<": head = ">"
-        key == "q": cleanup()
+        key == "q": cleanup(0)
     }
 }
 
 fun move_snake() {
+    let prev_x = head_x
+    let prev_y = head_y
+    let prev_char = " "
+
     if {
         head == "^": head_y -= 1
         head == "v": head_y += 1
@@ -90,12 +103,25 @@ fun move_snake() {
         head == ">": head_x += 1
     }
 
-    if head_y < 0 or head_y > LINES or head_x < 0 or head_x > COLUMNS {
-        echo_colored("You died!", 31)
-        exit 1
+    if head_y < 0 or head_y > LINES - 1 or head_x < 0 or head_x > COLUMNS - 1 {
+        echo_colored("You died! Your score was {score}", 31)
+        cleanup(1)
     }
 
-    trust $ eval "row{head_y}[{head_x}]='{head}'" $
+    $ eval "[[ \\\"\\\$\{grid{head_y}[{head_x}]}\\\" != 'o' ]]" $ failed {
+        echo_colored("You died! Your score was {score}", 31)
+        cleanup(1)
+    }
+
+    $ eval "[[ \\\"\\\$\{grid{head_y}[{head_x}]}\\\" != '@' ]]" $ failed {
+        prev_char = "o"
+        score += 1
+    }
+
+    // body += head
+
+    trust $ eval "grid{prev_y}[{prev_x}]='{prev_char}'" $
+    trust $ eval "grid{head_y}[{head_x}]='{head}'" $
 }
 
 fun spawn_food() {
@@ -106,12 +132,12 @@ fun spawn_food() {
         rnd_x = trust env_var_get("RANDOM") as Num % LINES
         rnd_y = trust env_var_get("RANDOM") as Num % COLUMNS
 
-        $ eval "[[ \\\"\\\$\{row{rnd_x}[{rnd_y}]}\\\" = \\\" \\\" ]]" $ failed { continue }
+        $ eval "[[ \\\"\\\$\{grid{rnd_x}[{rnd_y}]}\\\" = \\\" \\\" ]]" $ failed { continue }
 
         break
     }
 
-    trust $ eval "row{rnd_x}[{rnd_y}]='@'" $
+    trust $ eval "grid{rnd_x}[{rnd_y}]=@" $
 }
 
 main {
