@@ -1,4 +1,4 @@
-# cpp/opengl/learnopengl/13_lighting_maps
+# cpp/opengl/learnopengl/15_multiple_lights
 
 Example and exercises from https://learnopengl.com/Lighting/Multiple-lights
 

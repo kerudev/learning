@@ -1,4 +1,4 @@
-# cpp/opengl/learnopengl/13_lighting_maps
+# cpp/opengl/learnopengl/14_light_casters
 
 Example and exercises from https://learnopengl.com/Lighting/Light-casters
 
