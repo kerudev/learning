@@ -5,7 +5,8 @@ In this project I learned how to:
 - Use the resistor ladder as a voltage divider.
 - Use different voltages to output a tone to the piezo.
 
-Components used:
+## Components
+
 - 1 piezo
 - 4 switch
 - 1 1MΩ resistor

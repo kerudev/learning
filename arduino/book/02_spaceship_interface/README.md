@@ -6,7 +6,8 @@ In this project I learned how to:
 - Set digital pins to be inputs or outputs.
 - Read from and write to digital pins.
 
-Components used:
+## Components
+
 - 1 switch
 - 2 red LEDs
 - 1 green LEDs

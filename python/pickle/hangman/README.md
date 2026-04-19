@@ -12,7 +12,7 @@ Using `./hangman.py -h` displays the following commands:
 
 - `score`: manages your score
   - `--show`: displays your score
-  - `--show`: resets your score
+  - `--reset`: resets your score
 
 - `add`: add a word to the game's database
   - `word`: add a specific word

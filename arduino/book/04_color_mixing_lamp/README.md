@@ -5,7 +5,8 @@ In this project I learned how to:
 - Use phototransistors with colored plastic sheets to filter wavelengths.
 - Use light intensity received by the phototransistors to light up an RGB LED.
 
-Components used:
+## Components
+
 - 1 RGB LED
 - 3 phototransistors
 - 3 220Ω resistors

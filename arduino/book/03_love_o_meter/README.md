@@ -5,7 +5,8 @@ In this project I learned how to:
 - Use the TMP36 temperature sensor.
 - Calculate temperature using TMP36's output.
 
-Components used:
+## Components
+
 - 3 red LEDs
 - 3 220Ω resistors
 - 1 TMP36 temperature sensor

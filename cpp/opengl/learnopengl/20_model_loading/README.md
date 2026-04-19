@@ -6,7 +6,7 @@ Example from:
 - https://learnopengl.com/Model-Loading/Model
 
 In this project I learned how to:
-- Work with Assimp.
+- Work with `Assimp`.
 - Load a model from an obj file.
 - Simplify buffer manipulation (VAOs and VBOs) with meshes.
 
