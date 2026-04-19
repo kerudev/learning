@@ -3,6 +3,12 @@
 This repo contains small projects and code snippets I've used to learn
 programming languages or libraries I'm interested in.
 
+> [!IMPORTANT] Disclaimer (for others and myself)
+> If you see incorrect information in any of the README's, keep in mind they
+> will not be touched ever again. They were written when I was learning about a
+> certain topic, and I think there is some kind of beauty in leaving that
+> "naiveness" of learning something for the first time :)
+
 ## My workflow
 
 I follow the same workflow throughout the lifetime of a branch.
@@ -68,9 +74,6 @@ After that, I do repeat the process for the next branch.
 ### Zig
 - [**lang**](https://ziglang.org/): I've always been curious about it. 
 
-### Go
-- [**lang**](https://go.dev/): I want to know why it got so popular and explore it!
-
 ### assembly
 - Why not?
 - I'd like to learn the NASM (Intel) before GAS (AT&T).
@@ -120,6 +123,8 @@ After that, I do repeat the process for the next branch.
 
 - **raylib**: [docs](https://www.raylib.com/)
   - [2d-camera](./c/raylib/2d-camera)
+  - **wasm**:
+    - [cross-compile](./c/raylib/wasm/cross-compile)
 
 ### C++
 - **learnopengl**: [home](https://learnopengl.com/)
