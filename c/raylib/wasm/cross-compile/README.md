@@ -75,12 +75,14 @@ rm -rf raylib-5.5_*
 
 Check out `Makefile` to see the build recipes for each target:
 - `make linux`
+- `make linux-cpp`
 - `make windows`
+- `make windows-cpp`
 - `make wasm`
+- `make wasm-cpp`
 
 ## Extras
 
 - [Mozilla's guide to WASM](https://developer.mozilla.org/en-US/docs/WebAssembly/Guides/C_to_Wasm)
 - [emcc -s flag](https://github.com/emscripten-core/emscripten/blob/main/src/settings.js)
-- [raylib's WASM tutorial](https://github.com/raysan5/raylib/wiki/Working-for-Web-(HTML5))
 - [raylib's WASM template](https://github.com/raysan5/raylib-game-template)
