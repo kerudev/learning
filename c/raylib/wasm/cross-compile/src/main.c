@@ -12,16 +12,27 @@ int main() {
 
     Rectangle box = (Rectangle) { 0, 0, 80, 60 };
     int boxSpeedX = 3;
-    int boxSpeedY = 2;
+    int boxSpeedY = 3;
 
-    #ifdef __EMSCRIPTEN__
-    char *text = "Running on Web!";
+    const char *sys =
+    #if defined(__EMSCRIPTEN__)
+        "Web";
     #elif defined(_WIN32)
-    char *text = "Running on Windows!";
-    #elif defined (__GNUC__)
-    char *text = "Running on Unix!";
+        "Windows";
+    #elif defined (__linux__)
+        "Unix";
+    #else
+        "unknown platform";
     #endif
 
+    const char *lang = 
+    #if defined(__cplusplus)
+        "C++";
+    #else
+        "C";
+    #endif
+
+    const char *text = TextFormat("Running on %s! (%s)", sys, lang);
     int textW = MeasureText(text, FONT_SIZE);
     int textH = FONT_SIZE;
 
@@ -42,7 +53,7 @@ int main() {
         box.x -= boxSpeedX;
         box.y -= boxSpeedY;
 
-        DrawText(text, 10, 10, FONT_SIZE, LIGHTGRAY);
+        DrawText(text, 10, 10, FONT_SIZE, BLACK);
 
         EndDrawing();
     }
