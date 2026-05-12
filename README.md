@@ -58,14 +58,21 @@ After that, I do repeat the process for the next branch.
 - [**functools**](https://docs.python.org/3.13/library/functools.html): standard library.
 - [**itertools**](https://docs.python.org/3.13/library/itertools.html): standard library.
 - [**struct**](https://docs.python.org/3.13/library/struct.html): standard library.
+- [**asyncio**](https://docs.python.org/3/library/asyncio.html): async I/O.
 - [**pandas**](https://pandas.pydata.org/docs/): data analysis library.
 
 ### Rust
 - [**serde**](https://serde.rs/): I've worked with it on a surface level, but I want to know it more in depth.
 - [**tokio**](https://tokio.rs/): really popular on the Rust community. Would be helpful to reinforce my concurrency knowledge.
+- [**rocket**](https://rocket.rs/): framework for creating web apps.
+- [**anyhow**](https://docs.rs/anyhow/latest/anyhow/): error handling.
 
 ### C
 - [**Clay**](https://www.nicbarker.com/clay): modern layout library. Can render with raylib, WebGL, etc. 
+- [**pthreads**](https://pubs.opengroup.org/onlinepubs/7908799/xsh/pthread.h.html): POSIX threads.
+- [**libcurl**](https://curl.se/libcurl/): CURL API in C.
+- [**libuv**](https://libuv.org/): modern async I/O.
+- [**zlib**](https://www.zlib.net/): lossless data compression.
 
 ### Web
 - [**NextJS**](https://nextjs.org/): similar to React, but with backend management too.
