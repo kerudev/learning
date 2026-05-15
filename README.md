@@ -59,27 +59,34 @@ After that, I do repeat the process for the next branch.
 - [**itertools**](https://docs.python.org/3.13/library/itertools.html): standard library.
 - [**struct**](https://docs.python.org/3.13/library/struct.html): standard library.
 - [**asyncio**](https://docs.python.org/3/library/asyncio.html): async I/O.
+- [**C API**](https://docs.python.org/3/c-api/index.html): C level access to the Python compiler.
+- [**C extensions**](https://docs.python.org/3/extending/extending.html): a way to create Python modules with C.
 - [**pandas**](https://pandas.pydata.org/docs/): data analysis library.
+- [**numpy**](https://numpy.org/): scientific computing library.
 
 ### Rust
 - [**serde**](https://serde.rs/): I've worked with it on a surface level, but I want to know it more in depth.
 - [**tokio**](https://tokio.rs/): really popular on the Rust community. Would be helpful to reinforce my concurrency knowledge.
 - [**rocket**](https://rocket.rs/): framework for creating web apps.
 - [**anyhow**](https://docs.rs/anyhow/latest/anyhow/): error handling.
+- [**bevy**](https://bevy.org/): game engine.
+- [**diesel**](https://diesel.rs/): ORM and query builder.
 
 ### C
-- [**Clay**](https://www.nicbarker.com/clay): modern layout library. Can render with raylib, WebGL, etc. 
+- [**Clay**](https://www.nicbarker.com/clay): modern layout library. Can render with raylib, WebGL, etc.
 - [**pthreads**](https://pubs.opengroup.org/onlinepubs/7908799/xsh/pthread.h.html): POSIX threads.
 - [**libcurl**](https://curl.se/libcurl/): CURL API in C.
 - [**libuv**](https://libuv.org/): modern async I/O.
 - [**zlib**](https://www.zlib.net/): lossless data compression.
+- [**GTK**](https://docs.gtk.org/): toolkit for creating GUIs targeted at GNOME.
+- [**SQLite**](https://sqlite.org/docs.html): self-contained, serverless database.
 
 ### Web
 - [**NextJS**](https://nextjs.org/): similar to React, but with backend management too.
 - [**WebGL**](https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API): graphics engine in the browser.
 
 ### Zig
-- [**lang**](https://ziglang.org/): I've always been curious about it. 
+- [**lang**](https://ziglang.org/): I've always been curious about it.
 
 ### assembly
 - Why not?
