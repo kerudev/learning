@@ -9,8 +9,8 @@ class Collection(str, Enum):
     # COUNTER = "counter"
     # ORDEREDDICT = "ordereddict"
     # DEFAULTDICT = "defaultdict"
-    # USERDICT = "userdict"
-    # USERLIST = "userlist"
+    USERDICT = "userdict"
+    USERLIST = "userlist"
     USERSTRING = "userstring"
 
 
