@@ -4,7 +4,7 @@ import importlib.util
 
 class Collection(str, Enum):
     # NAMEDTUPLE = "namedtuple"
-    # DEQUE = "deque"
+    DEQUE = "deque"
     # CHAINMAP = "chainmap"
     # COUNTER = "counter"
     # ORDEREDDICT = "ordereddict"
