@@ -54,7 +54,6 @@ After that, I do repeat the process for the next branch.
 ## What I want to learn
 
 ### Python
-- [**collections**](https://docs.python.org/3.13/library/collections.html): standard library.
 - [**functools**](https://docs.python.org/3.13/library/functools.html): standard library.
 - [**itertools**](https://docs.python.org/3.13/library/itertools.html): standard library.
 - [**struct**](https://docs.python.org/3.13/library/struct.html): standard library.
@@ -63,6 +62,7 @@ After that, I do repeat the process for the next branch.
 - [**C extensions**](https://docs.python.org/3/extending/extending.html): a way to create Python modules with C.
 - [**pandas**](https://pandas.pydata.org/docs/): data analysis library.
 - [**numpy**](https://numpy.org/): scientific computing library.
+- [**hypothesis**](https://github.com/HypothesisWorks/hypothesis): testing library that could compliment my pytest knowledge.
 
 ### Rust
 - [**serde**](https://serde.rs/): I've worked with it on a surface level, but I want to know it more in depth.
@@ -161,6 +161,8 @@ After that, I do repeat the process for the next branch.
 ### Python
 - **pickle**: [docs](https://docs.python.org/3/library/pickle.html)
   - [hangman](./python/pickle/hangman)
+- **std**: [docs](https://docs.python.org/3.14/library)
+  - [collections](./python/std/collections)
 
 ### Rust
 - **ratatui**: [docs](https://ratatui.rs/)
