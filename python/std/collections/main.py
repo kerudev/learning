@@ -3,12 +3,12 @@ from enum import Enum
 import importlib.util
 
 class Collection(str, Enum):
-    # NAMEDTUPLE = "namedtuple"
+    NAMEDTUPLE = "namedtuple"
     DEQUE = "deque"
-    # CHAINMAP = "chainmap"
-    # COUNTER = "counter"
-    # ORDEREDDICT = "ordereddict"
-    # DEFAULTDICT = "defaultdict"
+    CHAINMAP = "chainmap"
+    COUNTER = "counter"
+    ORDEREDDICT = "ordereddict"
+    DEFAULTDICT = "defaultdict"
     USERDICT = "userdict"
     USERLIST = "userlist"
     USERSTRING = "userstring"
