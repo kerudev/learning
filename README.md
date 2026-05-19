@@ -159,10 +159,10 @@ After that, I do repeat the process for the next branch.
   - [wordle](./powershell/lang/wordle)
 
 ### Python
-- **pickle**: [docs](https://docs.python.org/3/library/pickle.html)
-  - [hangman](./python/pickle/hangman)
 - **std**: [docs](https://docs.python.org/3.14/library)
   - [collections](./python/std/collections)
+  - **pickle**: [docs](https://docs.python.org/3/library/pickle.html)
+    - [hangman](./python/std/pickle/hangman)
 
 ### Rust
 - **ratatui**: [docs](https://ratatui.rs/)
