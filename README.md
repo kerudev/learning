@@ -68,7 +68,7 @@ After that, I do repeat the process for the next branch.
 - [**serde**](https://serde.rs/): I've worked with it on a surface level, but I want to know it more in depth.
 - [**tokio**](https://tokio.rs/): really popular on the Rust community. Would be helpful to reinforce my concurrency knowledge.
 - [**rocket**](https://rocket.rs/): framework for creating web apps.
-- [**anyhow**](https://docs.rs/anyhow/latest/anyhow/): error handling.
+- [**reqwest**](https://docs.rs/reqwest/latest/reqwest/): HTTP client.
 - [**bevy**](https://bevy.org/): game engine.
 - [**diesel**](https://diesel.rs/): ORM and query builder.
 
@@ -168,3 +168,5 @@ After that, I do repeat the process for the next branch.
 - **ratatui**: [docs](https://ratatui.rs/)
   - [user-input](./rust/ratatui/user-input)
   - [table](./rust/ratatui/table)
+- **anyhow**: [docs](https://docs.rs/anyhow/latest/anyhow)
+  - [basics](./rust/anyhow/basics)
