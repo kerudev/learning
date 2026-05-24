@@ -1,0 +1,34 @@
+[
+  {
+    "id": 0,
+    "deadline": [
+      2026,
+      175
+    ],
+    "priority": "Low",
+    "size": 200,
+    "height": 128,
+    "width": 320
+  },
+  {
+    "id": 1,
+    "description": "Take care of plants",
+    "endDate": [
+      2026,
+      152
+    ],
+    "size": 400,
+    "height": 400,
+    "width": 300
+  },
+  {
+    "id": 2,
+    "title": "Finish reading book",
+    "deadline": [
+      2026,
+      150
+    ],
+    "priority": "High"
+  },
+  {}
+]
