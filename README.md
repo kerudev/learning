@@ -65,7 +65,6 @@ After that, I do repeat the process for the next branch.
 - [**hypothesis**](https://github.com/HypothesisWorks/hypothesis): testing library that could compliment my pytest knowledge.
 
 ### Rust
-- [**serde**](https://serde.rs/): I've worked with it on a surface level, but I want to know it more in depth.
 - [**tokio**](https://tokio.rs/): really popular on the Rust community. Would be helpful to reinforce my concurrency knowledge.
 - [**rocket**](https://rocket.rs/): framework for creating web apps.
 - [**reqwest**](https://docs.rs/reqwest/latest/reqwest/): HTTP client.
@@ -103,7 +102,6 @@ After that, I do repeat the process for the next branch.
 ### Others
 - [LLVM tutorials](https://llvm.org/docs/tutorial/)
 - [NextJS docs](https://nextjs.org/learn)
-- [Go docs](https://go.dev/learn/)
 - [Zig docs](https://ziglang.org/learn/)
 - [Zig book](https://pedropark99.github.io/zig-book/)
 - More on my [Ideas](https://github.com/stars/kerudev/lists/ideas) star list.
@@ -165,8 +163,10 @@ After that, I do repeat the process for the next branch.
     - [hangman](./python/std/pickle/hangman)
 
 ### Rust
+- **anyhow**: [docs](https://docs.rs/anyhow/latest/anyhow)
+  - [basics](./rust/anyhow/basics)
 - **ratatui**: [docs](https://ratatui.rs/)
   - [user-input](./rust/ratatui/user-input)
   - [table](./rust/ratatui/table)
-- **anyhow**: [docs](https://docs.rs/anyhow/latest/anyhow)
-  - [basics](./rust/anyhow/basics)
+- **serde**: [docs](https://serde.rs)
+  - [basics](./rust/serde/basics)
