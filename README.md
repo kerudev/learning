@@ -54,6 +54,7 @@ After that, I do repeat the process for the next branch.
 ## What I want to learn
 
 ### Python
+
 - [**functools**](https://docs.python.org/3.13/library/functools.html): standard library.
 - [**itertools**](https://docs.python.org/3.13/library/itertools.html): standard library.
 - [**struct**](https://docs.python.org/3.13/library/struct.html): standard library.
@@ -65,6 +66,7 @@ After that, I do repeat the process for the next branch.
 - [**hypothesis**](https://github.com/HypothesisWorks/hypothesis): testing library that could compliment my pytest knowledge.
 
 ### Rust
+
 - [**tokio**](https://tokio.rs/): really popular on the Rust community. Would be helpful to reinforce my concurrency knowledge.
 - [**rocket**](https://rocket.rs/): framework for creating web apps.
 - [**reqwest**](https://docs.rs/reqwest/latest/reqwest/): HTTP client.
@@ -72,6 +74,7 @@ After that, I do repeat the process for the next branch.
 - [**diesel**](https://diesel.rs/): ORM and query builder.
 
 ### C
+
 - [**Clay**](https://www.nicbarker.com/clay): modern layout library. Can render with raylib, WebGL, etc.
 - [**pthreads**](https://pubs.opengroup.org/onlinepubs/7908799/xsh/pthread.h.html): POSIX threads.
 - [**libcurl**](https://curl.se/libcurl/): CURL API in C.
@@ -79,20 +82,25 @@ After that, I do repeat the process for the next branch.
 - [**zlib**](https://www.zlib.net/): lossless data compression.
 - [**GTK**](https://docs.gtk.org/): toolkit for creating GUIs targeted at GNOME.
 - [**SQLite**](https://sqlite.org/docs.html): self-contained, serverless database.
+- [**ImGui**](https://github.com/ocornut/imgui): GUI library.
 
 ### Web
+
 - [**NextJS**](https://nextjs.org/): similar to React, but with backend management too.
 - [**WebGL**](https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API): graphics engine in the browser.
 
 ### Zig
+
 - [**lang**](https://ziglang.org/): I've always been curious about it.
 
 ### assembly
+
 - Why not?
 - I'd like to learn the NASM (Intel) before GAS (AT&T).
   - Docs (syscalls x86_64): https://blog.rchapman.org/posts/Linux_System_Call_Table_for_x86_64/
 
 ### Other languages
+
 - V: general purpose language ([repo](https://github.com/vlang/v))
 - Odin: Data-Oriented language ([repo](https://github.com/odin-lang/Odin))
 - Gleam: language for building scalable systems ([repo](https://github.com/gleam-lang/gleam))
@@ -100,15 +108,25 @@ After that, I do repeat the process for the next branch.
 - Carbon: experimental successor of C++ ([repo](https://github.com/carbon-language/carbon-lang))
 
 ### Others
+
+- My [Ideas](https://github.com/stars/kerudev/lists/ideas) star list on GitHub.
 - [LLVM tutorials](https://llvm.org/docs/tutorial/)
 - [NextJS docs](https://nextjs.org/learn)
 - [Zig docs](https://ziglang.org/learn/)
 - [Zig book](https://pedropark99.github.io/zig-book/)
-- More on my [Ideas](https://github.com/stars/kerudev/lists/ideas) star list.
+
+- Cybersecurity:
+  - [IDOR](https://cheatsheetseries.owasp.org/cheatsheets/Insecure_Direct_Object_Reference_Prevention_Cheat_Sheet.html)
+  - [Parameter Tampering](https://owasp.org/www-community/attacks/Web_Parameter_Tampering)
+
+- Shaders:
+  - https://thebookofshaders.com/
+  - https://www.youtube.com/watch?v=kfM-yu0iQBk
 
 ## What I have learned
 
 ### Arduino
+
 - **book**: [docs](https://docs.arduino.cc/)
   - [02_spaceship_interface](./arduino/book/02_spaceship_interface)
   - [03_love_o_meter](./arduino/book/03_love_o_meter)
@@ -118,6 +136,7 @@ After that, I do repeat the process for the next branch.
   - [07_keyboard_instrument](./arduino/book/07_keyboard_instrument)
 
 ### C
+
 - **lang**: [docs](https://en.cppreference.com/w/c/language)
   - [hello-blank](./c/lang/hello-blank)
   - [rock-paper-scissors](./c/lang/rock-paper-scissors)
@@ -139,6 +158,7 @@ After that, I do repeat the process for the next branch.
     - [cross-compile](./c/raylib/wasm/cross-compile)
 
 ### C++
+
 - **learnopengl**: [home](https://learnopengl.com/)
   - [first part](./c/opengl/learnopengl) (lessons use C++ libraries, so I moved to C++ to save time)
   - [04_transformations](./cpp/opengl/learnopengl/04_transformations)
@@ -153,16 +173,19 @@ After that, I do repeat the process for the next branch.
   - [20_model_loading](./cpp/opengl/learnopengl/20_model_loading)
 
 ### PowerShell
+
 - **lang**: [docs](https://learn.microsoft.com/en-us/powershell/scripting/how-to-use-docs?view=powershell-7.5)
   - [wordle](./powershell/lang/wordle)
 
 ### Python
+
 - **std**: [docs](https://docs.python.org/3.14/library)
   - [collections](./python/std/collections)
   - **pickle**: [docs](https://docs.python.org/3/library/pickle.html)
     - [hangman](./python/std/pickle/hangman)
 
 ### Rust
+
 - **anyhow**: [docs](https://docs.rs/anyhow/latest/anyhow)
   - [basics](./rust/anyhow/basics)
 - **ratatui**: [docs](https://ratatui.rs/)
