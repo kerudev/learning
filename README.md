@@ -101,11 +101,22 @@ After that, I do repeat the process for the next branch.
 
 ### Other languages
 
-- V: general purpose language ([repo](https://github.com/vlang/v))
-- Odin: Data-Oriented language ([repo](https://github.com/odin-lang/Odin))
-- Gleam: language for building scalable systems ([repo](https://github.com/gleam-lang/gleam))
-- Amber: compiles to Bash ([repo](https://github.com/amber-lang/amber))
-- Carbon: experimental successor of C++ ([repo](https://github.com/carbon-language/carbon-lang))
+- General-purpose
+  - Carbon: experimental successor of C++ (https://amber-lang.com)
+  - Odin: Data-Oriented language (https://odin-lang.org)
+  - V: general purpose language (https://vlang.io)
+
+- Functional
+  - Flix: combines logic programming and effect tracking (https://flix.dev/)
+  - Gleam: a small set of features, for building scalable systems (https://gleam.run)
+  - Koka: explicit type system (https://koka-lang.github.io)
+  - OCaml: strong typing and multi-paradigm support (https://ocaml.org)
+  - Scala: mixes object-oriented and functional (https://scala-lang.org)
+  - Unison: identifies code by content (https://unison-lang.org)
+
+- Scripting
+  - Amber: compiles to Bash (https://amber-lang.com)
+  - Raku: expressive, multi-paradigm, metaprogramming... (https://raku.org)
 
 ### Others
 
