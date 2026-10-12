@@ -102,7 +102,7 @@ After that, I do repeat the process for the next branch.
 ### Other languages
 
 - General-purpose
-  - Carbon: experimental successor of C++ (https://amber-lang.com)
+  - Carbon: experimental successor of C++ (https://docs.carbon-lang.dev/)
   - Odin: Data-Oriented language (https://odin-lang.org)
   - V: general purpose language (https://vlang.io)
 
@@ -113,10 +113,25 @@ After that, I do repeat the process for the next branch.
   - OCaml: strong typing and multi-paradigm support (https://ocaml.org)
   - Scala: mixes object-oriented and functional (https://scala-lang.org)
   - Unison: identifies code by content (https://unison-lang.org)
+  - Haskell: https://www.haskell.org/
+  - Idris: https://idris-lang.org/
 
 - Scripting
   - Amber: compiles to Bash (https://amber-lang.com)
   - Raku: expressive, multi-paradigm, metaprogramming... (https://raku.org)
+
+- Proof aware
+  - dafny: https://dafny.org/
+  - fstar: https://fstar-lang.org/
+  - lean: https://lean-lang.org/
+
+- Dynamic
+  - Revo: small language I found though YT (https://revo.lung.fyi/)
+
+- Mobile
+  - Kotlin
+  - Dart
+  - Flutter
 
 ### Others
 
