@@ -10,12 +10,24 @@ class Root extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
+          elevation: 4,
+          shadowColor: Colors.black,
+          surfaceTintColor: Colors.transparent,
+          backgroundColor: Colors.white,
           title: const Align(
             alignment: Alignment.center,
-            child: Text("Birdle"),
+            child: Text(
+              "Birdle",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
           ),
         ),
-        body: Center(child: GamePage()),
+        body: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 400),
+            child: GamePage(),
+          ),
+        ),
       ),
     );
   }

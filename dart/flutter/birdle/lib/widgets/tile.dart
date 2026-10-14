@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:birdle/game.dart';
+import 'package:birdle/utils/game.dart';
 
 class Tile extends StatelessWidget {
   const Tile(this.letter, this.hitType, {super.key});

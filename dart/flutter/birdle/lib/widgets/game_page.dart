@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:birdle/widgets/guess_input.dart';
 import 'package:birdle/widgets/tile.dart';
-import 'package:birdle/game.dart';
+import 'package:birdle/utils/game.dart';
 
 class GamePage extends StatefulWidget {
   const GamePage({super.key});

@@ -34,7 +34,10 @@ class GuessInputState extends State<GuessInput> {
           maxLength: 5,
           focusNode: _focusNode,
           autofocus: true,
-          decoration: const InputDecoration(
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: Colors.white,
+            suffixIcon: _submitButton(),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(35)),
             ),
@@ -57,6 +60,6 @@ class GuessInputState extends State<GuessInput> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(children: [_input(), _submitButton()]);
+    return Row(children: [_input()]);
   }
 }
