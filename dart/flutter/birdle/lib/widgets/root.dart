@@ -22,12 +22,7 @@ class Root extends StatelessWidget {
             ),
           ),
         ),
-        body: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 400),
-            child: GamePage(),
-          ),
-        ),
+        body: Center(child: GamePage()),
       ),
     );
   }

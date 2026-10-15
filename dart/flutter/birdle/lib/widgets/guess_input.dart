@@ -6,10 +6,10 @@ class GuessInput extends StatefulWidget {
   final void Function(String) onSubmitGuess;
 
   @override
-  State<GuessInput> createState() => GuessInputState();
+  State<GuessInput> createState() => _GuessInputState();
 }
 
-class GuessInputState extends State<GuessInput> {
+class _GuessInputState extends State<GuessInput> {
   final TextEditingController _textEditingController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
 

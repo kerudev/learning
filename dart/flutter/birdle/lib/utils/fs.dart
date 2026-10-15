@@ -19,7 +19,9 @@ void writeFileMode(
     file.createSync();
   }
 
-  file.writeAsStringSync(lines.join("\n"), mode: mode);
+  final contents = lines.join("\n") + (lines.length == 1 ? "\n" : "");
+
+  file.writeAsStringSync(contents, mode: mode);
 }
 
 void writeFile(String path, Set<String> lines) {
