@@ -7,7 +7,13 @@
 library;
 
 import 'dart:collection';
+import 'dart:io';
 import 'dart:math';
+
+import 'package:flutter/foundation.dart';
+
+import 'package:birdle/utils/fs.dart';
+import 'package:birdle/utils/http.dart';
 
 /// The result of evaluating a [Letter] of a guess against the hidden word.
 enum HitType {
@@ -28,24 +34,28 @@ enum HitType {
 typedef Letter = ({String char, HitType type});
 
 /// Every word that can be legally entered as a guess.
-const List<String> allLegalGuesses = [...legalWords, ...legalGuesses];
+final List<String> allLegalGuesses = [...legalWords, ...legalGuesses];
 
 /// Words that can be chosen as the hidden word.
-const List<String> legalWords = ['aback', 'abase', 'abate', 'abbey', 'abbot'];
+final legalWords = kIsWeb
+    ? ['aback', 'abase', 'abate', 'abbey', 'abbot']
+    : readFile(availableWordsPath).toList();
 
 /// Additional words accepted as guesses beyond those in [legalWords].
-const List<String> legalGuesses = [
-  'aback',
-  'abase',
-  'abate',
-  'abbey',
-  'abbot',
-  'abhor',
-  'abide',
-  'abled',
-  'abode',
-  'abort',
-];
+final List<String> legalGuesses = kIsWeb
+    ? [
+        'aback',
+        'abase',
+        'abate',
+        'abbey',
+        'abbot',
+        'abhor',
+        'abide',
+        'abled',
+        'abode',
+        'abort',
+      ]
+    : readFile(knownWordsPath).toList();
 
 /// Game state of a single round of Birdle,
 /// a five-letter word-guessing game similar to Wordle.
@@ -65,9 +75,29 @@ class Game {
   /// If [seed] is provided, the hidden word is
   /// chosen deterministically from [legalWords],
   /// otherwise it is selected at random.
-  Game({this.maxGuesses = defaultMaxGuesses, this.seed})
-    : _wordToGuess = _generateInitialWord(seed),
-      _guesses = List<Word>.filled(maxGuesses, Word.empty());
+  Game({this.maxGuesses = defaultMaxGuesses, this.seed}) {
+    Set<String> allWords = {};
+
+    if (!File(knownWordsPath).existsSync()) {
+      fetchWords().then((words) {
+        allWords = words.toSet();
+        writeFile(knownWordsPath, allWords);
+        writeFile(availableWordsPath, allWords);
+      });
+    } else {
+      allWords = readFile(knownWordsPath);
+    }
+
+    _wordToGuess = _generateInitialWord(seed);
+
+    String word = _wordToGuess.toString();
+    allWords.remove(word);
+
+    appendFile(usedWordsPath, {word});
+    writeFile(availableWordsPath, allWords);
+
+    _guesses = List<Word>.filled(maxGuesses, Word.empty());
+  }
 
   /// The maximum number of guesses allowed in this game.
   final int maxGuesses;
@@ -77,13 +107,13 @@ class Game {
   final int? seed;
 
   /// The current hidden word, exposed publicly through [hiddenWord].
-  Word _wordToGuess;
+  late Word _wordToGuess;
 
   /// Backing storage for [guesses].
   ///
   /// Holds every guess slot in order,
   /// with unfilled slots represented by empty [Word]s.
-  List<Word> _guesses;
+  late List<Word> _guesses;
 
   /// The word the player is trying to guess.
   Word get hiddenWord => _wordToGuess;
