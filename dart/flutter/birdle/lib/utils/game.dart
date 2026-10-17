@@ -7,13 +7,11 @@
 library;
 
 import 'dart:collection';
-import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 
 import 'package:birdle/utils/fs.dart';
-import 'package:birdle/utils/http.dart';
 
 /// The result of evaluating a [Letter] of a guess against the hidden word.
 enum HitType {
@@ -37,7 +35,7 @@ typedef Letter = ({String char, HitType type});
 final List<String> allLegalGuesses = [...legalWords, ...legalGuesses];
 
 /// Words that can be chosen as the hidden word.
-final legalWords = kIsWeb
+final List<String> legalWords = kIsWeb
     ? ['aback', 'abase', 'abate', 'abbey', 'abbot']
     : readFile(availableWordsPath).toList();
 
@@ -78,23 +76,18 @@ class Game {
   Game({this.maxGuesses = defaultMaxGuesses, this.seed}) {
     Set<String> allWords = {};
 
-    if (!File(knownWordsPath).existsSync()) {
-      fetchWords().then((words) {
-        allWords = words.toSet();
-        writeFile(knownWordsPath, allWords);
-        writeFile(availableWordsPath, allWords);
-      });
-    } else {
-      allWords = readFile(knownWordsPath);
-    }
+    allWords = legalGuesses.toSet();
 
     _wordToGuess = _generateInitialWord(seed);
 
     String word = _wordToGuess.toString();
     allWords.remove(word);
 
-    appendFile(usedWordsPath, {word});
-    writeFile(availableWordsPath, allWords);
+    if (!kIsWeb) {
+      // TODO doesn't delete used word
+      appendFile(usedWordsPath, {word});
+      writeFile(availableWordsPath, allWords);
+    }
 
     _guesses = List<Word>.filled(maxGuesses, Word.empty());
   }

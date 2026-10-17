@@ -1,7 +1,26 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:birdle/widgets/root.dart';
+import 'package:birdle/utils/fs.dart';
+import 'package:birdle/utils/http.dart';
 
-void main() {
+void main() async {
+  // Prefetch words so the whole code in Root stays sync
+  if (!kIsWeb) {
+    await _loadFile(knownWordsPath);
+    await _loadFile(availableWordsPath);
+  }
+
   runApp(const Root());
+}
+
+Future<Null> _loadFile(String path) async {
+  if (File(path).existsSync()) return;
+
+  final words = (await fetchWords()).toSet();
+  writeFile(knownWordsPath, words);
+  writeFile(availableWordsPath, words);
 }
