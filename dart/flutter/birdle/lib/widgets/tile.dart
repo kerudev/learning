@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:birdle/utils/game.dart';
 
 class Tile extends StatelessWidget {
-  const Tile(this.letter, this.hitType, {super.key});
+  const Tile(this.letter, this.hitType, {super.key, this.onClick});
 
   final String letter;
   final HitType hitType;
+  final void Function()? onClick;
 
   @override
   Widget build(BuildContext context) {
@@ -25,9 +26,12 @@ class Tile extends StatelessWidget {
         },
       ),
       child: Center(
-        child: Text(
-          letter.toUpperCase(),
-          style: Theme.of(context).textTheme.titleLarge,
+        child: TextButton(
+          onPressed: onClick,
+          child: Text(
+            letter.toUpperCase(),
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
         ),
       ),
     );

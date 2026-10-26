@@ -16,6 +16,8 @@ class GamePage extends StatefulWidget {
 class _GamePageState extends State<GamePage> {
   final Game _game = Game();
 
+  final TextEditingController _textEditingController = TextEditingController();
+
   final Map<String, HitType> _keyStates = {};
 
   void _updateKeyboard(String guess) {
@@ -45,7 +47,11 @@ class _GamePageState extends State<GamePage> {
     }
   }
 
-  Widget _newCell(({String char, HitType type}) letter) {
+  void _onKeyPress(String char) {
+    _textEditingController.text = _textEditingController.text + char;
+  }
+
+  Widget _newCell(Letter letter) {
     return Padding(
       padding: const EdgeInsets.all(2.5),
       child: Tile(letter.char, letter.type),
@@ -63,6 +69,7 @@ class _GamePageState extends State<GamePage> {
     return ConstrainedBox(
       constraints: const BoxConstraints(maxWidth: 400),
       child: GuessInput(
+        controller: _textEditingController,
         onSubmitGuess: (guess) {
           setState(() {
             _game.guess(guess);
@@ -81,7 +88,7 @@ class _GamePageState extends State<GamePage> {
         children: [
           ..._game.guesses.map(_newRow),
           _inputBar(),
-          Keyboard(states: _keyStates),
+          Keyboard(states: _keyStates, onClick: _onKeyPress),
         ],
       ),
     );

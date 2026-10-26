@@ -9,10 +9,7 @@ import 'package:birdle/utils/http.dart';
 
 void main() async {
   // Prefetch words so the whole code in Root stays sync
-  if (!kIsWeb) {
-    await _loadFile(knownWordsPath);
-    await _loadFile(availableWordsPath);
-  }
+  if (!kIsWeb) await _loadFile(knownWordsPath);
 
   runApp(const Root());
 }

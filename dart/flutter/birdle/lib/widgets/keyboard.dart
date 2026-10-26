@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:birdle/widgets/tile.dart';
 
 class Keyboard extends StatelessWidget {
-  Keyboard({super.key, required this.states});
+  Keyboard({super.key, required this.states, this.onClick});
 
   final Map<String, HitType> states;
+  final void Function(String s)? onClick;
 
   final List<List<String>> keys = [
     ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
@@ -16,7 +17,7 @@ class Keyboard extends StatelessWidget {
 
   Tile _asTile(String key) {
     final k = key.toLowerCase();
-    return Tile(k, states[k] ?? HitType.none);
+    return Tile(k, states[k] ?? HitType.none, onClick: () => {onClick?.call(k)});
   }
 
   Widget _newCell(String k) {
