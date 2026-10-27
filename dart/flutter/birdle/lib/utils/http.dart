@@ -6,8 +6,8 @@ import 'package:http/http.dart' as http;
 
 var uri = Uri.https("random-word-api.herokuapp.com", "word", {
   "length": "5",
-  "number": "5",
-  // "number": "500",
+  // "number": "5",
+  "number": "500",
 });
 
 Future<Set<String>> fetchWords() async {

@@ -1,3 +1,4 @@
+import 'package:birdle/widgets/message.dart';
 import 'package:flutter/material.dart';
 
 import 'package:birdle/widgets/guess_input.dart';
@@ -20,30 +21,9 @@ class _GamePageState extends State<GamePage> {
 
   final Map<String, HitType> _keyStates = {};
 
-  void _updateKeyboard(String guess) {
-    Word word = _game.hiddenWord;
-    List<String> chars = guess.split("");
-
-    Map<String, bool?> positions = {};
-
-    for (var i = 0; i < chars.length; i++) {
-      positions[chars[i]] = null;
-
-      for (var j = 0; j < word.length; j++) {
-        String char = word[j].char;
-
-        if (positions[char] != true && chars[i] == char) {
-          positions[char] = i == j;
-        }
-      }
-    }
-
-    for (MapEntry e in positions.entries) {
-      if (e.value == null) {
-        _keyStates[e.key] = HitType.miss;
-      } else {
-        _keyStates[e.key] = e.value ? HitType.hit : HitType.partial;
-      }
+  void _updateKeyboard(Word guess) {
+    for (final letter in guess) {
+      _keyStates[letter.char] = letter.type;
     }
   }
 
@@ -72,25 +52,35 @@ class _GamePageState extends State<GamePage> {
         controller: _textEditingController,
         onSubmitGuess: (guess) {
           setState(() {
-            _game.guess(guess);
-            _updateKeyboard(guess);
+            try {
+              _updateKeyboard(_game.guess(guess));
+            } on ArgumentError catch (e) {
+              ScaffoldMessenger.of(context).showSnackBar(Message(e.message));
+            }
           });
         },
       ),
     );
   }
 
+  List<Widget> _children() {
+    final children = _game.guesses.map(_newRow).toList();
+
+    if (!_game.didWin) {
+      children.addAll([
+        _inputBar(),
+        Keyboard(states: _keyStates, onClick: _onKeyPress),
+      ]);
+    }
+
+    return children;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Column(
-        children: [
-          ..._game.guesses.map(_newRow),
-          _inputBar(),
-          Keyboard(states: _keyStates, onClick: _onKeyPress),
-        ],
-      ),
+      child: Column(children: _children()),
     );
   }
 }

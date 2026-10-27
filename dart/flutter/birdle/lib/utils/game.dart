@@ -207,7 +207,7 @@ class Word with IterableMixin<Letter> {
       throw ArgumentError.value(
         guess,
         'guess',
-        'Must be exactly 5 characters long.',
+        'Must be exactly 5 characters long',
       );
     }
 
@@ -267,7 +267,13 @@ extension WordUtils on Word {
   /// but where each [Letter] has new a [HitType] of
   /// [HitType.hit], [HitType.partial], or [HitType.miss].
   Word evaluateGuess(Word hiddenWord) {
-    assert(isLegalGuess);
+    if (!isLegalGuess) {
+      throw ArgumentError.value(
+        isLegalGuess,
+        'isLegalGuess',
+        'Unknown word',
+      );
+    }
 
     final result = List<Letter>.filled(length, (char: '', type: HitType.none));
     // Counts hidden-word letters that can still be claimed as partial matches.
