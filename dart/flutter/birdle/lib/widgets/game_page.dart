@@ -54,8 +54,15 @@ class _GamePageState extends State<GamePage> {
           setState(() {
             try {
               _updateKeyboard(_game.guess(guess));
+
+              if (_game.didWin) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  Message("You won!", color: Colors.green),
+                );
+              }
             } on ArgumentError catch (e) {
-              ScaffoldMessenger.of(context).showSnackBar(Message(e.message));
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(Message(e.message, color: Colors.redAccent));
             }
           });
         },

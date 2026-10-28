@@ -15,7 +15,7 @@ void main() async {
 }
 
 Future<Null> _loadFile(String path) async {
-  if (File(path).existsSync()) return;
+  if (await File(path).exists()) return;
 
   final words = (await fetchWords()).toSet();
   writeFile(knownWordsPath, words);
