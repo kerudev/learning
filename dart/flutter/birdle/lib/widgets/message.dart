@@ -12,11 +12,13 @@ SnackBar Message(
       color: color,
     ),
     duration: duration,
-    elevation: 4,
+    elevation: 2,
     width: 400,
     padding: EdgeInsets.zero,
     backgroundColor: Colors.white,
     behavior: SnackBarBehavior.floating,
+    showCloseIcon: true,
+    closeIconColor: Colors.black,
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.all(Radius.circular(24)),
     ),
@@ -67,14 +69,17 @@ class _MessageContentState extends State<_MessageContent>
             style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
           ),
         ),
-        AnimatedBuilder(
-          animation: _controller,
-          builder: (context, child) => LinearProgressIndicator(
-            value: 1 - _controller.value,
-            minHeight: 4,
-            backgroundColor: Colors.white,
-            valueColor: AlwaysStoppedAnimation<Color>(widget.color),
-            borderRadius: BorderRadius.all(Radius.circular(20)),
+        Padding(
+          padding: EdgeInsetsGeometry.directional(start: 40),
+          child: AnimatedBuilder(
+            animation: _controller,
+            builder: (context, child) => LinearProgressIndicator(
+              value: 1 - _controller.value,
+              minHeight: 4,
+              backgroundColor: Colors.white,
+              valueColor: AlwaysStoppedAnimation<Color>(widget.color),
+              borderRadius: BorderRadius.all(Radius.circular(24)),
+            ),
           ),
         ),
       ],
