@@ -1,9 +1,9 @@
+import 'package:flutter/material.dart'
+;
+import 'package:birdle/widgets/grid.dart';
 import 'package:birdle/widgets/message.dart';
-import 'package:flutter/material.dart';
-
 import 'package:birdle/widgets/guess_input.dart';
 import 'package:birdle/widgets/keyboard.dart';
-import 'package:birdle/widgets/tile.dart';
 
 import 'package:birdle/utils/game.dart';
 
@@ -33,20 +33,6 @@ class _GamePageState extends State<GamePage> {
     }
   }
 
-  Widget _newCell(Letter letter) {
-    return Padding(
-      padding: const EdgeInsets.all(2.5),
-      child: Tile(letter.char, letter.type),
-    );
-  }
-
-  Widget _newRow(Word guess) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: guess.map(_newCell).toList(),
-    );
-  }
-
   Widget _inputBar() {
     return ConstrainedBox(
       constraints: const BoxConstraints(maxWidth: 400),
@@ -74,7 +60,7 @@ class _GamePageState extends State<GamePage> {
   }
 
   List<Widget> _children() {
-    final children = _game.guesses.map(_newRow).toList();
+    final List<Widget> children = [Grid(_game.guesses)];
 
     if (!_game.didWin) {
       children.addAll([

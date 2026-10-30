@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'package:birdle/widgets/root.dart';
+import 'package:birdle/root.dart';
 import 'package:birdle/utils/fs.dart';
 import 'package:birdle/utils/http.dart';
 
