@@ -7,7 +7,7 @@ class Tile extends StatelessWidget {
 
   final String letter;
   final HitType hitType;
-  final void Function()? onClick;
+  final VoidCallback? onClick;
 
   @override
   Widget build(BuildContext context) {
@@ -26,11 +26,18 @@ class Tile extends StatelessWidget {
         },
       ),
       child: Center(
-        child: TextButton(
-          onPressed: onClick,
-          child: Text(
-            letter.toUpperCase(),
-            style: Theme.of(context).textTheme.titleLarge,
+        child: SizedBox(
+          width: 60,
+          height: 60,
+          child: TextButton(
+            style: TextButton.styleFrom(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+            ),
+            onPressed: onClick,
+            child: Text(
+              letter.toUpperCase(),
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
           ),
         ),
       ),

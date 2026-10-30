@@ -28,7 +28,9 @@ class _GamePageState extends State<GamePage> {
   }
 
   void _onKeyPress(String char) {
-    _textEditingController.text = _textEditingController.text + char;
+    if (_textEditingController.text.length < 5) {
+      _textEditingController.text = _textEditingController.text + char;
+    }
   }
 
   Widget _newCell(Letter letter) {
@@ -56,11 +58,12 @@ class _GamePageState extends State<GamePage> {
               _updateKeyboard(_game.guess(guess));
 
               if (_game.didWin) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  Message("You won!", color: Colors.green),
-                );
+                ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(Message("You won!", color: Colors.green));
               }
             } on ArgumentError catch (e) {
+              ScaffoldMessenger.of(context).removeCurrentSnackBar();
               ScaffoldMessenger.of(context)
                   .showSnackBar(Message(e.message, color: Colors.redAccent));
             }
