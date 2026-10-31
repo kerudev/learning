@@ -16,7 +16,7 @@ class _GridState extends State<Grid> {
   Widget _newCell(Letter letter) {
     return Padding(
       padding: const EdgeInsets.all(2.5),
-      child: Tile(letter.char, letter.type),
+      child: Tile(letter.char, letter.type.asColor()),
     );
   }
 

@@ -10,6 +10,7 @@ import 'dart:collection';
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 import 'package:birdle/utils/fs.dart';
 
@@ -26,6 +27,17 @@ enum HitType {
 
   /// The letter doesn't appear in the hidden word.
   miss,
+}
+
+extension HitTypeImpl on HitType {
+  Color asColor() {
+    return switch (this) {
+      HitType.hit => Colors.green,
+      HitType.partial => Colors.yellow,
+      HitType.miss => Colors.grey,
+      _ => Colors.white,
+    };
+  }
 }
 
 /// A single character paired with its [HitType] against the hidden word.
@@ -68,12 +80,19 @@ class Game {
   /// The default maximum number of guesses allowed in a [Game].
   static const int defaultMaxGuesses = 5;
 
+  /// The default lengths of the guess in a [Game].
+  static const int defaultGuessLength = 5;
+
   /// Creates a new game with [maxGuesses] guesses allowed.
   ///
   /// If [seed] is provided, the hidden word is
   /// chosen deterministically from [legalWords],
   /// otherwise it is selected at random.
-  Game({this.maxGuesses = defaultMaxGuesses, this.seed}) {
+  Game({
+    this.maxGuesses = defaultMaxGuesses,
+    this.guessLength = defaultGuessLength,
+    this.seed,
+  }) {
     Set<String> allWords = {};
 
     allWords = legalGuesses.toSet();
@@ -94,6 +113,9 @@ class Game {
 
   /// The maximum number of guesses allowed in this game.
   final int maxGuesses;
+
+  /// The default lengths of the guess in a [Game].
+  int guessLength;
 
   /// The seed used to choose the hidden word,
   /// or `null` if it was selected at random.
@@ -268,11 +290,7 @@ extension WordUtils on Word {
   /// [HitType.hit], [HitType.partial], or [HitType.miss].
   Word evaluateGuess(Word hiddenWord) {
     if (!isLegalGuess) {
-      throw ArgumentError.value(
-        isLegalGuess,
-        'isLegalGuess',
-        'Unknown word',
-      );
+      throw ArgumentError.value(isLegalGuess, 'isLegalGuess', 'Unknown word');
     }
 
     final result = List<Letter>.filled(length, (char: '', type: HitType.none));

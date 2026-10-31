@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 
-import 'package:birdle/utils/game.dart';
-
 class Tile extends StatelessWidget {
-  const Tile(this.letter, this.hitType, {super.key, this.onClick});
+  const Tile(
+    this.letter,
+    this.color, {
+    super.key,
+    this.animate = true,
+    this.onClick,
+  });
 
   final String letter;
-  final HitType hitType;
+  final Color color;
+  final bool animate;
   final VoidCallback? onClick;
 
-  @override
-  Widget build(BuildContext context) {
+  Widget _AnimatedContainer(BuildContext context, Color color) {
     return AnimatedContainer(
       duration: Duration(milliseconds: 500),
       curve: Curves.bounceIn,
@@ -18,29 +22,47 @@ class Tile extends StatelessWidget {
       height: 60,
       decoration: BoxDecoration(
         border: Border.all(color: Colors.black),
-        color: switch (hitType) {
-          HitType.hit => Colors.green,
-          HitType.partial => Colors.yellow,
-          HitType.miss => Colors.grey,
-          _ => Colors.white,
-        },
+        color: color,
       ),
-      child: Center(
-        child: SizedBox(
-          width: 60,
-          height: 60,
-          child: TextButton(
-            style: TextButton.styleFrom(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-            ),
-            onPressed: onClick,
-            child: Text(
-              letter.toUpperCase(),
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
+      child: _square(context),
+    );
+  }
+
+  Widget _Container(BuildContext context, Color color) {
+    return Container(
+      width: 60,
+      height: 60,
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.black),
+        color: color,
+      ),
+      child: _square(context),
+    );
+  }
+
+  Widget _square(BuildContext context) {
+    return Center(
+      child: SizedBox(
+        width: 60,
+        height: 60,
+        child: TextButton(
+          style: TextButton.styleFrom(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+          ),
+          onPressed: onClick,
+          child: Text(
+            letter.toUpperCase(),
+            style: Theme.of(context).textTheme.titleLarge,
           ),
         ),
       ),
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return animate
+        ? _AnimatedContainer(context, color)
+        : _Container(context, color);
   }
 }

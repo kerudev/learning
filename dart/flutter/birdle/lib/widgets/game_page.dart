@@ -1,6 +1,7 @@
-import 'package:flutter/material.dart'
-;
+import 'package:flutter/material.dart';
+
 import 'package:birdle/widgets/grid.dart';
+import 'package:birdle/widgets/difficulty.dart';
 import 'package:birdle/widgets/message.dart';
 import 'package:birdle/widgets/guess_input.dart';
 import 'package:birdle/widgets/keyboard.dart';
@@ -20,6 +21,12 @@ class _GamePageState extends State<GamePage> {
   final TextEditingController _textEditingController = TextEditingController();
 
   final Map<String, HitType> _keyStates = {};
+
+  void _onDifficultyChange(int d) {
+    setState(() {
+      _game.guessLength = d;
+    });
+  }
 
   void _updateKeyboard(Word guess) {
     for (final letter in guess) {
@@ -60,7 +67,14 @@ class _GamePageState extends State<GamePage> {
   }
 
   List<Widget> _children() {
-    final List<Widget> children = [Grid(_game.guesses)];
+    final List<Widget> children = [
+      Column(
+        children: [
+          Difficulty(_game.guessLength, onClick: _onDifficultyChange),
+          Grid(_game.guesses),
+        ],
+      ),
+    ];
 
     if (!_game.didWin) {
       children.addAll([

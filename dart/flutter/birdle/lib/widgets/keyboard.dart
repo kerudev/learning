@@ -17,7 +17,8 @@ class Keyboard extends StatelessWidget {
 
   Tile _asTile(String key) {
     final k = key.toLowerCase();
-    return Tile(k, states[k] ?? HitType.none, onClick: () => {onClick?.call(k)});
+    final hit = states[k] ?? HitType.none;
+    return Tile(k, hit.asColor(), onClick: () => {onClick?.call(k)});
   }
 
   Widget _newCell(String k) {
