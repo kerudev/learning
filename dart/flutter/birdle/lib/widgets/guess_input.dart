@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:birdle/utils/context.dart';
+
 class GuessInput extends StatefulWidget {
   const GuessInput({
     super.key,
@@ -35,7 +37,7 @@ class _GuessInputState extends State<GuessInput> {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: TextField(
-          maxLength: 5,
+          maxLength: gContext.difficulty,
           focusNode: _focusNode,
           autofocus: true,
           decoration: InputDecoration(

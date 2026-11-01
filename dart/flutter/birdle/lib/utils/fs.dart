@@ -2,11 +2,6 @@
 
 import 'dart:io';
 
-const filesPath = "words";
-const knownWordsPath = "$filesPath/known.txt";
-const availableWordsPath = "$filesPath/available.txt";
-const usedWordsPath = "$filesPath/used.txt";
-
 void writeFileMode(
   String path,
   Set<String> lines, [
@@ -15,8 +10,7 @@ void writeFileMode(
   var file = File(path);
 
   if (!file.existsSync()) {
-    Directory(filesPath).createSync();
-    file.createSync();
+    file.createSync(recursive: true);
   }
 
   final contents = lines.join("\n") + (lines.length == 1 ? "\n" : "");

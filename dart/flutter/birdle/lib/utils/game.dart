@@ -13,6 +13,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:birdle/utils/fs.dart';
+import 'package:birdle/utils/context.dart';
 
 /// The result of evaluating a [Letter] of a guess against the hidden word.
 enum HitType {
@@ -43,30 +44,6 @@ extension HitTypeImpl on HitType {
 /// A single character paired with its [HitType] against the hidden word.
 typedef Letter = ({String char, HitType type});
 
-/// Every word that can be legally entered as a guess.
-final List<String> allLegalGuesses = [...legalWords, ...legalGuesses];
-
-/// Words that can be chosen as the hidden word.
-final List<String> legalWords = kIsWeb
-    ? ['aback', 'abase', 'abate', 'abbey', 'abbot']
-    : readFile(availableWordsPath).toList();
-
-/// Additional words accepted as guesses beyond those in [legalWords].
-final List<String> legalGuesses = kIsWeb
-    ? [
-        'aback',
-        'abase',
-        'abate',
-        'abbey',
-        'abbot',
-        'abhor',
-        'abide',
-        'abled',
-        'abode',
-        'abort',
-      ]
-    : readFile(knownWordsPath).toList();
-
 /// Game state of a single round of Birdle,
 /// a five-letter word-guessing game similar to Wordle.
 ///
@@ -81,31 +58,24 @@ class Game {
   static const int defaultMaxGuesses = 5;
 
   /// The default lengths of the guess in a [Game].
-  static const int defaultGuessLength = 5;
+  static const int defaultDifficulty = 5;
 
   /// Creates a new game with [maxGuesses] guesses allowed.
   ///
   /// If [seed] is provided, the hidden word is
-  /// chosen deterministically from [legalWords],
+  /// chosen deterministically from [Context.legalWords],
   /// otherwise it is selected at random.
-  Game({
-    this.maxGuesses = defaultMaxGuesses,
-    this.guessLength = defaultGuessLength,
-    this.seed,
-  }) {
-    Set<String> allWords = {};
-
-    allWords = legalGuesses.toSet();
-
+  Game({this.maxGuesses = defaultMaxGuesses, this.seed}) {
     _wordToGuess = _generateInitialWord(seed);
-
     String word = _wordToGuess.toString();
+
+    Set<String> allWords = gContext.legalWords.toSet();
     allWords.remove(word);
 
     if (!kIsWeb) {
       // TODO doesn't delete used word
-      appendFile(usedWordsPath, {word});
-      writeFile(availableWordsPath, allWords);
+      appendFile(gContext.usedPath, {word});
+      writeFile(gContext.poolPath, allWords);
     }
 
     _guesses = List<Word>.filled(maxGuesses, Word.empty());
@@ -113,9 +83,6 @@ class Game {
 
   /// The maximum number of guesses allowed in this game.
   final int maxGuesses;
-
-  /// The default lengths of the guess in a [Game].
-  int guessLength;
 
   /// The seed used to choose the hidden word,
   /// or `null` if it was selected at random.
@@ -205,7 +172,7 @@ class Game {
 
   /// Returns the starting hidden word for a new round.
   ///
-  /// Picks a deterministic word from [legalWords] when [seed] is provided,
+  /// Picks a deterministic word from [Context.legalWords] when [seed] is provided,
   /// or one at random otherwise.
   static Word _generateInitialWord(int? seed) =>
       seed == null ? Word.random() : Word.fromSeed(seed);
@@ -218,18 +185,19 @@ class Word with IterableMixin<Letter> {
 
   /// Creates a word with five blank letters of [HitType.none].
   factory Word.empty() =>
-      Word(List<Letter>.filled(5, (char: '', type: HitType.none)));
+      Word(List<Letter>.filled(gContext.difficulty, (char: '', type: HitType.none)));
 
   /// Creates a [Word] from [guess].
   ///
   /// Each character is lowercased,
   /// every [Letter] starts as [HitType.none].
   factory Word.fromString(String guess) {
-    if (guess.length != 5) {
+    if (guess.length != gContext.difficulty) {
+      
       throw ArgumentError.value(
         guess,
         'guess',
-        'Must be exactly 5 characters long',
+        'Must be exactly ${gContext.difficulty} characters long',
       );
     }
 
@@ -241,16 +209,16 @@ class Word with IterableMixin<Letter> {
     return Word(letters);
   }
 
-  /// Creates a word chosen at random from [legalWords].
+  /// Creates a word chosen at random from [Context.legalWords].
   factory Word.random() {
-    final random = Random();
-    final nextWord = legalWords[random.nextInt(legalWords.length)];
+    final random = Random().nextInt(gContext.legalWords.length);
+    final nextWord = gContext.legalWords[random];
     return Word.fromString(nextWord);
   }
 
-  /// Creates a word chosen from [legalWords] using [seed] as an index.
+  /// Creates a word chosen from [Context.legalWords] using [seed] as an index.
   factory Word.fromSeed(int seed) =>
-      Word.fromString(legalWords[seed % legalWords.length]);
+      Word.fromString(gContext.legalWords[seed % gContext.legalWords.length]);
 
   /// An unmodifiable list of [Letter]s that make up this word.
   final List<Letter> _letters;
@@ -282,7 +250,7 @@ class Word with IterableMixin<Letter> {
 /// Validation and guess-evaluation logic on [Word].
 extension WordUtils on Word {
   /// Whether this word appears in [allLegalGuesses].
-  bool get isLegalGuess => allLegalGuesses.contains(toString());
+  bool get isLegalGuess => gContext.allLegalGuesses.contains(toString());
 
   /// Compares this [Word] against the specified [hiddenWord]
   /// and returns a new [Word] with the same letters,

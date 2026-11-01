@@ -1,3 +1,4 @@
+import 'package:birdle/utils/context.dart';
 import 'package:flutter/material.dart';
 
 import 'package:birdle/widgets/grid.dart';
@@ -16,7 +17,8 @@ class GamePage extends StatefulWidget {
 }
 
 class _GamePageState extends State<GamePage> {
-  final Game _game = Game();
+  // final Game _game = Game();
+  late Game _game = Game();
 
   final TextEditingController _textEditingController = TextEditingController();
 
@@ -24,7 +26,8 @@ class _GamePageState extends State<GamePage> {
 
   void _onDifficultyChange(int d) {
     setState(() {
-      _game.guessLength = d;
+      gContext.setDifficulty(d);
+      _game = Game();
     });
   }
 
@@ -35,7 +38,7 @@ class _GamePageState extends State<GamePage> {
   }
 
   void _onKeyPress(String char) {
-    if (_textEditingController.text.length < 5) {
+    if (_textEditingController.text.length < gContext.difficulty) {
       _textEditingController.text = _textEditingController.text + char;
     }
   }
@@ -70,7 +73,7 @@ class _GamePageState extends State<GamePage> {
     final List<Widget> children = [
       Column(
         children: [
-          Difficulty(_game.guessLength, onClick: _onDifficultyChange),
+          Difficulty(gContext.difficulty, onClick: _onDifficultyChange),
           Grid(_game.guesses),
         ],
       ),
