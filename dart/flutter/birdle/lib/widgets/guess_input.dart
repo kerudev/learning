@@ -45,7 +45,7 @@ class _GuessInputState extends State<GuessInput> {
             fillColor: Colors.white,
             suffixIcon: _submitButton(),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(35)),
+              borderRadius: BorderRadius.all(Radius.circular(36)),
             ),
           ),
           controller: widget.controller,

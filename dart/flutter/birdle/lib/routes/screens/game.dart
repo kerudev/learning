@@ -1,4 +1,3 @@
-import 'package:birdle/utils/context.dart';
 import 'package:flutter/material.dart';
 
 import 'package:birdle/widgets/grid.dart';
@@ -7,17 +6,17 @@ import 'package:birdle/widgets/message.dart';
 import 'package:birdle/widgets/guess_input.dart';
 import 'package:birdle/widgets/keyboard.dart';
 
+import 'package:birdle/utils/context.dart';
 import 'package:birdle/utils/game.dart';
 
-class GamePage extends StatefulWidget {
-  const GamePage({super.key});
+class GameScreen extends StatefulWidget {
+  const GameScreen({super.key});
 
   @override
-  State<GamePage> createState() => _GamePageState();
+  State<GameScreen> createState() => _GameScreenState();
 }
 
-class _GamePageState extends State<GamePage> {
-  // final Game _game = Game();
+class _GameScreenState extends State<GameScreen> {
   late Game _game = Game();
 
   final TextEditingController _textEditingController = TextEditingController();
@@ -74,7 +73,9 @@ class _GamePageState extends State<GamePage> {
       Column(
         children: [
           Difficulty(gContext.difficulty, onClick: _onDifficultyChange),
+          SizedBox(height: 8),
           Grid(_game.guesses),
+          SizedBox(height: 8),
         ],
       ),
     ];

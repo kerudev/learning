@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 
 class Tile extends StatelessWidget {
   const Tile(
-    this.letter,
+    this.text,
     this.color, {
     super.key,
     this.animate = true,
     this.onClick,
   });
 
-  final String letter;
+  final String text;
   final Color color;
   final bool animate;
   final VoidCallback? onClick;
@@ -51,7 +51,7 @@ class Tile extends StatelessWidget {
           ),
           onPressed: onClick,
           child: Text(
-            letter.toUpperCase(),
+            text.toUpperCase(),
             style: Theme.of(context).textTheme.titleLarge,
           ),
         ),

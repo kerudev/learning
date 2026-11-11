@@ -43,8 +43,6 @@ class Context {
   }
 
   void setPaths(int d) {
-    print("1");
-
     wordsPath = "$wordsRoot/$d";
 
     allPath = "$wordsPath/all.txt";
@@ -53,16 +51,14 @@ class Context {
   }
 
   Future<void> ensureWords(int d) async {
-    if (await File(allPath).existsSync()) return;
-    print("2");
+    if (await File(allPath).exists()) return;
 
     final words = (await fetchWords(d)).toSet();
     writeFile(allPath, words);
+    writeFile(poolPath, words);
   }
 
   void setWords() {
-    print("3");
-
     legalWords = kIsWeb
         ? ['aback', 'abase', 'abate', 'abbey', 'abbot']
         : readFile(poolPath).toList();

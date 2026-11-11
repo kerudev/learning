@@ -78,7 +78,7 @@ class _MessageContentState extends State<_MessageContent>
               minHeight: 4,
               backgroundColor: Colors.white,
               valueColor: AlwaysStoppedAnimation<Color>(widget.color),
-              borderRadius: BorderRadius.all(Radius.circular(24)),
+              borderRadius: BorderRadius.all(Radius.circular(8)),
             ),
           ),
         ),
