@@ -6,11 +6,11 @@ class GuessInput extends StatefulWidget {
   const GuessInput({
     super.key,
     required this.controller,
-    required this.onSubmitGuess,
+    required this.onSubmit,
   });
 
   final TextEditingController controller;
-  final void Function(String) onSubmitGuess;
+  final void Function(String) onSubmit;
 
   @override
   State<GuessInput> createState() => _GuessInputState();
@@ -27,7 +27,7 @@ class _GuessInputState extends State<GuessInput> {
   }
 
   void _onSubmit() {
-    widget.onSubmitGuess(widget.controller.text.trim());
+    widget.onSubmit(widget.controller.text.trim());
     widget.controller.clear();
     _focusNode.requestFocus();
   }

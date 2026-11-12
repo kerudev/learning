@@ -1,28 +1,37 @@
 import 'package:flutter/material.dart';
 
-SnackBar Message(
-  String message, {
-  Duration duration = const Duration(seconds: 3),
-  Color color = Colors.tealAccent,
-}) {
-  return SnackBar(
-    content: _MessageContent(
-      message: message,
+class Message {
+  late final SnackBar _inner;
+
+  Message(
+    String message, {
+    Duration duration = const Duration(seconds: 3),
+    Color color = Colors.tealAccent,
+  }) {
+    _inner = SnackBar(
+      content: _MessageContent(
+        message: message,
+        duration: duration,
+        color: color,
+      ),
       duration: duration,
-      color: color,
-    ),
-    duration: duration,
-    elevation: 2,
-    width: 400,
-    padding: EdgeInsets.zero,
-    backgroundColor: Colors.white,
-    behavior: SnackBarBehavior.floating,
-    showCloseIcon: true,
-    closeIconColor: Colors.black,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.all(Radius.circular(24)),
-    ),
-  );
+      elevation: 2,
+      width: 400,
+      padding: EdgeInsets.zero,
+      backgroundColor: Colors.white,
+      behavior: SnackBarBehavior.floating,
+      showCloseIcon: true,
+      closeIconColor: Colors.black,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(24)),
+      ),
+    );
+  }
+
+  void show(BuildContext context) {
+    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(_inner);
+  }
 }
 
 class _MessageContent extends StatefulWidget {

@@ -19,7 +19,7 @@ class GameScreen extends StatefulWidget {
 class _GameScreenState extends State<GameScreen> {
   late Game _game = Game();
 
-  final TextEditingController _textEditingController = TextEditingController();
+  final TextEditingController _textController = TextEditingController();
 
   final Map<String, HitType> _keyStates = {};
 
@@ -30,6 +30,19 @@ class _GameScreenState extends State<GameScreen> {
     });
   }
 
+  void _onSubmit(String guess) {
+    setState(() {
+      try {
+        _updateKeyboard(_game.guess(guess));
+        if (_game.didWin) {
+          Message("You won!", color: Colors.green).show(context);
+        }
+      } on ArgumentError catch (e) {
+        Message(e.message, color: Colors.redAccent).show(context);
+      }
+    });
+  }
+
   void _updateKeyboard(Word guess) {
     for (final letter in guess) {
       _keyStates[letter.char] = letter.type;
@@ -37,34 +50,15 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   void _onKeyPress(String char) {
-    if (_textEditingController.text.length < gContext.difficulty) {
-      _textEditingController.text = _textEditingController.text + char;
+    if (_textController.text.length < gContext.difficulty) {
+      _textController.text += char;
     }
   }
 
   Widget _inputBar() {
     return ConstrainedBox(
       constraints: const BoxConstraints(maxWidth: 400),
-      child: GuessInput(
-        controller: _textEditingController,
-        onSubmitGuess: (guess) {
-          setState(() {
-            try {
-              _updateKeyboard(_game.guess(guess));
-
-              if (_game.didWin) {
-                ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(Message("You won!", color: Colors.green));
-              }
-            } on ArgumentError catch (e) {
-              ScaffoldMessenger.of(context).removeCurrentSnackBar();
-              ScaffoldMessenger.of(context)
-                  .showSnackBar(Message(e.message, color: Colors.redAccent));
-            }
-          });
-        },
-      ),
+      child: GuessInput(controller: _textController, onSubmit: _onSubmit),
     );
   }
 
