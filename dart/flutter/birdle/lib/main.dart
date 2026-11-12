@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:birdle/utils/context.dart';
-import 'package:birdle/routes/root.dart';
+import 'package:birdle/shared/utils/context.dart';
+import 'package:birdle/screens/root.dart';
 
 void main() async {
   await initContext();

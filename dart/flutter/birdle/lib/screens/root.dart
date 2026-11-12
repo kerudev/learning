@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:birdle/routes/screens/game.dart';
-import 'package:birdle/routes/screens/dictionary.dart';
+import 'package:birdle/screens/dictionary/root.dart';
+import 'package:birdle/screens/game/root.dart';
 
 class Root extends StatelessWidget {
   const Root({super.key});

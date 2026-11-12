@@ -1,7 +1,7 @@
-import 'package:birdle/widgets/filter_input.dart';
+import 'package:birdle/screens/dictionary/widgets/filter_input.dart';
 import 'package:flutter/material.dart';
 
-import 'package:birdle/utils/context.dart';
+import 'package:birdle/shared/utils/context.dart';
 
 class DictionaryScreen extends StatefulWidget {
   const DictionaryScreen({super.key});

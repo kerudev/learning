@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 
-import 'package:birdle/utils/context.dart';
+import 'package:birdle/shared/utils/context.dart';
 
-class GuessInput extends StatefulWidget {
-  const GuessInput({
+class FilterInput extends StatefulWidget {
+  const FilterInput({
     super.key,
     required this.controller,
-    required this.onSubmit,
+    required this.onChanged,
   });
 
   final TextEditingController controller;
-  final void Function(String) onSubmit;
+  final void Function() onChanged;
 
   @override
-  State<GuessInput> createState() => _GuessInputState();
+  State<FilterInput> createState() => _FilterInputState();
 }
 
-class _GuessInputState extends State<GuessInput> {
+class _FilterInputState extends State<FilterInput> {
   final FocusNode _focusNode = FocusNode();
 
   @override
@@ -26,9 +26,8 @@ class _GuessInputState extends State<GuessInput> {
     super.dispose();
   }
 
-  void _onSubmit() {
-    widget.onSubmit(widget.controller.text.trim());
-    widget.controller.clear();
+  void _onChanged() {
+    widget.onChanged();
     _focusNode.requestFocus();
   }
 
@@ -43,24 +42,16 @@ class _GuessInputState extends State<GuessInput> {
           decoration: InputDecoration(
             filled: true,
             fillColor: Colors.white,
-            suffixIcon: _submitButton(),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(36)),
             ),
           ),
           controller: widget.controller,
-          onSubmitted: (input) {
-            _onSubmit();
+          onChanged: (input) {
+            _onChanged();
           },
         ),
       ),
-    );
-  }
-
-  Widget _submitButton() {
-    return IconButton(
-      icon: const Icon(Icons.arrow_circle_up),
-      onPressed: _onSubmit,
     );
   }
 
