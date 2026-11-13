@@ -12,8 +12,8 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'package:birdle/shared/utils/fs.dart';
 import 'package:birdle/shared/utils/context.dart';
+import 'package:birdle/shared/utils/fs.dart';
 
 /// The result of evaluating a [Letter] of a guess against the hidden word.
 enum HitType {

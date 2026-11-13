@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 
-import 'package:birdle/shared/widgets/difficulty.dart';
-import 'package:birdle/shared/widgets/message.dart';
 import 'package:birdle/screens/game/widgets/grid.dart';
 import 'package:birdle/screens/game/widgets/guess_input.dart';
 import 'package:birdle/screens/game/widgets/keyboard.dart';
-
 import 'package:birdle/shared/utils/context.dart';
 import 'package:birdle/shared/utils/game.dart';
+import 'package:birdle/shared/widgets/difficulty.dart';
+import 'package:birdle/shared/widgets/message.dart';
 
 class GameScreen extends StatefulWidget {
   const GameScreen({super.key});

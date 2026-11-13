@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:birdle/shared/widgets/tile.dart';
 import 'package:birdle/shared/utils/game.dart';
+import 'package:birdle/shared/widgets/tile.dart';
 
 class Keyboard extends StatelessWidget {
   Keyboard({super.key, required this.states, this.onClick});

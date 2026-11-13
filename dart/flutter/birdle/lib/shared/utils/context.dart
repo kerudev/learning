@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 
-import 'package:birdle/shared/utils/game.dart';
 import 'package:birdle/shared/utils/fs.dart';
+import 'package:birdle/shared/utils/game.dart';
 import 'package:birdle/shared/utils/http.dart';
 
 /// Handles the game's context.
