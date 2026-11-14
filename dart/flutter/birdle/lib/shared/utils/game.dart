@@ -184,8 +184,9 @@ class Word with IterableMixin<Letter> {
   Word(this._letters);
 
   /// Creates a word with five blank letters of [HitType.none].
-  factory Word.empty() =>
-      Word(List<Letter>.filled(gContext.difficulty, (char: '', type: HitType.none)));
+  factory Word.empty() => Word(
+    List<Letter>.filled(gContext.difficulty, (char: '', type: HitType.none)),
+  );
 
   /// Creates a [Word] from [guess].
   ///
@@ -193,7 +194,6 @@ class Word with IterableMixin<Letter> {
   /// every [Letter] starts as [HitType.none].
   factory Word.fromString(String guess) {
     if (guess.length != gContext.difficulty) {
-      
       throw ArgumentError.value(
         guess,
         'guess',

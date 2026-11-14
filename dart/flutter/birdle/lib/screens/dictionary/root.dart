@@ -37,21 +37,22 @@ class _DictionaryScreenState extends State<DictionaryScreen> {
   }
 
   Widget _filter() {
-    return FilterInput(controller: _textController, onChanged: () => setState(() {}));
+    return FilterInput(
+      controller: _textController,
+      onChanged: () => setState(() {}),
+    );
   }
 
   Widget _sliverGrid(List<Widget> items) {
-    final px = 20.0 * gContext.difficulty;
-
     return SliverGrid.builder(
       itemCount: items.length,
+      itemBuilder: (context, index) => items[index],
       gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-        maxCrossAxisExtent: px,
+        maxCrossAxisExtent: 20.0 * gContext.difficulty,
         mainAxisExtent: 100,
         crossAxisSpacing: 8,
         mainAxisSpacing: 8,
       ),
-      itemBuilder: (context, index) => items[index],
     );
   }
 

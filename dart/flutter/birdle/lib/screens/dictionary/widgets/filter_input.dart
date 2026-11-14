@@ -18,6 +18,7 @@ class FilterInput extends StatefulWidget {
 
 class _FilterInputState extends State<FilterInput> {
   final FocusNode _focusNode = FocusNode();
+  late bool _isButtonDisabled = false;
 
   @override
   void dispose() {
@@ -29,6 +30,17 @@ class _FilterInputState extends State<FilterInput> {
   void _onChanged() {
     widget.onChanged();
     _focusNode.requestFocus();
+  }
+
+  void _fetch() async {
+    _isButtonDisabled = true;
+    setState(() {});
+
+    await gContext.writeWords(gContext.difficulty, 1);
+    gContext.setWords();
+
+    _isButtonDisabled = false;
+    setState(() {});
   }
 
   Widget _input() {
@@ -55,8 +67,53 @@ class _FilterInputState extends State<FilterInput> {
     );
   }
 
+  Widget _loading() {
+    return SizedBox(
+      width: 24,
+      height: 24,
+      child: CircularProgressIndicator(
+        strokeWidth: 2,
+        color: Colors.black,
+        // strokeCap: StrokeCap.round,
+      ),
+    );
+  }
+
+  Widget _icon() {
+    return Icon(
+      Icons.add_circle_outline_rounded,
+      color: _isButtonDisabled ? Colors.black : Colors.lightBlue,
+    );
+  }
+
+  Widget _addRandomButton() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: SizedBox(
+        height: 48,
+        child: FloatingActionButton.extended(
+          icon: _isButtonDisabled ? _loading() : _icon(),
+          label: Text(
+            "Random",
+            style: TextStyle(
+              color: _isButtonDisabled ? Colors.black : Colors.lightBlue,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          backgroundColor: _isButtonDisabled
+              ? Colors.grey.shade300
+              : Colors.white,
+          onPressed: _isButtonDisabled ? null : _fetch,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Row(children: [_input()]);
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [_input(), _addRandomButton()],
+    );
   }
 }

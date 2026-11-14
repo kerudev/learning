@@ -50,12 +50,15 @@ class Context {
     usedPath = "$wordsPath/used.txt";
   }
 
-  Future<void> ensureWords(int d) async {
-    if (await File(allPath).exists()) return;
+  Future<void> writeWords(int d, [int iter = nFetches]) async {
+    final words = (await fetchWords(d, iter)).toSet();
+    appendFile(allPath, words);
+    appendFile(poolPath, words);
+  }
 
-    final words = (await fetchWords(d)).toSet();
-    writeFile(allPath, words);
-    writeFile(poolPath, words);
+  Future<void> ensureWords(int d, [int iter = nFetches]) async {
+    if (await File(allPath).exists()) return;
+    writeWords(d, iter);
   }
 
   void setWords() {

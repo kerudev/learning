@@ -13,7 +13,7 @@ void writeFileMode(
     file.createSync(recursive: true);
   }
 
-  final contents = lines.join("\n") + (lines.length == 1 ? "\n" : "");
+  final contents = "${lines.join("\n")}\n";
 
   file.writeAsStringSync(contents, mode: mode);
 }
