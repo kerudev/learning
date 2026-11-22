@@ -36,11 +36,13 @@ class _FilterInputState extends State<FilterInput> {
     _isButtonDisabled = true;
     setState(() {});
 
-    await gContext.writeWords(gContext.difficulty, 1);
+    await gContext.writeWords(gContext.difficulty);
     gContext.setWords();
 
     _isButtonDisabled = false;
-    setState(() {});
+    setState(() {
+      widget.onChanged();
+    });
   }
 
   Widget _input() {

@@ -13,9 +13,10 @@ void writeFileMode(
     file.createSync(recursive: true);
   }
 
-  final contents = "${lines.join("\n")}\n";
+  final contents = lines.join("\n");
+  if (contents.isEmpty) return;
 
-  file.writeAsStringSync(contents, mode: mode);
+  file.writeAsStringSync("$contents\n", mode: mode);
 }
 
 void writeFile(String path, Set<String> lines) {

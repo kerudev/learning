@@ -73,7 +73,6 @@ class Game {
     allWords.remove(word);
 
     if (!kIsWeb) {
-      // TODO doesn't delete used word
       appendFile(gContext.usedPath, {word});
       writeFile(gContext.poolPath, allWords);
     }
