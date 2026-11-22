@@ -3,19 +3,19 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 
 import 'package:birdle/shared/utils/fs.dart';
-import 'package:birdle/shared/utils/game.dart';
 import 'package:birdle/shared/utils/http.dart';
 
 /// Handles the game's context.
 class Context {
-  late int difficulty;
-
-  final String wordsRoot = "words";
+  static const defaultDifficulty = 5;
+  static const wordsRoot = "words";
 
   late String wordsPath;
   late String allPath;
   late String poolPath;
   late String usedPath;
+
+  late int difficulty = defaultDifficulty;
 
   /// Every word that can be legally entered as a guess.
   late List<String> allLegalGuesses;
@@ -26,10 +26,10 @@ class Context {
   /// Additional words accepted as guesses beyond those in [legalWords].
   late List<String> legalGuesses;
 
-  Context._(int difficulty);
+  Context._init(int difficulty);
 
   static Future<Context> load(int difficulty) async {
-    final self = Context._(difficulty);
+    final self = Context._init(difficulty);
     await self.setDifficulty(difficulty);
     return self;
   }
@@ -92,5 +92,5 @@ class Context {
 late Context gContext;
 
 Future<void> initContext() async {
-  gContext = await Context.load(Game.defaultDifficulty);
+  gContext = await Context.load(Context.defaultDifficulty);
 }
