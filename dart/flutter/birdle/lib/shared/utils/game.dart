@@ -33,9 +33,9 @@ enum HitType {
 extension HitTypeImpl on HitType {
   Color asColor() {
     return switch (this) {
-      HitType.hit => Colors.green,
-      HitType.partial => Colors.yellow,
-      HitType.miss => Colors.grey,
+      HitType.hit => Colors.green.shade400,
+      HitType.partial => Colors.yellow.shade400,
+      HitType.miss => Colors.grey.shade400,
       _ => Colors.white,
     };
   }
@@ -52,13 +52,10 @@ typedef Letter = ({String char, HitType type});
 /// but doesn't advance play on its own.
 ///
 /// Clients drive each round by calling [guess] to submit an attempt and
-/// [resetGame] to start over.
+/// [reset] to start over.
 class Game {
   /// The default maximum number of guesses allowed in a [Game].
   static const int defaultMaxGuesses = 5;
-
-  /// The default lengths of the guess in a [Game].
-  static const int defaultDifficulty = 5;
 
   /// Creates a new game with [maxGuesses] guesses allowed.
   ///
@@ -133,7 +130,7 @@ class Game {
   bool get didLose => guessesRemaining == 0 && !didWin;
 
   /// Picks a new hidden word and clears every submitted guess.
-  void resetGame() {
+  void reset() {
     _wordToGuess = _generateInitialWord(seed);
     _guesses = List<Word>.filled(maxGuesses, Word.empty());
   }

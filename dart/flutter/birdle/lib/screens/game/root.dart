@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:birdle/screens/game/widgets/grid.dart';
 import 'package:birdle/screens/game/widgets/guess_input.dart';
 import 'package:birdle/screens/game/widgets/keyboard.dart';
+import 'package:birdle/screens/game/widgets/reset.dart';
 import 'package:birdle/shared/utils/context.dart';
 import 'package:birdle/shared/utils/game.dart';
 import 'package:birdle/shared/widgets/difficulty.dart';
@@ -55,6 +56,13 @@ class _GameScreenState extends State<GameScreen> {
     }
   }
 
+  void _resetGame() {
+    setState(() {
+      _game.reset();
+      _keyStates.clear();
+    });
+  }
+
   Widget _inputBar() {
     return ConstrainedBox(
       constraints: const BoxConstraints(maxWidth: 400),
@@ -74,7 +82,9 @@ class _GameScreenState extends State<GameScreen> {
       ),
     ];
 
-    if (!_game.didWin) {
+    if (_game.didWin) {
+      children.add(ResetButton(onClick: _resetGame));
+    } else {
       children.addAll([
         _inputBar(),
         Keyboard(states: _keyStates, onClick: _onKeyPress),

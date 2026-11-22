@@ -21,7 +21,6 @@ class _GuessInputState extends State<GuessInput> {
 
   @override
   void dispose() {
-    widget.controller.dispose();
     _focusNode.dispose();
     super.dispose();
   }
