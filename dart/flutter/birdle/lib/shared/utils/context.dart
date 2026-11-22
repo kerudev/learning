@@ -62,7 +62,7 @@ class Context {
 
   Future<void> ensureWords(int d) async {
     if (await File(allPath).exists() && readFile(poolPath).isNotEmpty) return;
-    writeWords(d);
+    await writeWords(d);
   }
 
   void setWords() {
