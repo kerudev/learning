@@ -22,9 +22,10 @@ class _GameScreenState extends State<GameScreen> {
 
   final Map<String, HitType> _keyStates = {};
 
-  void _onDifficultyChange(int d) {
-    setState(() async {
-      await gContext.setDifficulty(d);
+  void _onDifficultyChange(int d) async {
+    await gContext.setDifficulty(d);
+
+    setState(() {
       _game = Game();
     });
   }
