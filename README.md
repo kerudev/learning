@@ -4,10 +4,10 @@ This repo contains small projects and code snippets I've used to learn
 programming languages or libraries I'm interested in.
 
 > [!IMPORTANT] Disclaimer (for others and myself)
-> If you see incorrect information in any of the README's, keep in mind they
-> will not be touched ever again. They were written when I was learning about a
-> certain topic, and I think there is some kind of beauty in leaving that
-> "naiveness" of learning something for the first time :)
+> READMEs may contain incorrect information, but they will never be edited.
+> They were written while I was learning something for the first time, and I
+> think there is some kind of beauty in the "naiveness" of past mistakes.
+> It helps me remember I don't need to get it perfect on the first try :)
 
 ## My workflow
 
@@ -197,6 +197,16 @@ After that, I do repeat the process for the next branch.
   - [14_light_casters](./cpp/opengl/learnopengl/14_light_casters)
   - [15_multiple_lights](./cpp/opengl/learnopengl/15_multiple_lights)
   - [20_model_loading](./cpp/opengl/learnopengl/20_model_loading)
+
+### Dart
+
+- **flutter**: [docs](https://docs.flutter.dev/)
+  - [birdle](./dart/flutter/birdle)
+
+### Go
+
+- **lang**: [docs](https://go.dev/doc)
+  - [cat-api](./go/lang/cat-api)
 
 ### PowerShell
 
