@@ -56,6 +56,7 @@ class _FilterInputState extends State<FilterInput> {
           decoration: InputDecoration(
             filled: true,
             fillColor: Colors.white,
+            hintText: "Type to filter",
             border: OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(36)),
             ),

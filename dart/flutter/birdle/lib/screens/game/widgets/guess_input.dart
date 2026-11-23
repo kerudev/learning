@@ -42,6 +42,7 @@ class _GuessInputState extends State<GuessInput> {
           decoration: InputDecoration(
             filled: true,
             fillColor: Colors.white,
+            hintText: "Type a guess",
             suffixIcon: _submitButton(),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(36)),
